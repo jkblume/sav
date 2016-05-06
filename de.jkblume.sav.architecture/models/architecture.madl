@@ -1,0 +1,73 @@
+import "platform:/plugin/org.qualitune.smags.architecture.dsl/resources/StandardTypes.madl";
+import "../../SmagRE/models/AdaptationArchitecture.madl";
+import "../../SmagRE/models/CommonLib.madl";
+import "../../de.jkblume.sav.sensorml/models/sensorml.madl";
+
+namespace "de.jkblume.sav.architecture";
+
+meta architecture SavMetaArchitecture{
+	sensor units:
+
+	type libraries:
+	
+	port types:
+		
+	port type IProcess {
+		parameter smlConfiguration : AbstractProcess;
+		IOPropertyList execute(IOPropertyList value);
+	}
+	
+	port type IOrchestratorProcess extends IProcess {
+		requires IProcess[0 to *];
+	}
+	
+	port type ISensor {
+		parameter smlConfiguration : AbstractPhysicalProcess;
+		parameter currentEvent : Event;
+		requires IProcess;
+		void start();
+		void stop();
+		Boolean isRunning();
+	}
+	
+	port type IReasoner extends ISensor {
+		void classify(Long intervalStart, Long intervalEnd);
+		void classifySnapshot(Long timestamp);
+	}
+	
+	port type ILearningReasoner extends IReasoner {
+		Object translateEvent(Event event);
+		void train();
+		void teachCurrentState(Category category);
+	}
+	
+	port type IVisualisationStrategy {
+		void visualizeEvent(ISensor source, Event event);
+		void addSensor(ISensor sensor);
+		void removeSensor(ISensor sensor);
+	}
+	
+	component types:
+	
+	component type TechnicalSensor {
+		provides ISensor;
+	}
+	
+	component type LogicalSensor {
+		provides ISensor;
+		requires ISensor[0 to *];
+	}
+	
+	component type LearningReasoner {
+		provides ILearningReasoner;
+		requires ISensor[0 to *];
+	}
+	
+	component type Visualizer {
+		requires ISensor[0 to *];
+		provides IVisualisationStrategy;
+	}
+	
+	sensor types:
+
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:SimpleProcess gml:id="csvProcessor"
+	xmlns:sml="http://www.opengis.net/sensorml/2.0" xmlns:swe="http://www.opengis.net/swe/2.0"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<sml:inputs>
+		<sml:InputList>
+			<sml:input name="input1">
+				<swe:Text>
+				</swe:Text>
+			</sml:input>
+		</sml:InputList>
+	</sml:inputs>
+	<sml:outputs>
+		<sml:OutputList>
+			<sml:output name="output1">
+				<swe:Text>
+				</swe:Text>
+			</sml:output>
+		</sml:OutputList>
+	</sml:outputs>
+    <sml:parameters>
+        <sml:ParameterList>
+            <sml:parameter name="separator">
+				<swe:Text>
+				    <swe:value>;</swe:value>
+				</swe:Text>
+			</sml:parameter>
+            <sml:parameter name="column">
+				<swe:Count>
+				    <swe:value>1</swe:value>
+				</swe:Count>
+			</sml:parameter>
+		</sml:ParameterList>
+	</sml:parameters>
+	
+
+</sml:SimpleProcess>

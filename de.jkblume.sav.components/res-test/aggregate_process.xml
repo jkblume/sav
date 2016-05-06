@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:AggregateProcess xmlns:sml="http://www.opengis.net/sensorml/2.0"
+	xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:gml="http://www.opengis.net/gml/3.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
+	gml:id="aggregateSensor">
+
+	<sml:inputs>
+		<sml:InputList>
+			<sml:input name="input1">
+				<swe:Text>
+				</swe:Text>
+			</sml:input>
+		</sml:InputList>
+	</sml:inputs>
+
+	<sml:outputs>
+		<sml:OutputList>
+			<sml:output name="acceleration">
+				<swe:DataRecord>
+					<swe:field name="x">
+						<swe:Quantity>
+						</swe:Quantity>
+					</swe:field>
+					<swe:field name="y">
+						<swe:Quantity>
+						</swe:Quantity>
+					</swe:field>
+					<swe:field name="z">
+						<swe:Quantity>
+						</swe:Quantity>
+					</swe:field>
+				</swe:DataRecord>
+			</sml:output>
+			<sml:output name="gyroscope">
+				<swe:DataRecord>
+					<swe:field name="x">
+						<swe:Quantity>
+						</swe:Quantity>
+					</swe:field>
+					<swe:field name="y">
+						<swe:Quantity>
+						</swe:Quantity>
+					</swe:field>
+					<swe:field name="z">
+						<swe:Quantity>
+						</swe:Quantity>
+					</swe:field>
+				</swe:DataRecord>
+			</sml:output>
+		</sml:OutputList>
+	</sml:outputs>
+
+	<sml:components>
+		<sml:ComponentList>
+			<sml:component name="acceleration_csv_preprocessing">
+				<sml:SimpleProcess gml:id="acceleration_csv_preprocessing">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Text>
+								</swe:Text>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>/</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>1</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+			
+			<sml:component name="gyroscope_csv_preprocessing">
+				<sml:SimpleProcess gml:id="gyroscope_csv_preprocessing">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Text>
+								</swe:Text>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>/</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>2</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="acceleration_csv_process_x">
+				<sml:SimpleProcess gml:id="acceleration_csv_process_x">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>;</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>1</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="acceleration_csv_process_y">
+				<sml:SimpleProcess gml:id="acceleration_csv_process_y">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>;</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>2</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="acceleration_csv_process_z">
+				<sml:SimpleProcess gml:id="acceleration_csv_process_z">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>;</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>3</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+			
+			<sml:component name="gyroscope_csv_process_x">
+				<sml:SimpleProcess gml:id="gyroscope_csv_process_x">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>;</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>1</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="gyroscope_csv_process_y">
+				<sml:SimpleProcess gml:id="gyroscope_csv_process_y">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>;</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>2</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="gyroscope_csv_process_z">
+				<sml:SimpleProcess gml:id="gyroscope_csv_process_z">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="separator">
+								<swe:Text>
+									<swe:value>;</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="column">
+								<swe:Count>
+									<swe:value>3</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+		</sml:ComponentList>
+	</sml:components>
+
+	<sml:connections>
+		<sml:ConnectionList>
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="inputs/input1" />
+					<sml:destination
+						ref="components/acceleration_csv_preprocessing/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+			
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="inputs/input1" />
+					<sml:destination
+						ref="components/gyroscope_csv_preprocessing/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source
+						ref="components/acceleration_csv_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/acceleration_csv_process_x/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source
+						ref="components/acceleration_csv_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/acceleration_csv_process_y/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source
+						ref="components/acceleration_csv_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/acceleration_csv_process_z/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+			
+			<sml:connection>
+				<sml:Link>
+					<sml:source
+						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/gyroscope_csv_process_x/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source
+						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/gyroscope_csv_process_y/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source
+						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/gyroscope_csv_process_z/inputs/input1" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="components/acceleration_csv_process_x/outputs/output1" />
+					<sml:destination ref="outputs/acceleration/x" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="components/acceleration_csv_process_y/outputs/output1" />
+					<sml:destination ref="outputs/acceleration/y" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="components/acceleration_csv_process_z/outputs/output1" />
+					<sml:destination ref="outputs/acceleration/z" />
+				</sml:Link>
+			</sml:connection>
+			
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="components/gyroscope_csv_process_x/outputs/output1" />
+					<sml:destination ref="outputs/gyroscope/x" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="components/gyroscope_csv_process_y/outputs/output1" />
+					<sml:destination ref="outputs/gyroscope/y" />
+				</sml:Link>
+			</sml:connection>
+
+			<sml:connection>
+				<sml:Link>
+					<sml:source ref="components/gyroscope_csv_process_z/outputs/output1" />
+					<sml:destination ref="outputs/gyroscope/z" />
+				</sml:Link>
+			</sml:connection>
+		</sml:ConnectionList>
+	</sml:connections>
+
+</sml:AggregateProcess>

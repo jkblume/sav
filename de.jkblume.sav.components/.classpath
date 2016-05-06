@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-gen"/>
+	<classpathentry kind="src" path="src-test"/>
+	<classpathentry kind="src" path="res-test"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/de.jkblume.sav.architecture"/>
+	<classpathentry exported="true" kind="lib" path="/home/jkb/development/libraries/rxtx-2.1-7-bins-r2/RXTXcomm.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/jkb/development/libraries/rxtx-2.1-7-bins-r2/Linux/x86_64-unknown-linux-gnu"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="lib" path="/home/jkb/development/libraries/weka-3-8-0/weka.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/jkb/wekafiles/packages/HMM/HMM.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

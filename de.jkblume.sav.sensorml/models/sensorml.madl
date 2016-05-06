@@ -1,0 +1,40 @@
+import "platform:/plugin/org.qualitune.smags.architecture.dsl/resources/StandardTypes.madl";
+import "../../SmagRE/models/AdaptationArchitecture.madl";
+import "../../SmagRE/models/CommonLib.madl";
+
+namespace "de.jkblume.sav.sensorml";
+
+meta architecture SavMetaSensorML{
+	sensor units:
+
+	type libraries:
+	type library DummyLibrary {
+		// DummyType is only for generation of the package, otherwise smags is generating the import statement that cant be resolved
+		complex DummyType {
+			
+		}
+	}
+	type library SensorMLLibrary {		
+		AbstractProcess;
+		AbstractPhysicalProcess;
+		SimpleProcess;
+		PhysicalComponent;
+		Event;
+		IOPropertyList;
+		AbstractSWEIdentifiable;
+		DataComponent;
+		Category;
+	}
+	type library SWECommonDataModelLibrary {
+
+	
+		
+	}
+	
+	port types:
+
+	component types:
+
+	sensor types:
+
+}
