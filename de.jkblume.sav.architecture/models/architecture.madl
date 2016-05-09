@@ -25,24 +25,25 @@ meta architecture SavMetaArchitecture{
 		parameter smlConfiguration : AbstractPhysicalProcess;
 		parameter lastEvent : Event;
 		requires IProcess;
-		String getId();
 		Boolean initialize();
-		IOPropertyList retrieveValues();
 		void start();
 		void stop();
 		Boolean isRunning();
+		String getId();
+		IOPropertyList retrieveValues();
 	}
 			
 	port type IReasoner extends ISensor {
-		void classify(Long intervalStart, Long intervalEnd);
-		void classifySnapshot(Long timestamp);
+		void buildClassifier();
+		Category classify(Event event);
 	}
-		
-//	port type ILearningReasoner extends IReasoner {
-//		Object translateEvent(Event event);
-//		void train();
-//		void teachCurrentState(Category category);
-//	}
+	
+	port type ILearningReasoner extends IReasoner {
+		void startGesture(Category category);
+		void stopGesture(Category category);
+		void teachCurrentState(Category category);
+		void train();
+	}
 	
 	port type IVisualisationStrategy {
 		void visualizeEvent(ISensor source, Event event);
