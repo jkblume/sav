@@ -23,51 +23,75 @@ meta architecture SavMetaArchitecture{
 	
 	port type ISensor {
 		parameter smlConfiguration : AbstractPhysicalProcess;
-		parameter currentEvent : Event;
+		parameter lastEvent : Event;
 		requires IProcess;
+		String getId();
+		Boolean initialize();
+		IOPropertyList retrieveValues();
 		void start();
 		void stop();
 		Boolean isRunning();
 	}
 	
-	port type IReasoner extends ISensor {
+	event port type IMyPushSensor fires Event extends ISensor{
+		void fireUnprocessedValues(IOPropertyList values);
+	}
+		
+	port type IPullReasoner extends ISensor {
 		void classify(Long intervalStart, Long intervalEnd);
 		void classifySnapshot(Long timestamp);
 	}
 	
-	port type ILearningReasoner extends IReasoner {
-		Object translateEvent(Event event);
-		void train();
-		void teachCurrentState(Category category);
-	}
+//	event port type IPushReasoner fires Event extends IMyPushSensor {
+//		
+//	}
+	
+//	port type ILearningReasoner extends IReasoner {
+//		Object translateEvent(Event event);
+//		void train();
+//		void teachCurrentState(Category category);
+//	}
 	
 	port type IVisualisationStrategy {
 		void visualizeEvent(ISensor source, Event event);
 		void addSensor(ISensor sensor);
 		void removeSensor(ISensor sensor);
 	}
-	
+		
 	component types:
 	
-	component type TechnicalSensor {
+	component type TechnicalPushSensor {
+		provides IMyPushSensor;
+	}
+	
+	component type TechnicalPullSensor {
 		provides ISensor;
 	}
 	
-	component type LogicalSensor {
-		provides ISensor;
+	component type LogicalPushSensor {
+		provides IMyPushSensor;
+		requires IMyPushSensor[0 to *];
 		requires ISensor[0 to *];
 	}
 	
-	component type Reasoner {
-		provides IReasoner;
+	component type LogicalPullSensor {
+		provides ISensor;
+		requires IMyPushSensor[0 to *];
+		requires ISensor[0 to *];
+	}
+	
+	component type PullReasoner {
+		provides IPullReasoner;
+		requires IMyPushSensor[0 to *];
 		requires ISensor[0 to *];
 	}
 	
 	component type Visualizer {
 		requires ISensor[0 to *];
+		requires IMyPushSensor[0 to *];
 		provides IVisualisationStrategy;
 	}
-	
+		
 	sensor types:
 
 }

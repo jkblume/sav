@@ -25,10 +25,11 @@ app SavComponents {
 	implementation port DifferenceProcessor implements IProcess{}
 	implementation port SysoVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port JavaFXVisualisationStrategy implements IVisualisationStrategy{}
+	implementation port SerialTechnicalSensor implements ISensor{}
+	implementation port SimulatingTechnicalSensor implements ISensor{}
+	
 	
 	components:
-	component SerialTechnicalSensor implements TechnicalSensor{}
-	component SimulatingTechnicalSensor implements TechnicalSensor{}
 	
 	sensors:
 

@@ -43,7 +43,6 @@ public class UI extends Application {
 
 			@Override
 			public void run() {
-				System.out.println("Hello");
 				NumberAxis xAxis = new NumberAxis();
 				NumberAxis yAxis = new NumberAxis();
 				xAxis.setLabel("Number of Month");

@@ -34,6 +34,9 @@ public interface ISensor {
 	public static Class remotePortClass = ISensorRemote.class;
 	public static Class proxyComponentClass = ISensorRemoteProxy.class;
 
+	public String getId();
+	public Boolean initialize();
+	public IOPropertyList retrieveValues();
 	public void start();
 	public void stop();
 	public Boolean isRunning();
@@ -41,8 +44,8 @@ public interface ISensor {
 	public AbstractPhysicalProcess getSmlConfiguration();
 	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration);
 
-	public Event getCurrentEvent();
-	public void setCurrentEvent(Event currentEvent);
+	public Event getLastEvent();
+	public void setLastEvent(Event lastEvent);
 
 	public <T> T as(Class<T> c);
 
@@ -62,14 +65,26 @@ public interface ISensor {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public Event getCurrentEvent() {
-			return base.getCurrentEvent();
+		public Event getLastEvent() {
+			return base.getLastEvent();
 		}
 
-		public void setCurrentEvent(Event currentEvent) {
-			base.setCurrentEvent(currentEvent);
+		public void setLastEvent(Event lastEvent) {
+			base.setLastEvent(lastEvent);
 		}
 
+		public String getId() {
+			String result = base.getId();
+			return result;
+		}
+		public Boolean initialize() {
+			Boolean result = base.initialize();
+			return result;
+		}
+		public IOPropertyList retrieveValues() {
+			IOPropertyList result = base.retrieveValues();
+			return result;
+		}
 		public void start() {
 			base.start();
 		}
@@ -120,15 +135,34 @@ public interface ISensor {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public Event getCurrentEvent() {
-			GetCurrentEventRemoteMessage in = new GetCurrentEventRemoteMessage();
-			return client.send(in, GetCurrentEventRemoteMessage.class).getResponseResult();
+		public Event getLastEvent() {
+			GetLastEventRemoteMessage in = new GetLastEventRemoteMessage();
+			return client.send(in, GetLastEventRemoteMessage.class).getResponseResult();
 		}
 
-		public void setCurrentEvent(Event currentEvent) {
-			SetCurrentEventRemoteMessage in = new SetCurrentEventRemoteMessage();
-			in.setCurrentEvent(currentEvent);
-			client.send(in, SetCurrentEventRemoteMessage.class);
+		public void setLastEvent(Event lastEvent) {
+			SetLastEventRemoteMessage in = new SetLastEventRemoteMessage();
+			in.setLastEvent(lastEvent);
+			client.send(in, SetLastEventRemoteMessage.class);
+		}
+
+		public String getId() {
+			GetIdRemoteMessage in = new GetIdRemoteMessage();
+
+			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
+		}
+
+		public Boolean initialize() {
+			InitializeRemoteMessage in = new InitializeRemoteMessage();
+
+			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
+		}
+
+		public IOPropertyList retrieveValues() {
+			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
+
+			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
+					.getResponseResult();
 		}
 
 		public void start() {
@@ -183,34 +217,76 @@ public interface ISensor {
 		}
 	}
 
-	public class GetCurrentEventRemoteMessage extends RemoteMessageBase<Event> {
+	public class GetLastEventRemoteMessage extends RemoteMessageBase<Event> {
 
-		public GetCurrentEventRemoteMessage() {
-			super("getCurrentEvent");
+		public GetLastEventRemoteMessage() {
+			super("getLastEvent");
 		}
 
 	}
 
-	public class SetCurrentEventRemoteMessage extends RemoteMessageBase<Object> {
+	public class SetLastEventRemoteMessage extends RemoteMessageBase<Object> {
 
-		private Event currentEvent;
+		private Event lastEvent;
 
-		public SetCurrentEventRemoteMessage() {
-			super("setCurrentEvent", Event.class.getName());
+		public SetLastEventRemoteMessage() {
+			super("setLastEvent", Event.class.getName());
 		}
 
-		public void setCurrentEvent(Event currentEvent) {
-			this.currentEvent = currentEvent;
+		public void setLastEvent(Event lastEvent) {
+			this.lastEvent = lastEvent;
 		}
 
-		public Event getCurrentEvent() {
-			return currentEvent;
+		public Event getLastEvent() {
+			return lastEvent;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
-			result.add(getCurrentEvent());
+			result.add(getLastEvent());
+			return result;
+		}
+	}
+
+	public class GetIdRemoteMessage extends RemoteMessageBase<String> {
+
+		public GetIdRemoteMessage() {
+			super("getId");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class InitializeRemoteMessage extends RemoteMessageBase<Boolean> {
+
+		public InitializeRemoteMessage() {
+			super("initialize");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<IOPropertyList> {
+
+		public RetrieveValuesRemoteMessage() {
+			super("retrieveValues");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
 			return result;
 		}
 	}

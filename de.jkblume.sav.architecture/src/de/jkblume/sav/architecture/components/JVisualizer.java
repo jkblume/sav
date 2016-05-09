@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.jkblume.sav.architecture.gen.components.AbstractVisualizer;
+import de.jkblume.sav.architecture.gen.porttypes.IMyPushSensorSubject;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import net.opengis.gml.v32.TimeInstant;
+import net.opengis.sensorml.v20.AbstractPhysicalProcess;
 import net.opengis.sensorml.v20.Event;
+import net.opengis.sensorml.v20.IOPropertyList;
 
 public class JVisualizer extends AbstractVisualizer {
 
@@ -26,7 +29,7 @@ public class JVisualizer extends AbstractVisualizer {
 			public void run() {
 				while (true) {
 					for (ISensor sensor : getISensors()) {
-						Event currentEvent = sensor.getCurrentEvent();
+						Event currentEvent = sensor.getLastEvent();
 						if (currentEvent != null) {
 							if (!alreadVisualized(sensor, currentEvent)) {
 								visualizeEvent(sensor, currentEvent);
@@ -93,6 +96,84 @@ public class JVisualizer extends AbstractVisualizer {
 
 	@Override
 	public void removeSensorImpl(ISensor sensor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean initialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IOPropertyList retrieveValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Boolean isRunning() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AbstractPhysicalProcess getSmlConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Event getLastEvent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setLastEvent(Event lastEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleIMyPushSensorAdded(IMyPushSensorSubject item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleIMyPushSensorRemoved(IMyPushSensorSubject item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyEventChangedImpl(Object sender, Event argument) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -98,12 +98,12 @@ public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor
 		base.setSmlConfiguration(smlConfiguration);
 	}
 
-	public Event getCurrentEvent() {
-		return base.getCurrentEvent();
+	public Event getLastEvent() {
+		return base.getLastEvent();
 	}
 
-	public void setCurrentEvent(Event currentEvent) {
-		base.setCurrentEvent(currentEvent);
+	public void setLastEvent(Event lastEvent) {
+		base.setLastEvent(lastEvent);
 	}
 
 }

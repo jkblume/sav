@@ -19,9 +19,10 @@ import org.smags.runtime.reconfigurtion.operations.SetupPortOperation;
 import org.vast.sensorML.SMLUtils;
 import org.vast.xml.XMLReaderException;
 
+import de.jkblume.sav.architecture.components.JTechnicalPullSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
-import de.jkblume.sav.components.components.SimulatingTechnicalSensor;
 import de.jkblume.sav.components.ports.JavaFXVisualisationStrategy;
+import de.jkblume.sav.components.ports.SimulatingTechnicalSensor;
 import net.opengis.sensorml.v20.AbstractProcess;
 
 public class Starter {
@@ -34,33 +35,57 @@ public class Starter {
 
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-        InputStream is = new FileInputStream("res/simsen.xml");
-        SMLUtils utils = new SMLUtils(SMLUtils.V2_0);
-        AbstractProcess ssDesc = utils.readProcess(is);
+		SMLUtils utils = new SMLUtils(SMLUtils.V2_0);
+		
+        InputStream is = new FileInputStream("res/ssp1.xml");
+        AbstractProcess sspDesc1 = utils.readProcess(is);
         
-        ops.add(new CreatePortInstanceOperation("vs", JavaFXVisualisationStrategy.class));
-		
-		ops.add(new CreateComponentInstanceOperation("simsen", SimulatingTechnicalSensor.class));
+        is = new FileInputStream("res/ssp2.xml");
+        AbstractProcess sspDesc2 = utils.readProcess(is);
+        
+
 		ops.add(new CreateComponentInstanceOperation("v", JVisualizer.class));
-		
+		ops.add(new CreatePortInstanceOperation("vs", JavaFXVisualisationStrategy.class));
 		ops.add(new BindPortOperation("v", "vs", "IVisualisationStrategy"));
-		ops.add(new SetComponentParameterOperation("simsen", "smlConfiguration", ssDesc));
+
+		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalPullSensor.class));
+		ops.add(new CreatePortInstanceOperation("ssp1", SimulatingTechnicalSensor.class));
+		ops.add(new BindPortOperation("jtps1", "ssp1", "ISensor"));
+		ops.add(new SetComponentParameterOperation("jtps1", "smlConfiguration", sspDesc1));
+		ops.add(new SetupComponentOperation("jtps1"));
+		ops.add(new SetupPortOperation("ssp1"));
 		
-		ops.add(new SetupComponentOperation("simsen"));
+		ops.add(new CreateComponentInstanceOperation("jtps2", JTechnicalPullSensor.class));
+		ops.add(new CreatePortInstanceOperation("ssp2", SimulatingTechnicalSensor.class));
+		ops.add(new BindPortOperation("jtps2", "ssp2", "ISensor"));
+		ops.add(new SetComponentParameterOperation("jtps2", "smlConfiguration", sspDesc2));
+		ops.add(new SetupComponentOperation("jtps2"));
+		ops.add(new SetupPortOperation("ssp2"));
+		
 		ops.add(new SetupComponentOperation("v"));
 		ops.add(new SetupPortOperation("vs"));
 		
 		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
 
-		SimulatingTechnicalSensor simulatingSensor = (SimulatingTechnicalSensor) re.getRuntimeModel().getComponentByName("simsen");
+		JTechnicalPullSensor simulatingSensor = (JTechnicalPullSensor) re.getRuntimeModel().getComponentByName("jtps1");
 		simulatingSensor.start();
 		
 		Thread.sleep(1000);
 		
 		ops = new ArrayList<ReconfigurtionOperation>();
-		ops.add(new ConnectOperation("simsen", "v", "ISensor"));
+		ops.add(new ConnectOperation("jtps1", "v", "ISensor"));
 		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
 
+		simulatingSensor = (JTechnicalPullSensor) re.getRuntimeModel().getComponentByName("jtps2");
+		simulatingSensor.start();
+		
+		Thread.sleep(10000);
+		
+		ops = new ArrayList<ReconfigurtionOperation>();
+		ops.add(new ConnectOperation("jtps2", "v", "ISensor"));
+		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
+
+		
 		
 	}
 }
