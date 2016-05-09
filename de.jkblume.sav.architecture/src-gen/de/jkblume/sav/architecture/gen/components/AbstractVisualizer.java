@@ -35,8 +35,7 @@ import org.smags.componentmodel.annotations.Component;
 public abstract class AbstractVisualizer extends AbstractComponent
 		implements
 			INotifyPropertyChanged,
-			IVisualisationStrategy,
-			IMyPushSensorObserver {
+			IVisualisationStrategy {
 
 	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
@@ -58,29 +57,7 @@ public abstract class AbstractVisualizer extends AbstractComponent
 	public abstract void handleISensorAdded(ISensor item);
 	public abstract void handleISensorRemoved(ISensor item);
 
-	@RequirementA
-	private List<IMyPushSensorSubject> iMyPushSensorSubjects = new ArrayList<IMyPushSensorSubject>();
-
-	public List<IMyPushSensorSubject> getIMyPushSensors() {
-		return this.iMyPushSensorSubjects;
-	}
-
-	public void addIMyPushSensorSubject(IMyPushSensorSubject item) {
-		this.iMyPushSensorSubjects.add(item);
-		handleIMyPushSensorAdded(item);
-	}
-
-	public abstract void handleIMyPushSensorAdded(IMyPushSensorSubject item);
-	public abstract void handleIMyPushSensorRemoved(IMyPushSensorSubject item);
-
-	public void removeIMyPushSensorSubject(IMyPushSensorSubject item) {
-		this.iMyPushSensorSubjects.remove(item);
-		handleIMyPushSensorRemoved(item);
-	}
-
 	private final List<IVisualisationStrategy> iVisualisationStrategyRoles = new ArrayList<IVisualisationStrategy>();
-
-	private final List<IMyPushSensorObserver> iMyPushSensorObserverRoles = new ArrayList<IMyPushSensorObserver>();
 
 	public AbstractVisualizer(String name) {
 		super(name);
@@ -91,10 +68,6 @@ public abstract class AbstractVisualizer extends AbstractComponent
 
 		if (type == IVisualisationStrategy.class)
 			return iVisualisationStrategyRoles.size() > 0 ? (T) iVisualisationStrategyRoles.get(0) : (T) this;
-
-		if (type == IMyPushSensorObserver.class) {
-			return iMyPushSensorObserverRoles.size() > 0 ? (T) iMyPushSensorObserverRoles.get(0) : (T) this;
-		}
 
 		return null;
 	}
@@ -107,11 +80,6 @@ public abstract class AbstractVisualizer extends AbstractComponent
 			return true;
 		}
 
-		if (port instanceof IMyPushSensorObserver) {
-			iMyPushSensorObserverRoles.add(0, (IMyPushSensorObserver) port);
-			return true;
-		}
-
 		return false;
 	}
 
@@ -120,11 +88,6 @@ public abstract class AbstractVisualizer extends AbstractComponent
 
 		if (port instanceof IVisualisationStrategy && iVisualisationStrategyRoles.contains(port)) {
 			iVisualisationStrategyRoles.remove(port);
-			return true;
-		}
-
-		if (port instanceof IMyPushSensorObserver && iMyPushSensorObserverRoles.contains(port)) {
-			iMyPushSensorObserverRoles.remove((IMyPushSensorObserver) port);
 			return true;
 		}
 
@@ -167,17 +130,5 @@ public abstract class AbstractVisualizer extends AbstractComponent
 	public abstract void visualizeEventImpl(ISensor source, Event event);
 	public abstract void addSensorImpl(ISensor sensor);
 	public abstract void removeSensorImpl(ISensor sensor);
-
-	public abstract void notifyEventChangedImpl(Object sender, Event argument);
-
-	@Override
-	public final void notifyEventChanged(Object sender, Event argument) {
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("notifyEventChanged", this);
-
-		if (countInCallStack > 1 || iMyPushSensorObserverRoles.size() == 0)
-			notifyEventChangedImpl(sender, argument);
-		else
-			iMyPushSensorObserverRoles.get(0).notifyEventChanged(sender, argument);
-	}
 
 }

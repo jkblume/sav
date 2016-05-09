@@ -32,31 +32,26 @@ import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
 @Component(name = "PullReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "PullReasoner", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractPullReasoner extends AbstractComponent
-		implements
-			INotifyPropertyChanged,
-			IPullReasoner,
-			IMyPushSensorObserver {
+public abstract class AbstractPullReasoner extends AbstractComponent implements INotifyPropertyChanged, IReasoner {
 
 	@RequirementA
-	private List<IMyPushSensorSubject> iMyPushSensorSubjects = new ArrayList<IMyPushSensorSubject>();
+	private IProcess iProcess;
 
-	public List<IMyPushSensorSubject> getIMyPushSensors() {
-		return this.iMyPushSensorSubjects;
+	public IProcess getIProcess() {
+		return this.iProcess;
+
 	}
 
-	public void addIMyPushSensorSubject(IMyPushSensorSubject item) {
-		this.iMyPushSensorSubjects.add(item);
-		handleIMyPushSensorAdded(item);
+	public void setIProcess(IProcess iProcess) {
+		this.iProcess = iProcess;
+		if (iProcess != null)
+			handleIProcessConnected(iProcess);
+		else
+			handleIProcessDisconnected(iProcess);
 	}
 
-	public abstract void handleIMyPushSensorAdded(IMyPushSensorSubject item);
-	public abstract void handleIMyPushSensorRemoved(IMyPushSensorSubject item);
-
-	public void removeIMyPushSensorSubject(IMyPushSensorSubject item) {
-		this.iMyPushSensorSubjects.remove(item);
-		handleIMyPushSensorRemoved(item);
-	}
+	public abstract void handleIProcessConnected(IProcess item);
+	public abstract void handleIProcessDisconnected(IProcess item);
 
 	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
@@ -78,28 +73,7 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 	public abstract void handleISensorAdded(ISensor item);
 	public abstract void handleISensorRemoved(ISensor item);
 
-	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
-
-	private final List<IPullReasoner> iPullReasonerRoles = new ArrayList<IPullReasoner>();
-
-	private final List<IMyPushSensorObserver> iMyPushSensorObserverRoles = new ArrayList<IMyPushSensorObserver>();
+	private final List<IReasoner> iReasonerRoles = new ArrayList<IReasoner>();
 
 	public AbstractPullReasoner(String name) {
 		super(name);
@@ -128,12 +102,8 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
-		if (type == IPullReasoner.class)
-			return iPullReasonerRoles.size() > 0 ? (T) iPullReasonerRoles.get(0) : (T) this;
-
-		if (type == IMyPushSensorObserver.class) {
-			return iMyPushSensorObserverRoles.size() > 0 ? (T) iMyPushSensorObserverRoles.get(0) : (T) this;
-		}
+		if (type == IReasoner.class)
+			return iReasonerRoles.size() > 0 ? (T) iReasonerRoles.get(0) : (T) this;
 
 		return null;
 	}
@@ -141,13 +111,8 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 	@Override
 	public boolean innerBindPort(IPort port) {
 
-		if (port instanceof IPullReasoner) {
-			iPullReasonerRoles.add(0, (IPullReasoner) port);
-			return true;
-		}
-
-		if (port instanceof IMyPushSensorObserver) {
-			iMyPushSensorObserverRoles.add(0, (IMyPushSensorObserver) port);
+		if (port instanceof IReasoner) {
+			iReasonerRoles.add(0, (IReasoner) port);
 			return true;
 		}
 
@@ -157,13 +122,8 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 	@Override
 	public boolean innerUnbindPort(IPort port) {
 
-		if (port instanceof IPullReasoner && iPullReasonerRoles.contains(port)) {
-			iPullReasonerRoles.remove(port);
-			return true;
-		}
-
-		if (port instanceof IMyPushSensorObserver && iMyPushSensorObserverRoles.contains(port)) {
-			iMyPushSensorObserverRoles.remove((IMyPushSensorObserver) port);
+		if (port instanceof IReasoner && iReasonerRoles.contains(port)) {
+			iReasonerRoles.remove(port);
 			return true;
 		}
 
@@ -174,10 +134,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("classify", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			classifyImpl(intervalStart, intervalEnd);
 		else
-			iPullReasonerRoles.get(0).classify(intervalStart, intervalEnd);
+			iReasonerRoles.get(0).classify(intervalStart, intervalEnd);
 
 	}
 
@@ -185,10 +145,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("classifySnapshot", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			classifySnapshotImpl(timestamp);
 		else
-			iPullReasonerRoles.get(0).classifySnapshot(timestamp);
+			iReasonerRoles.get(0).classifySnapshot(timestamp);
 
 	}
 
@@ -196,10 +156,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			return getIdImpl();
 		else
-			return iPullReasonerRoles.get(0).getId();
+			return iReasonerRoles.get(0).getId();
 
 	}
 
@@ -207,10 +167,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			return initializeImpl();
 		else
-			return iPullReasonerRoles.get(0).initialize();
+			return iReasonerRoles.get(0).initialize();
 
 	}
 
@@ -218,10 +178,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			return retrieveValuesImpl();
 		else
-			return iPullReasonerRoles.get(0).retrieveValues();
+			return iReasonerRoles.get(0).retrieveValues();
 
 	}
 
@@ -229,10 +189,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			startImpl();
 		else
-			iPullReasonerRoles.get(0).start();
+			iReasonerRoles.get(0).start();
 
 	}
 
@@ -240,10 +200,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			stopImpl();
 		else
-			iPullReasonerRoles.get(0).stop();
+			iReasonerRoles.get(0).stop();
 
 	}
 
@@ -251,10 +211,10 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
 
-		if (countInCallStack > 1 || iPullReasonerRoles.size() == 0)
+		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
 			return isRunningImpl();
 		else
-			return iPullReasonerRoles.get(0).isRunning();
+			return iReasonerRoles.get(0).isRunning();
 
 	}
 
@@ -266,17 +226,5 @@ public abstract class AbstractPullReasoner extends AbstractComponent
 	public abstract void startImpl();
 	public abstract void stopImpl();
 	public abstract Boolean isRunningImpl();
-
-	public abstract void notifyEventChangedImpl(Object sender, Event argument);
-
-	@Override
-	public final void notifyEventChanged(Object sender, Event argument) {
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("notifyEventChanged", this);
-
-		if (countInCallStack > 1 || iMyPushSensorObserverRoles.size() == 0)
-			notifyEventChangedImpl(sender, argument);
-		else
-			iMyPushSensorObserverRoles.get(0).notifyEventChanged(sender, argument);
-	}
 
 }

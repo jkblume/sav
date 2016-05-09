@@ -32,31 +32,26 @@ import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
 @Component(name = "LogicalPullSensor", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "LogicalPullSensor", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractLogicalPullSensor extends AbstractComponent
-		implements
-			INotifyPropertyChanged,
-			ISensor,
-			IMyPushSensorObserver {
+public abstract class AbstractLogicalPullSensor extends AbstractComponent implements INotifyPropertyChanged, ISensor {
 
 	@RequirementA
-	private List<IMyPushSensorSubject> iMyPushSensorSubjects = new ArrayList<IMyPushSensorSubject>();
+	private IProcess iProcess;
 
-	public List<IMyPushSensorSubject> getIMyPushSensors() {
-		return this.iMyPushSensorSubjects;
+	public IProcess getIProcess() {
+		return this.iProcess;
+
 	}
 
-	public void addIMyPushSensorSubject(IMyPushSensorSubject item) {
-		this.iMyPushSensorSubjects.add(item);
-		handleIMyPushSensorAdded(item);
+	public void setIProcess(IProcess iProcess) {
+		this.iProcess = iProcess;
+		if (iProcess != null)
+			handleIProcessConnected(iProcess);
+		else
+			handleIProcessDisconnected(iProcess);
 	}
 
-	public abstract void handleIMyPushSensorAdded(IMyPushSensorSubject item);
-	public abstract void handleIMyPushSensorRemoved(IMyPushSensorSubject item);
-
-	public void removeIMyPushSensorSubject(IMyPushSensorSubject item) {
-		this.iMyPushSensorSubjects.remove(item);
-		handleIMyPushSensorRemoved(item);
-	}
+	public abstract void handleIProcessConnected(IProcess item);
+	public abstract void handleIProcessDisconnected(IProcess item);
 
 	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
@@ -78,28 +73,7 @@ public abstract class AbstractLogicalPullSensor extends AbstractComponent
 	public abstract void handleISensorAdded(ISensor item);
 	public abstract void handleISensorRemoved(ISensor item);
 
-	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
-
 	private final List<ISensor> iSensorRoles = new ArrayList<ISensor>();
-
-	private final List<IMyPushSensorObserver> iMyPushSensorObserverRoles = new ArrayList<IMyPushSensorObserver>();
 
 	public AbstractLogicalPullSensor(String name) {
 		super(name);
@@ -132,10 +106,6 @@ public abstract class AbstractLogicalPullSensor extends AbstractComponent
 		if (type == ISensor.class)
 			return iSensorRoles.size() > 0 ? (T) iSensorRoles.get(0) : (T) this;
 
-		if (type == IMyPushSensorObserver.class) {
-			return iMyPushSensorObserverRoles.size() > 0 ? (T) iMyPushSensorObserverRoles.get(0) : (T) this;
-		}
-
 		return null;
 	}
 
@@ -147,11 +117,6 @@ public abstract class AbstractLogicalPullSensor extends AbstractComponent
 			return true;
 		}
 
-		if (port instanceof IMyPushSensorObserver) {
-			iMyPushSensorObserverRoles.add(0, (IMyPushSensorObserver) port);
-			return true;
-		}
-
 		return false;
 	}
 
@@ -160,11 +125,6 @@ public abstract class AbstractLogicalPullSensor extends AbstractComponent
 
 		if (port instanceof ISensor && iSensorRoles.contains(port)) {
 			iSensorRoles.remove(port);
-			return true;
-		}
-
-		if (port instanceof IMyPushSensorObserver && iMyPushSensorObserverRoles.contains(port)) {
-			iMyPushSensorObserverRoles.remove((IMyPushSensorObserver) port);
 			return true;
 		}
 
@@ -243,17 +203,5 @@ public abstract class AbstractLogicalPullSensor extends AbstractComponent
 	public abstract void startImpl();
 	public abstract void stopImpl();
 	public abstract Boolean isRunningImpl();
-
-	public abstract void notifyEventChangedImpl(Object sender, Event argument);
-
-	@Override
-	public final void notifyEventChanged(Object sender, Event argument) {
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("notifyEventChanged", this);
-
-		if (countInCallStack > 1 || iMyPushSensorObserverRoles.size() == 0)
-			notifyEventChangedImpl(sender, argument);
-		else
-			iMyPushSensorObserverRoles.get(0).notifyEventChanged(sender, argument);
-	}
 
 }

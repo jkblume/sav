@@ -11,7 +11,6 @@ public class JavaFXVisualisationStrategy extends AbstractJavaFXVisualisationStra
 
 
 	private Thread uiThread;
-	private double firstTimestamp = 0.0;
 	
 	public JavaFXVisualisationStrategy(String name) {
 		super(name);
@@ -19,11 +18,11 @@ public class JavaFXVisualisationStrategy extends AbstractJavaFXVisualisationStra
 
 	public void setup() {
 		uiThread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Application.launch(UI.class, new String[] {});
-			}
+	
+				@Override
+				public void run() {
+					UI.initialize();
+				}
 		});
 		uiThread.start();
 	}
@@ -47,7 +46,7 @@ public class JavaFXVisualisationStrategy extends AbstractJavaFXVisualisationStra
 	@Override
 	public void addSensor(ISensor sensor) {
 		String sensorId = sensor.getSmlConfiguration().getId();
-		UI.addChart(sensorId);
+		UI.addChart(this.getName(), sensorId);
 	}
 
 	@Override

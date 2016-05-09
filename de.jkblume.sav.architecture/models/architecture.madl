@@ -32,20 +32,12 @@ meta architecture SavMetaArchitecture{
 		void stop();
 		Boolean isRunning();
 	}
-	
-	event port type IMyPushSensor fires Event extends ISensor{
-		void fireUnprocessedValues(IOPropertyList values);
-	}
-		
-	port type IPullReasoner extends ISensor {
+			
+	port type IReasoner extends ISensor {
 		void classify(Long intervalStart, Long intervalEnd);
 		void classifySnapshot(Long timestamp);
 	}
-	
-//	event port type IPushReasoner fires Event extends IMyPushSensor {
-//		
-//	}
-	
+		
 //	port type ILearningReasoner extends IReasoner {
 //		Object translateEvent(Event event);
 //		void train();
@@ -59,36 +51,24 @@ meta architecture SavMetaArchitecture{
 	}
 		
 	component types:
-	
-	component type TechnicalPushSensor {
-		provides IMyPushSensor;
-	}
-	
+		
 	component type TechnicalPullSensor {
 		provides ISensor;
 	}
 	
-	component type LogicalPushSensor {
-		provides IMyPushSensor;
-		requires IMyPushSensor[0 to *];
-		requires ISensor[0 to *];
-	}
 	
 	component type LogicalPullSensor {
 		provides ISensor;
-		requires IMyPushSensor[0 to *];
 		requires ISensor[0 to *];
 	}
 	
 	component type PullReasoner {
-		provides IPullReasoner;
-		requires IMyPushSensor[0 to *];
+		provides IReasoner;
 		requires ISensor[0 to *];
 	}
 	
 	component type Visualizer {
 		requires ISensor[0 to *];
-		requires IMyPushSensor[0 to *];
 		provides IVisualisationStrategy;
 	}
 		

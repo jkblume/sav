@@ -22,9 +22,7 @@ app SavArchitecture {
 
 	components:
 	component JLogicalPullSensor implements LogicalPullSensor{}
-	component JLogicalPushSensor implements LogicalPushSensor{}
 	component JTechnicalPullSensor implements TechnicalPullSensor{}
-	component JTechnicalPushSensor implements TechnicalPushSensor{}
 	
 	component JVisualizer implements Visualizer{}
 	

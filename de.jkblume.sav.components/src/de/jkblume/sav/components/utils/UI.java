@@ -21,28 +21,38 @@ import net.opengis.swe.v20.Quantity;
 public class UI extends Application {
 
 	private static Map<String, LineChart<?, ?>> charts = new HashMap<>();
-	private static Stage stage;
+	private static Map<String, Stage> stages = new HashMap<>();
+	private static Stage primaryStage;
 
 	private static VBox chartBox;
 
 	private static double firstTimestamp = 0;
 	
+	public static void initialize() {
+		if  (primaryStage == null) {
+			Application.launch(UI.class, new String[] {});
+		}
+	}
+	
 	@Override
 	public void start(Stage stage) throws Exception {
-		this.stage = stage;
-
-		chartBox = new VBox(8);
-		Scene scene = new Scene(chartBox, 800, 600);
-
-		stage.setScene(scene);
-		stage.show();
+		this.primaryStage = stage;
 	}
 
-	public static void addChart(String sensorId) {
+	public static void addChart(String vsName, String sensorId) {
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
+				Stage targetStage = stages.get(vsName);
+				if (targetStage == null) {
+					targetStage = new Stage();
+					chartBox = new VBox(8);
+					Scene scene = new Scene(chartBox, 800, 600);
+					targetStage.setScene(scene);
+					targetStage.show();
+				}
+				
 				NumberAxis xAxis = new NumberAxis();
 				NumberAxis yAxis = new NumberAxis();
 				xAxis.setLabel("Number of Month");

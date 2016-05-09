@@ -47,7 +47,9 @@ public class Starter {
 		ops.add(new CreateComponentInstanceOperation("v", JVisualizer.class));
 		ops.add(new CreatePortInstanceOperation("vs", JavaFXVisualisationStrategy.class));
 		ops.add(new BindPortOperation("v", "vs", "IVisualisationStrategy"));
-
+		ops.add(new SetupComponentOperation("v"));
+		ops.add(new SetupPortOperation("vs"));
+		
 		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalPullSensor.class));
 		ops.add(new CreatePortInstanceOperation("ssp1", SimulatingTechnicalSensor.class));
 		ops.add(new BindPortOperation("jtps1", "ssp1", "ISensor"));
@@ -62,8 +64,7 @@ public class Starter {
 		ops.add(new SetupComponentOperation("jtps2"));
 		ops.add(new SetupPortOperation("ssp2"));
 		
-		ops.add(new SetupComponentOperation("v"));
-		ops.add(new SetupPortOperation("vs"));
+
 		
 		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
 
@@ -80,6 +81,13 @@ public class Starter {
 		simulatingSensor.start();
 		
 		Thread.sleep(10000);
+		
+		ops.add(new CreateComponentInstanceOperation("v2", JVisualizer.class));
+		ops.add(new CreatePortInstanceOperation("vs2", JavaFXVisualisationStrategy.class));
+		ops.add(new BindPortOperation("v2", "vs2", "IVisualisationStrategy"));
+		ops.add(new SetupComponentOperation("v2"));
+		ops.add(new SetupPortOperation("vs2"));
+		
 		
 		ops = new ArrayList<ReconfigurtionOperation>();
 		ops.add(new ConnectOperation("jtps2", "v", "ISensor"));

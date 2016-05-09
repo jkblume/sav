@@ -1,34 +1,18 @@
 
 package de.jkblume.sav.architecture.components;
 
-import de.jkblume.sav.architecture.gen.components.*;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.architecture.gen.porttypes.*;
+import de.jkblume.sav.architecture.gen.components.AbstractLogicalPullSensor;
+import de.jkblume.sav.architecture.gen.porttypes.IProcess;
+import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import de.jkblume.sav.architecture.utils.MySMLUtils;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.lang.Class;
+import net.opengis.OgcPropertyList;
 import net.opengis.sensorml.v20.Event;
-import net.opengis.swe.v20.Category;
+import net.opengis.sensorml.v20.IOPropertyList;
+import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.sensorml.v20.AbstractProcess;
-import net.opengis.OgcPropertyList;
-import net.opengis.sensorml.v20.AbstractPhysicalProcess;
-import net.opengis.swe.v20.AbstractSWEIdentifiable;
-import net.opengis.sensorml.v20.IOPropertyList;
-
-import java.util.*;
-import org.smags.componentmodel.annotations.ParameterA;
 
 public class JLogicalPullSensor extends AbstractLogicalPullSensor {
-	private Map<String, Event> lastEventOfPushSensors;
 	private Thread pollingThread;
 	private boolean running;
 	
@@ -87,14 +71,6 @@ public class JLogicalPullSensor extends AbstractLogicalPullSensor {
 	}
 
 	@Override
-	public void notifyEventChangedImpl(Object sender, Event argument) {
-		if (sender instanceof IMyPushSensorSubject) {
-			lastEventOfPushSensors.put(((IMyPushSensorSubject) sender).getId(), argument);
-		}
-		retrieveValues();
-	}
-
-	@Override
 	public void handleIProcessConnected(IProcess connectedItem) {
 		//TODO Handle
 	}
@@ -118,18 +94,6 @@ public class JLogicalPullSensor extends AbstractLogicalPullSensor {
 	}
 
 	@Override
-	public void handleIMyPushSensorAdded(IMyPushSensorSubject item) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void handleIMyPushSensorRemoved(IMyPushSensorSubject item) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public IOPropertyList retrieveValuesImpl() {
 		IOPropertyList values = new IOPropertyList();
 		
@@ -137,11 +101,6 @@ public class JLogicalPullSensor extends AbstractLogicalPullSensor {
 		for (ISensor pullSensor : getISensors()) {
 			OgcPropertyList<DataComponent> partialResult = pullSensor.getLastEvent().getPropertyList();
 			values.addAll(partialResult);
-		}
-		
-		// join with last values from push sensors
-		for (Event lastPushedEvent : lastEventOfPushSensors.values()) {
-			values.addAll(lastPushedEvent.getPropertyList());
 		}
 		
 		return values;
