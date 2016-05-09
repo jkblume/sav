@@ -52,17 +52,17 @@ meta architecture SavMetaArchitecture{
 		
 	component types:
 		
-	component type TechnicalPullSensor {
+	component type TechnicalSensor {
 		provides ISensor;
 	}
 	
 	
-	component type LogicalPullSensor {
+	component type LogicalSensor {
 		provides ISensor;
 		requires ISensor[0 to *];
 	}
 	
-	component type PullReasoner {
+	component type Reasoner {
 		provides IReasoner;
 		requires ISensor[0 to *];
 	}

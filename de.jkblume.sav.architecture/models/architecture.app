@@ -21,10 +21,12 @@ app SavArchitecture {
 	
 
 	components:
-	component JLogicalPullSensor implements LogicalPullSensor{}
-	component JTechnicalPullSensor implements TechnicalPullSensor{}
+	component JLogicalSensor implements LogicalSensor{}
+	component JTechnicalSensor implements TechnicalSensor{}
 	
 	component JVisualizer implements Visualizer{}
+	
+	component JReasoner implements Reasoner{}
 	
 	sensors:
 

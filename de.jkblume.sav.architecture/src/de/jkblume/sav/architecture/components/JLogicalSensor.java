@@ -1,7 +1,7 @@
 
 package de.jkblume.sav.architecture.components;
 
-import de.jkblume.sav.architecture.gen.components.AbstractLogicalPullSensor;
+import de.jkblume.sav.architecture.gen.components.AbstractLogicalSensor;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import de.jkblume.sav.architecture.utils.MySMLUtils;
@@ -12,14 +12,14 @@ import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
 
-public class JLogicalPullSensor extends AbstractLogicalPullSensor {
+public class JLogicalSensor extends AbstractLogicalSensor {
 	private Thread pollingThread;
 	private boolean running;
 	
 	private String id;
 	private int samplingRate;
 	
-	public JLogicalPullSensor(String name) {
+	public JLogicalSensor(String name) {
 		super(name);
 	}
 

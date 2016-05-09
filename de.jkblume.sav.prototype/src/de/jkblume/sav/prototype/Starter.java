@@ -19,7 +19,7 @@ import org.smags.runtime.reconfigurtion.operations.SetupPortOperation;
 import org.vast.sensorML.SMLUtils;
 import org.vast.xml.XMLReaderException;
 
-import de.jkblume.sav.architecture.components.JTechnicalPullSensor;
+import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
 import de.jkblume.sav.components.ports.JavaFXVisualisationStrategy;
 import de.jkblume.sav.components.ports.SimulatingTechnicalSensor;
@@ -50,14 +50,14 @@ public class Starter {
 		ops.add(new SetupComponentOperation("v"));
 		ops.add(new SetupPortOperation("vs"));
 		
-		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalPullSensor.class));
+		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalSensor.class));
 		ops.add(new CreatePortInstanceOperation("ssp1", SimulatingTechnicalSensor.class));
 		ops.add(new BindPortOperation("jtps1", "ssp1", "ISensor"));
 		ops.add(new SetComponentParameterOperation("jtps1", "smlConfiguration", sspDesc1));
 		ops.add(new SetupComponentOperation("jtps1"));
 		ops.add(new SetupPortOperation("ssp1"));
 		
-		ops.add(new CreateComponentInstanceOperation("jtps2", JTechnicalPullSensor.class));
+		ops.add(new CreateComponentInstanceOperation("jtps2", JTechnicalSensor.class));
 		ops.add(new CreatePortInstanceOperation("ssp2", SimulatingTechnicalSensor.class));
 		ops.add(new BindPortOperation("jtps2", "ssp2", "ISensor"));
 		ops.add(new SetComponentParameterOperation("jtps2", "smlConfiguration", sspDesc2));
@@ -68,7 +68,7 @@ public class Starter {
 		
 		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
 
-		JTechnicalPullSensor simulatingSensor = (JTechnicalPullSensor) re.getRuntimeModel().getComponentByName("jtps1");
+		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
 		simulatingSensor.start();
 		
 		Thread.sleep(1000);
@@ -77,7 +77,7 @@ public class Starter {
 		ops.add(new ConnectOperation("jtps1", "v", "ISensor"));
 		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
 
-		simulatingSensor = (JTechnicalPullSensor) re.getRuntimeModel().getComponentByName("jtps2");
+		simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps2");
 		simulatingSensor.start();
 		
 		Thread.sleep(10000);
