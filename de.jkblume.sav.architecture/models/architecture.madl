@@ -58,8 +58,8 @@ meta architecture SavMetaArchitecture{
 		requires ISensor[0 to *];
 	}
 	
-	component type LearningReasoner {
-		provides ILearningReasoner;
+	component type Reasoner {
+		provides IReasoner;
 		requires ISensor[0 to *];
 	}
 	

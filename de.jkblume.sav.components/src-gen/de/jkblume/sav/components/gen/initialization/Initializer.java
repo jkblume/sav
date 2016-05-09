@@ -19,10 +19,13 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.lang.Class;
+import net.opengis.sensorml.v20.Event;
 import net.opengis.swe.v20.Category;
-import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AbstractPhysicalProcess;
+import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import net.opengis.sensorml.v20.IOPropertyList;
 import org.smags.runtime.RuntimeEnvironment;
 import org.smags.runtime.reconfigurtion.operations.*;
 import org.smags.runtime.reconfigurtion.ReconfigurationScript;
@@ -32,26 +35,10 @@ import java.util.List;
 
 public class Initializer {
 
-	public static final String V = "v";
-
 	public static void initialize(RuntimeEnvironment re) {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		ops.add(new CreatePortInstanceOperation("vs", JavaFXVisualisationStrategy.class));
-
-		ops.add(new CreateComponentInstanceOperation("v", JVisualizer.class));
-
-		ops.add(new BindPortOperation("v", "vs", "IVisualisationStrategy"));
-
-		ops.add(new SetupPortOperation("vs"));
-
-		ops.add(new SetupComponentOperation("v"));
-
 		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
-	}
-
-	public static JVisualizer getV() {
-		return RuntimeEnvironment.instance().getRuntimeModel().getComponentByName(Initializer.V).as(JVisualizer.class);
 	}
 
 }

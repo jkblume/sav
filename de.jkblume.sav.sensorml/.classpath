@@ -4,16 +4,16 @@
 	<classpathentry kind="src" path="/SmagRE"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src-gen"/>
-	<classpathentry exported="true" kind="lib" path="/home/jkb/development/projects/gb/sensorml/osh-core/lib-swe-common/swe-common-core/target/swe-common-core-1.1-SNAPSHOT.jar">
+	<classpathentry exported="true" kind="lib" path="/home/jkb/Development/projects/gb/sensorml/osh-core/lib-swe-common/swe-common-core/target/swe-common-core-1.1-SNAPSHOT.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/home/jkb/development/projects/gb/sensorml/osh-core/lib-swe-common/swe-common-core/target/swe-common-core-1.1-SNAPSHOT-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/home/jkb/Development/projects/gb/sensorml/osh-core/lib-swe-common/swe-common-core/target/swe-common-core-1.1-SNAPSHOT-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="/home/jkb/development/projects/gb/sensorml/osh-core/lib-sensorml/sensorml-core/target/sensorml-core-1.1-SNAPSHOT.jar">
+	<classpathentry exported="true" kind="lib" path="/home/jkb/Development/projects/gb/sensorml/osh-core/lib-sensorml/sensorml-core/target/sensorml-core-1.1-SNAPSHOT.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/home/jkb/development/projects/gb/sensorml/osh-core/lib-sensorml/sensorml-core/target/sensorml-core-1.1-SNAPSHOT-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/home/jkb/Development/projects/gb/sensorml/osh-core/lib-sensorml/sensorml-core/target/sensorml-core-1.1-SNAPSHOT-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="/home/jkb/development/projects/gb/sensorml/osh-core/lib-swe-common/swe-common-om/target/swe-common-om-1.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/jkb/Development/projects/gb/sensorml/osh-core/lib-swe-common/swe-common-om/target/swe-common-om-1.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

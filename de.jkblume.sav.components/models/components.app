@@ -9,11 +9,14 @@ import "../../de.jkblume.sav.sensorml/models/sensorml.madl";
 namespace "de.jkblume.sav.components";
 
 app SavComponents {
-		platform: Java7 with mappings {
+	platform: Java7 with mappings {
+		Event maps to "Event" ["net.opengis.sensorml.v20"]
 		Category maps to "Category" ["net.opengis.swe.v20"]
-		AbstractSWEIdentifiable maps to "AbstractSWEIdentifiable" ["net.opengis.swe.v20"]
+		DataComponent maps to "DataComponent" ["net.opengis.swe.v20"]
 		AbstractProcess maps to "AbstractProcess" ["net.opengis.sensorml.v20"]
 		AbstractPhysicalProcess maps to "AbstractPhysicalProcess" ["net.opengis.sensorml.v20"]
+		AbstractSWEIdentifiable maps to "AbstractSWEIdentifiable" ["net.opengis.swe.v20"]
+		IOPropertyList maps to "IOPropertyList" ["net.opengis.sensorml.v20"]
 	}
 
 	ports:
@@ -29,11 +32,6 @@ app SavComponents {
 	
 	sensors:
 
-	initialization{
-		port vs = new JavaFXVisualisationStrategy;
-		component v = new JVisualizer {
-			bind port vs to offer IVisualisationStrategy;	
-		};
-		
+	initialization{		
 	}
 }

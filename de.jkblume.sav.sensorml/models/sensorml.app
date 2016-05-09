@@ -15,6 +15,7 @@ app SavSensorML {
 		PhysicalComponent maps to "PhysicalComponent" ["net.opengis.sensorml.v20"]
 		Event maps to "Event" ["net.opengis.sensorml.v20"]
 		IOPropertyList maps to "IOPropertyList" ["net.opengis.sensorml.v20"]
+	
 	}
 	
 

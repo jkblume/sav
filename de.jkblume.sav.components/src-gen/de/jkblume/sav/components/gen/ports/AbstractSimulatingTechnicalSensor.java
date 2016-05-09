@@ -27,13 +27,32 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractDifferenceProcessor implements IPort<IProcess>, INotifyPropertyChanged, IProcess {
+public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor>, INotifyPropertyChanged, ISensor {
 
 	private String name;
 	private boolean isActive = true;
-	protected IProcess base;
+	protected ISensor base;
 
-	public AbstractDifferenceProcessor(String name) {
+	@RequirementA
+	private IProcess iProcess;
+
+	public IProcess getIProcess() {
+		return this.iProcess;
+
+	}
+
+	public void setIProcess(IProcess iProcess) {
+		this.iProcess = iProcess;
+		if (iProcess != null)
+			handleIProcessConnected(iProcess);
+		else
+			handleIProcessDisconnected(iProcess);
+	}
+
+	public abstract void handleIProcessConnected(IProcess item);
+	public abstract void handleIProcessDisconnected(IProcess item);
+
+	public AbstractSimulatingTechnicalSensor(String name) {
 		this.name = name;
 	}
 
@@ -58,12 +77,12 @@ public abstract class AbstractDifferenceProcessor implements IPort<IProcess>, IN
 	}
 
 	@Override
-	public IProcess getBase() {
+	public ISensor getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(IProcess base) {
+	public void setBase(ISensor base) {
 		this.base = base;
 	}
 
@@ -71,12 +90,20 @@ public abstract class AbstractDifferenceProcessor implements IPort<IProcess>, IN
 		return base.as(c);
 	}
 
-	public AbstractProcess getSmlConfiguration() {
+	public AbstractPhysicalProcess getSmlConfiguration() {
 		return base.getSmlConfiguration();
 	}
 
-	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
 		base.setSmlConfiguration(smlConfiguration);
+	}
+
+	public Event getCurrentEvent() {
+		return base.getCurrentEvent();
+	}
+
+	public void setCurrentEvent(Event currentEvent) {
+		base.setCurrentEvent(currentEvent);
 	}
 
 }
