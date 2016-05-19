@@ -33,6 +33,8 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	
 	private boolean running;
 	
+	private IOPropertyList lastValue;
+	
 	public SerialTechnicalSensor(String name) {
 		super(name);
 	}
@@ -129,7 +131,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 							values = getIProcess().execute(values);
 						}
 						
-						setLastEvent(MySMLUtils.createEvent(values));
+						lastValue = values;
 					}
 				}
 			});
@@ -161,8 +163,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 
 	@Override
 	public IOPropertyList retrieveValues() {
-		// TODO Auto-generated method stub
-		return null;
+		return lastValue;
 	}
 
 	@Override

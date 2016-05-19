@@ -28,7 +28,6 @@ app SavComponents {
 	implementation port SerialTechnicalSensor implements ISensor{}
 	implementation port SimulatingTechnicalSensor implements ISensor{}
 	
-	
 	components:
 	
 	sensors:

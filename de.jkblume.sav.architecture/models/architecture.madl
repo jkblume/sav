@@ -24,21 +24,22 @@ meta architecture SavMetaArchitecture{
 	port type ISensor {
 		parameter smlConfiguration : AbstractPhysicalProcess;
 		parameter lastEvent : Event;
-		requires IProcess;
-		Boolean initialize();
+		
 		void start();
 		void stop();
+		Boolean initialize();
 		Boolean isRunning();
 		String getId();
 		IOPropertyList retrieveValues();
+		
+		requires IProcess;
 	}
 			
-	port type IReasoner extends ISensor {
+	port type IReasoner extends IProcess {
 		void buildClassifier();
-		Category classify(Event event);
 	}
 	
-	port type ILearningReasoner extends IReasoner {
+	port type ISupervisedLearning extends IReasoner {
 		void startGesture(Category category);
 		void stopGesture(Category category);
 		void teachCurrentState(Category category);
