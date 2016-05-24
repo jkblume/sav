@@ -35,25 +35,6 @@ import org.smags.componentmodel.annotations.Component;
 public abstract class AbstractReasoner extends AbstractComponent implements INotifyPropertyChanged, IReasoner {
 
 	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
-
-	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
 
 	public List<ISensor> getISensors() {
@@ -79,24 +60,14 @@ public abstract class AbstractReasoner extends AbstractComponent implements INot
 		super(name);
 	}
 
-	public AbstractPhysicalProcess getSmlConfiguration() {
-		return (AbstractPhysicalProcess) getSharedMemory().getValue(AbstractReasoner.class, "smlConfiguration");
+	public AbstractProcess getSmlConfiguration() {
+		return (AbstractProcess) getSharedMemory().getValue(AbstractReasoner.class, "smlConfiguration");
 	}
 
-	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-		AbstractPhysicalProcess oldValue = getSmlConfiguration();
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		AbstractProcess oldValue = getSmlConfiguration();
 		getSharedMemory().setValue(AbstractReasoner.class, "smlConfiguration", smlConfiguration);
 		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
-	}
-
-	public Event getLastEvent() {
-		return (Event) getSharedMemory().getValue(AbstractReasoner.class, "lastEvent");
-	}
-
-	public void setLastEvent(Event lastEvent) {
-		Event oldValue = getLastEvent();
-		getSharedMemory().setValue(AbstractReasoner.class, "lastEvent", lastEvent);
-		notifyPropertyChanged(this, "lastEvent", oldValue, lastEvent);
 	}
 
 	@Override
@@ -130,101 +101,29 @@ public abstract class AbstractReasoner extends AbstractComponent implements INot
 		return false;
 	}
 
-	public void classify(Long intervalStart, Long intervalEnd) {
+	public void buildClassifier() {
 
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("classify", this);
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("buildClassifier", this);
 
 		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			classifyImpl(intervalStart, intervalEnd);
+			buildClassifierImpl();
 		else
-			iReasonerRoles.get(0).classify(intervalStart, intervalEnd);
+			iReasonerRoles.get(0).buildClassifier();
 
 	}
 
-	public void classifySnapshot(Long timestamp) {
+	public IOPropertyList execute(IOPropertyList value) {
 
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("classifySnapshot", this);
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
 
 		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			classifySnapshotImpl(timestamp);
+			return executeImpl(value);
 		else
-			iReasonerRoles.get(0).classifySnapshot(timestamp);
+			return iReasonerRoles.get(0).execute(value);
 
 	}
 
-	public String getId() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
-
-		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			return getIdImpl();
-		else
-			return iReasonerRoles.get(0).getId();
-
-	}
-
-	public Boolean initialize() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
-
-		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			return initializeImpl();
-		else
-			return iReasonerRoles.get(0).initialize();
-
-	}
-
-	public IOPropertyList retrieveValues() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
-
-		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			return retrieveValuesImpl();
-		else
-			return iReasonerRoles.get(0).retrieveValues();
-
-	}
-
-	public void start() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
-
-		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			startImpl();
-		else
-			iReasonerRoles.get(0).start();
-
-	}
-
-	public void stop() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
-
-		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			stopImpl();
-		else
-			iReasonerRoles.get(0).stop();
-
-	}
-
-	public Boolean isRunning() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
-
-		if (countInCallStack > 1 || iReasonerRoles.size() == 0)
-			return isRunningImpl();
-		else
-			return iReasonerRoles.get(0).isRunning();
-
-	}
-
-	public abstract void classifyImpl(Long intervalStart, Long intervalEnd);
-	public abstract void classifySnapshotImpl(Long timestamp);
-	public abstract String getIdImpl();
-	public abstract Boolean initializeImpl();
-	public abstract IOPropertyList retrieveValuesImpl();
-	public abstract void startImpl();
-	public abstract void stopImpl();
-	public abstract Boolean isRunningImpl();
+	public abstract void buildClassifierImpl();
+	public abstract IOPropertyList executeImpl(IOPropertyList value);
 
 }

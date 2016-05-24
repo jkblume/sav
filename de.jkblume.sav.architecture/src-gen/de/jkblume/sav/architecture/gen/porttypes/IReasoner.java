@@ -29,13 +29,12 @@ import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
 @PortTypeA(name = "IReasoner", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface IReasoner extends ISensor {
+public interface IReasoner extends IProcess {
 
 	public static Class remotePortClass = IReasonerRemote.class;
 	public static Class proxyComponentClass = IReasonerRemoteProxy.class;
 
-	public void classify(Long intervalStart, Long intervalEnd);
-	public void classifySnapshot(Long timestamp);
+	public void buildClassifier();
 
 	public <T> T as(Class<T> c);
 
@@ -47,49 +46,20 @@ public interface IReasoner extends ISensor {
 			super(name, IReasoner.class);
 		}
 
-		public AbstractPhysicalProcess getSmlConfiguration() {
+		public AbstractProcess getSmlConfiguration() {
 			return base.getSmlConfiguration();
 		}
 
-		public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public Event getLastEvent() {
-			return base.getLastEvent();
+		public void buildClassifier() {
+			base.buildClassifier();
 		}
 
-		public void setLastEvent(Event lastEvent) {
-			base.setLastEvent(lastEvent);
-		}
-
-		public void classify(Long intervalStart, Long intervalEnd) {
-			base.classify(intervalStart, intervalEnd);
-		}
-		public void classifySnapshot(Long timestamp) {
-			base.classifySnapshot(timestamp);
-		}
-
-		public String getId() {
-			String result = base.getId();
-			return result;
-		}
-		public Boolean initialize() {
-			Boolean result = base.initialize();
-			return result;
-		}
-		public IOPropertyList retrieveValues() {
-			IOPropertyList result = base.retrieveValues();
-			return result;
-		}
-		public void start() {
-			base.start();
-		}
-		public void stop() {
-			base.stop();
-		}
-		public Boolean isRunning() {
-			Boolean result = base.isRunning();
+		public IOPropertyList execute(IOPropertyList value) {
+			IOPropertyList result = base.execute(value);
 			return result;
 		}
 
@@ -121,141 +91,41 @@ public interface IReasoner extends ISensor {
 			return null;
 		}
 
-		public AbstractPhysicalProcess getSmlConfiguration() {
+		public AbstractProcess getSmlConfiguration() {
 			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
 			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
 		}
 
-		public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
 			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
 			in.setSmlConfiguration(smlConfiguration);
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public Event getLastEvent() {
-			GetLastEventRemoteMessage in = new GetLastEventRemoteMessage();
-			return client.send(in, GetLastEventRemoteMessage.class).getResponseResult();
+		public void buildClassifier() {
+			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
+
+			client.send(in, BuildClassifierRemoteMessage.class);
 		}
 
-		public void setLastEvent(Event lastEvent) {
-			SetLastEventRemoteMessage in = new SetLastEventRemoteMessage();
-			in.setLastEvent(lastEvent);
-			client.send(in, SetLastEventRemoteMessage.class);
-		}
+		public IOPropertyList execute(IOPropertyList value) {
+			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
+			in.setValue(value);
 
-		public void classify(Long intervalStart, Long intervalEnd) {
-			ClassifyRemoteMessage in = new ClassifyRemoteMessage();
-			in.setIntervalStart(intervalStart);
-			in.setIntervalEnd(intervalEnd);
-
-			client.send(in, ClassifyRemoteMessage.class);
-		}
-
-		public void classifySnapshot(Long timestamp) {
-			ClassifySnapshotRemoteMessage in = new ClassifySnapshotRemoteMessage();
-			in.setTimestamp(timestamp);
-
-			client.send(in, ClassifySnapshotRemoteMessage.class);
-		}
-
-		public String getId() {
-			GetIdRemoteMessage in = new GetIdRemoteMessage();
-
-			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
-		}
-
-		public Boolean initialize() {
-			InitializeRemoteMessage in = new InitializeRemoteMessage();
-
-			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
-		}
-
-		public IOPropertyList retrieveValues() {
-			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
-
-			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
-					.getResponseResult();
-		}
-
-		public void start() {
-			StartRemoteMessage in = new StartRemoteMessage();
-
-			client.send(in, StartRemoteMessage.class);
-		}
-
-		public void stop() {
-			StopRemoteMessage in = new StopRemoteMessage();
-
-			client.send(in, StopRemoteMessage.class);
-		}
-
-		public Boolean isRunning() {
-			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
-
-			return ((IsRunningRemoteMessage) client.send(in, IsRunningRemoteMessage.class)).getResponseResult();
+			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
 		}
 
 	}
 
-	public class ClassifyRemoteMessage extends RemoteMessageBase<Object> {
+	public class BuildClassifierRemoteMessage extends RemoteMessageBase<Object> {
 
-		private Long intervalStart;
-
-		private Long intervalEnd;
-
-		public ClassifyRemoteMessage() {
-			super("classify", Long.class.getName(), Long.class.getName());
-		}
-
-		public void setIntervalStart(Long intervalStart) {
-			this.intervalStart = intervalStart;
-		}
-
-		public Long getIntervalStart() {
-			return intervalStart;
-		}
-
-		public void setIntervalEnd(Long intervalEnd) {
-			this.intervalEnd = intervalEnd;
-		}
-
-		public Long getIntervalEnd() {
-			return intervalEnd;
+		public BuildClassifierRemoteMessage() {
+			super("buildClassifier");
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
-
-			result.add(getIntervalStart());
-
-			result.add(getIntervalEnd());
-
-			return result;
-		}
-	}
-
-	public class ClassifySnapshotRemoteMessage extends RemoteMessageBase<Object> {
-
-		private Long timestamp;
-
-		public ClassifySnapshotRemoteMessage() {
-			super("classifySnapshot", Long.class.getName());
-		}
-
-		public void setTimestamp(Long timestamp) {
-			this.timestamp = timestamp;
-		}
-
-		public Long getTimestamp() {
-			return timestamp;
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			result.add(getTimestamp());
 
 			return result;
 		}

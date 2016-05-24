@@ -79,16 +79,6 @@ public class JReasoner extends AbstractReasoner {
 	}
 
 	@Override
-	public void handleIProcessConnected(IProcess connectedItem) {
-		//TODO Handle
-	}
-
-	@Override
-	public void handleIProcessDisconnected(IProcess disconnectedItem) {
-		//TODO Handle
-	}
-
-	@Override
 	public void handleISensorAdded(ISensor connectedItem) {
 		//TODO Handle
 	}
@@ -109,6 +99,18 @@ public class JReasoner extends AbstractReasoner {
 			//TODO:Implement
 		}
 
+	}
+
+	@Override
+	public void buildClassifierImpl() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IOPropertyList executeImpl(IOPropertyList value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

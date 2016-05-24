@@ -14,7 +14,7 @@ meta architecture SavMetaArchitecture{
 		
 	port type IProcess {
 		parameter smlConfiguration : AbstractProcess;
-		IOPropertyList execute(IOPropertyList value);
+		Object execute(Object value);
 	}
 	
 	port type IOrchestratorProcess extends IProcess {
@@ -65,7 +65,7 @@ meta architecture SavMetaArchitecture{
 	}
 	
 	component type Reasoner {
-		provides IReasoner;
+		provides ISensor;
 		requires ISensor[0 to *];
 	}
 	

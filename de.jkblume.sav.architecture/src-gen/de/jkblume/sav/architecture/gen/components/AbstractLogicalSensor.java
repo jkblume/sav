@@ -130,39 +130,6 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 		return false;
 	}
 
-	public String getId() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			return getIdImpl();
-		else
-			return iSensorRoles.get(0).getId();
-
-	}
-
-	public Boolean initialize() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			return initializeImpl();
-		else
-			return iSensorRoles.get(0).initialize();
-
-	}
-
-	public IOPropertyList retrieveValues() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			return retrieveValuesImpl();
-		else
-			return iSensorRoles.get(0).retrieveValues();
-
-	}
-
 	public void start() {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
@@ -185,6 +152,17 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 	}
 
+	public Boolean initialize() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
+
+		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+			return initializeImpl();
+		else
+			return iSensorRoles.get(0).initialize();
+
+	}
+
 	public Boolean isRunning() {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
@@ -196,11 +174,33 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 	}
 
-	public abstract String getIdImpl();
-	public abstract Boolean initializeImpl();
-	public abstract IOPropertyList retrieveValuesImpl();
+	public String getId() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
+
+		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+			return getIdImpl();
+		else
+			return iSensorRoles.get(0).getId();
+
+	}
+
+	public IOPropertyList retrieveValues() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
+
+		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+			return retrieveValuesImpl();
+		else
+			return iSensorRoles.get(0).retrieveValues();
+
+	}
+
 	public abstract void startImpl();
 	public abstract void stopImpl();
+	public abstract Boolean initializeImpl();
 	public abstract Boolean isRunningImpl();
+	public abstract String getIdImpl();
+	public abstract IOPropertyList retrieveValuesImpl();
 
 }

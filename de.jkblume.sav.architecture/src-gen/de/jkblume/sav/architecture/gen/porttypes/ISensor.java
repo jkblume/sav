@@ -34,12 +34,12 @@ public interface ISensor {
 	public static Class remotePortClass = ISensorRemote.class;
 	public static Class proxyComponentClass = ISensorRemoteProxy.class;
 
-	public String getId();
-	public Boolean initialize();
-	public IOPropertyList retrieveValues();
 	public void start();
 	public void stop();
+	public Boolean initialize();
 	public Boolean isRunning();
+	public String getId();
+	public IOPropertyList retrieveValues();
 
 	public AbstractPhysicalProcess getSmlConfiguration();
 	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration);
@@ -73,26 +73,26 @@ public interface ISensor {
 			base.setLastEvent(lastEvent);
 		}
 
-		public String getId() {
-			String result = base.getId();
-			return result;
-		}
-		public Boolean initialize() {
-			Boolean result = base.initialize();
-			return result;
-		}
-		public IOPropertyList retrieveValues() {
-			IOPropertyList result = base.retrieveValues();
-			return result;
-		}
 		public void start() {
 			base.start();
 		}
 		public void stop() {
 			base.stop();
 		}
+		public Boolean initialize() {
+			Boolean result = base.initialize();
+			return result;
+		}
 		public Boolean isRunning() {
 			Boolean result = base.isRunning();
+			return result;
+		}
+		public String getId() {
+			String result = base.getId();
+			return result;
+		}
+		public IOPropertyList retrieveValues() {
+			IOPropertyList result = base.retrieveValues();
 			return result;
 		}
 
@@ -146,25 +146,6 @@ public interface ISensor {
 			client.send(in, SetLastEventRemoteMessage.class);
 		}
 
-		public String getId() {
-			GetIdRemoteMessage in = new GetIdRemoteMessage();
-
-			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
-		}
-
-		public Boolean initialize() {
-			InitializeRemoteMessage in = new InitializeRemoteMessage();
-
-			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
-		}
-
-		public IOPropertyList retrieveValues() {
-			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
-
-			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
-					.getResponseResult();
-		}
-
 		public void start() {
 			StartRemoteMessage in = new StartRemoteMessage();
 
@@ -177,10 +158,29 @@ public interface ISensor {
 			client.send(in, StopRemoteMessage.class);
 		}
 
+		public Boolean initialize() {
+			InitializeRemoteMessage in = new InitializeRemoteMessage();
+
+			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
+		}
+
 		public Boolean isRunning() {
 			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
 
 			return ((IsRunningRemoteMessage) client.send(in, IsRunningRemoteMessage.class)).getResponseResult();
+		}
+
+		public String getId() {
+			GetIdRemoteMessage in = new GetIdRemoteMessage();
+
+			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
+		}
+
+		public IOPropertyList retrieveValues() {
+			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
+
+			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
+					.getResponseResult();
 		}
 
 	}
@@ -249,48 +249,6 @@ public interface ISensor {
 		}
 	}
 
-	public class GetIdRemoteMessage extends RemoteMessageBase<String> {
-
-		public GetIdRemoteMessage() {
-			super("getId");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class InitializeRemoteMessage extends RemoteMessageBase<Boolean> {
-
-		public InitializeRemoteMessage() {
-			super("initialize");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<IOPropertyList> {
-
-		public RetrieveValuesRemoteMessage() {
-			super("retrieveValues");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
 	public class StartRemoteMessage extends RemoteMessageBase<Object> {
 
 		public StartRemoteMessage() {
@@ -319,10 +277,52 @@ public interface ISensor {
 		}
 	}
 
+	public class InitializeRemoteMessage extends RemoteMessageBase<Boolean> {
+
+		public InitializeRemoteMessage() {
+			super("initialize");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
 	public class IsRunningRemoteMessage extends RemoteMessageBase<Boolean> {
 
 		public IsRunningRemoteMessage() {
 			super("isRunning");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class GetIdRemoteMessage extends RemoteMessageBase<String> {
+
+		public GetIdRemoteMessage() {
+			super("getId");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<IOPropertyList> {
+
+		public RetrieveValuesRemoteMessage() {
+			super("retrieveValues");
 		}
 
 		@Override
