@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.vast.data.TextImpl;
 import org.vast.sensorML.SMLUtils;
 
-import de.jkblume.sav.architecture.gen.porttypes.IOrchestratorProcess;
+import de.jkblume.sav.architecture.gen.porttypes.IAggregationProcess;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
-import de.jkblume.sav.components.ports.CSVQueryProcessor;
+import de.jkblume.sav.components.ports.CsvProcessor;
 import de.jkblume.sav.components.ports.JAggregateProcessOperator;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
@@ -30,7 +30,7 @@ public class JAggregateProcessOperatorTest {
 		
 		AggregateProcess aggregateProcess = (AggregateProcess) operator.getSmlConfiguration();
 		for (AbstractProcess description : aggregateProcess.getComponentList()) {
-			CSVQueryProcessor processor = createCsvProcess(description);
+			CsvProcessor processor = createCsvProcess(description);
 			processor.setup();
 			operator.addIProcess(processor);
 		}
@@ -43,7 +43,7 @@ public class JAggregateProcessOperatorTest {
 		IOPropertyList list = new IOPropertyList();
 		list.add(input);
 		
-		IOPropertyList output = operator.execute(list);
+		IOPropertyList output = (IOPropertyList) operator.execute(list);
 		assertEquals("The size of the output list is wrong", 2, output.size());
 		
 		DataComponent partialOutput = output.getComponent(0);
@@ -70,14 +70,14 @@ public class JAggregateProcessOperatorTest {
         AbstractProcess process = parseDescription(fileName);
         System.out.println(((AggregateProcess) process).getConnectionList().size());
         JAggregateProcessOperator operator = new JAggregateProcessOperator(fileName);
-        IOrchestratorProcess base = new TestOrchestrationBase();
+        IAggregationProcess base = new TestAggregatorBase();
         operator.setBase(base);
         operator.setSmlConfiguration(process);
         return operator;
 	}
 	
-	private CSVQueryProcessor createCsvProcess(AbstractProcess description) throws FileNotFoundException, IOException {
-		CSVQueryProcessor processor = new CSVQueryProcessor("name");
+	private CsvProcessor createCsvProcess(AbstractProcess description) throws FileNotFoundException, IOException {
+		CsvProcessor processor = new CsvProcessor("name");
         IProcess base = new TestCsvProcessorBase();
         processor.setBase(base);
         processor.setSmlConfiguration(description);
@@ -91,12 +91,12 @@ public class JAggregateProcessOperatorTest {
         return process;
 	}
 	
-	private class TestOrchestrationBase implements IOrchestratorProcess {
+	private class TestAggregatorBase implements IAggregationProcess {
 		
 		private AbstractProcess process;
 		
 		@Override
-		public IOPropertyList execute(IOPropertyList value) {
+		public Object execute(Object value) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -125,7 +125,7 @@ public class JAggregateProcessOperatorTest {
 		private AbstractProcess process;
 		
 		@Override
-		public IOPropertyList execute(IOPropertyList value) {
+		public Object execute(Object value) {
 			// TODO Auto-generated method stub
 			return null;
 		}

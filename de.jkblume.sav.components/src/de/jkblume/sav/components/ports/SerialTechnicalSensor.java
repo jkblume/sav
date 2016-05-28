@@ -17,6 +17,7 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
 import net.opengis.sensorml.v20.AbstractPhysicalProcess;
+import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.Event;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.Count;
@@ -128,7 +129,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 						values.add(input);
 						
 						if (getIProcess() != null) {
-							values = getIProcess().execute(values);
+							values = (IOPropertyList) getIProcess().execute(values);
 						}
 						
 						lastValue = values;
@@ -147,7 +148,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	private Boolean validateSmlConfiguration() {
 		boolean result = true;
 		
-		AbstractPhysicalProcess description = getSmlConfiguration();
+		AbstractPhysicalProcess description = (AbstractPhysicalProcess) getSmlConfiguration();
 		IOPropertyList parameterList = description.getParameterList();
 		
 		if (parameterList == null) {
@@ -184,16 +185,6 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	}
 
 	@Override
-	public AbstractPhysicalProcess getSmlConfiguration() {
-		return base.getSmlConfiguration();
-	}
-
-	@Override
-	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-		base.setSmlConfiguration(smlConfiguration);
-	}
-
-	@Override
 	public Event getLastEvent() {
 		return base.getLastEvent();
 	}
@@ -212,4 +203,16 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	@Override
 	public void handleIProcessDisconnected(IProcess item) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public Object execute(Object value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		// TODO Auto-generated method stub
+		
 	}}

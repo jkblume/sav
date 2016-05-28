@@ -20,8 +20,9 @@ app SavComponents {
 	}
 
 	ports:
-	implementation port JAggregateProcessOperator implements IOrchestratorProcess{}
-	implementation port CSVQueryProcessor implements IProcess{}
+	implementation port JAggregateProcessOperator implements IAggregationProcess{}
+	implementation port CsvProcessor implements IProcess{}
+	implementation port ReqexProcessor implements IProcess{}
 	implementation port DifferenceProcessor implements IProcess{}
 	implementation port SysoVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port JavaFXVisualisationStrategy implements IVisualisationStrategy{}

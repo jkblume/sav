@@ -37,7 +37,7 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 				
 				// process values
 				if (getIProcess() != null) {
-					values = getIProcess().execute(values);
+					values = (IOPropertyList) getIProcess().execute(values);
 				} 
 				
 				Event currentEvent = MySMLUtils.createEvent(values);
@@ -142,5 +142,11 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 	@Override
 	public Boolean initializeImpl() {
 		return validateSmlConfigurationImpl();
+	}
+
+	@Override
+	public Object executeImpl(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

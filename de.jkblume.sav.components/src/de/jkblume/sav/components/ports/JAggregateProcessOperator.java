@@ -84,10 +84,10 @@ public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator
 	private IOPropertyList result = new IOPropertyList();
 	
 	@Override
-	public IOPropertyList execute(IOPropertyList value) {
+	public Object execute(Object value) {
 		for (ProcessTree tree : trees) {
 			try {
-				executeForProcess(tree.root, value);
+				executeForProcess(tree.root, (IOPropertyList) value);
 			} catch (SMLException e) {
 				e.printStackTrace();
 			}
@@ -100,7 +100,7 @@ public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator
 			fillResultWithOutput(node, input);
 			return;
 		}
-		IOPropertyList output = node.process.execute(input);
+		IOPropertyList output = (IOPropertyList) node.process.execute(input);
 		for (ProcessTreeNode child : node.children) {
 			executeForProcess(child, output);
 		};

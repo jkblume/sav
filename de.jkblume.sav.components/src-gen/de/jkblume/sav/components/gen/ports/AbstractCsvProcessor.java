@@ -27,32 +27,13 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor>, INotifyPropertyChanged, ISensor {
+public abstract class AbstractCsvProcessor implements IPort<IProcess>, INotifyPropertyChanged, IProcess {
 
 	private String name;
 	private boolean isActive = true;
-	protected ISensor base;
+	protected IProcess base;
 
-	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
-
-	public AbstractSimulatingTechnicalSensor(String name) {
+	public AbstractCsvProcessor(String name) {
 		this.name = name;
 	}
 
@@ -77,25 +58,17 @@ public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor
 	}
 
 	@Override
-	public ISensor getBase() {
+	public IProcess getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(ISensor base) {
+	public void setBase(IProcess base) {
 		this.base = base;
 	}
 
 	public <T> T as(Class<T> c) {
 		return base.as(c);
-	}
-
-	public Event getLastEvent() {
-		return base.getLastEvent();
-	}
-
-	public void setLastEvent(Event lastEvent) {
-		base.setLastEvent(lastEvent);
 	}
 
 	public AbstractProcess getSmlConfiguration() {

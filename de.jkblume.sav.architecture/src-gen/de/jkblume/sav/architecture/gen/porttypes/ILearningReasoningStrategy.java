@@ -28,11 +28,11 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "ISupervisedLearning", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ISupervisedLearning extends IReasoner {
+@PortTypeA(name = "ILearningReasoningStrategy", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ILearningReasoningStrategy extends IReasoningStrategy {
 
-	public static Class remotePortClass = ISupervisedLearningRemote.class;
-	public static Class proxyComponentClass = ISupervisedLearningRemoteProxy.class;
+	public static Class remotePortClass = ILearningReasoningStrategyRemote.class;
+	public static Class proxyComponentClass = ILearningReasoningStrategyRemoteProxy.class;
 
 	public void startGesture(Category category);
 	public void stopGesture(Category category);
@@ -43,20 +43,28 @@ public interface ISupervisedLearning extends IReasoner {
 
 	/*--------- REMOTE ---------*/
 
-	public class ISupervisedLearningRemote extends AbstractRemotePort<ISupervisedLearning>
+	public class ILearningReasoningStrategyRemote extends AbstractRemotePort<ILearningReasoningStrategy>
 			implements
-				ISupervisedLearning {
+				ILearningReasoningStrategy {
 
-		public ISupervisedLearningRemote(String name) {
-			super(name, ISupervisedLearning.class);
+		public ILearningReasoningStrategyRemote(String name) {
+			super(name, ILearningReasoningStrategy.class);
 		}
 
-		public AbstractProcess getSmlConfiguration() {
-			return base.getSmlConfiguration();
+		public Boolean getInjectorProvided() {
+			return base.getInjectorProvided();
 		}
 
-		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-			base.setSmlConfiguration(smlConfiguration);
+		public void setInjectorProvided(Boolean injectorProvided) {
+			base.setInjectorProvided(injectorProvided);
+		}
+
+		public Boolean getExtractorProvided() {
+			return base.getExtractorProvided();
+		}
+
+		public void setExtractorProvided(Boolean extractorProvided) {
+			base.setExtractorProvided(extractorProvided);
 		}
 
 		public void startGesture(Category category) {
@@ -75,9 +83,8 @@ public interface ISupervisedLearning extends IReasoner {
 		public void buildClassifier() {
 			base.buildClassifier();
 		}
-
-		public IOPropertyList execute(IOPropertyList value) {
-			IOPropertyList result = base.execute(value);
+		public DataComponent getQualityOfService() {
+			DataComponent result = base.getQualityOfService();
 			return result;
 		}
 
@@ -88,11 +95,11 @@ public interface ISupervisedLearning extends IReasoner {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "ISupervisedLearning", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ISupervisedLearningRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class ISupervisedLearningRemoteProxy extends RemoteProxyComponent<ISupervisedLearning>
+	@Component(name = "ILearningReasoningStrategy", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ILearningReasoningStrategyRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ILearningReasoningStrategyRemoteProxy extends RemoteProxyComponent<ILearningReasoningStrategy>
 			implements
-				ISupervisedLearning {
-		public ISupervisedLearningRemoteProxy(String name) {
+				ILearningReasoningStrategy {
+		public ILearningReasoningStrategyRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -111,15 +118,26 @@ public interface ISupervisedLearning extends IReasoner {
 			return null;
 		}
 
-		public AbstractProcess getSmlConfiguration() {
-			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
-			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
+		public Boolean getInjectorProvided() {
+			GetInjectorProvidedRemoteMessage in = new GetInjectorProvidedRemoteMessage();
+			return client.send(in, GetInjectorProvidedRemoteMessage.class).getResponseResult();
 		}
 
-		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
-			in.setSmlConfiguration(smlConfiguration);
-			client.send(in, SetSmlConfigurationRemoteMessage.class);
+		public void setInjectorProvided(Boolean injectorProvided) {
+			SetInjectorProvidedRemoteMessage in = new SetInjectorProvidedRemoteMessage();
+			in.setInjectorProvided(injectorProvided);
+			client.send(in, SetInjectorProvidedRemoteMessage.class);
+		}
+
+		public Boolean getExtractorProvided() {
+			GetExtractorProvidedRemoteMessage in = new GetExtractorProvidedRemoteMessage();
+			return client.send(in, GetExtractorProvidedRemoteMessage.class).getResponseResult();
+		}
+
+		public void setExtractorProvided(Boolean extractorProvided) {
+			SetExtractorProvidedRemoteMessage in = new SetExtractorProvidedRemoteMessage();
+			in.setExtractorProvided(extractorProvided);
+			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
 		public void startGesture(Category category) {
@@ -155,11 +173,11 @@ public interface ISupervisedLearning extends IReasoner {
 			client.send(in, BuildClassifierRemoteMessage.class);
 		}
 
-		public IOPropertyList execute(IOPropertyList value) {
-			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
-			in.setValue(value);
+		public DataComponent getQualityOfService() {
+			GetQualityOfServiceRemoteMessage in = new GetQualityOfServiceRemoteMessage();
 
-			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
+			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
+					.getResponseResult();
 		}
 
 	}

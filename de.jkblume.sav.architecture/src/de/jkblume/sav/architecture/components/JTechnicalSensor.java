@@ -51,7 +51,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 					IOPropertyList values = retrieveValues();
 					
 					if (getIProcess() != null) {
-						values = getIProcess().execute(values);
+						values = (IOPropertyList) getIProcess().execute(values);
 					}
 					
 					Event currentEvent = MySMLUtils.createEvent(values);
@@ -144,6 +144,12 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 			//TODO:Implement
 		}
 
+	}
+
+	@Override
+	public Object executeImpl(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

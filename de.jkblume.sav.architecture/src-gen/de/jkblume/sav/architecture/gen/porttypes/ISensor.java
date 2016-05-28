@@ -29,7 +29,7 @@ import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
 @PortTypeA(name = "ISensor", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ISensor {
+public interface ISensor extends IProcess {
 
 	public static Class remotePortClass = ISensorRemote.class;
 	public static Class proxyComponentClass = ISensorRemoteProxy.class;
@@ -40,9 +40,6 @@ public interface ISensor {
 	public Boolean isRunning();
 	public String getId();
 	public IOPropertyList retrieveValues();
-
-	public AbstractPhysicalProcess getSmlConfiguration();
-	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration);
 
 	public Event getLastEvent();
 	public void setLastEvent(Event lastEvent);
@@ -57,20 +54,20 @@ public interface ISensor {
 			super(name, ISensor.class);
 		}
 
-		public AbstractPhysicalProcess getSmlConfiguration() {
-			return base.getSmlConfiguration();
-		}
-
-		public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-			base.setSmlConfiguration(smlConfiguration);
-		}
-
 		public Event getLastEvent() {
 			return base.getLastEvent();
 		}
 
 		public void setLastEvent(Event lastEvent) {
 			base.setLastEvent(lastEvent);
+		}
+
+		public AbstractProcess getSmlConfiguration() {
+			return base.getSmlConfiguration();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			base.setSmlConfiguration(smlConfiguration);
 		}
 
 		public void start() {
@@ -93,6 +90,11 @@ public interface ISensor {
 		}
 		public IOPropertyList retrieveValues() {
 			IOPropertyList result = base.retrieveValues();
+			return result;
+		}
+
+		public Object execute(Object value) {
+			Object result = base.execute(value);
 			return result;
 		}
 
@@ -124,17 +126,6 @@ public interface ISensor {
 			return null;
 		}
 
-		public AbstractPhysicalProcess getSmlConfiguration() {
-			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
-			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
-		}
-
-		public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
-			in.setSmlConfiguration(smlConfiguration);
-			client.send(in, SetSmlConfigurationRemoteMessage.class);
-		}
-
 		public Event getLastEvent() {
 			GetLastEventRemoteMessage in = new GetLastEventRemoteMessage();
 			return client.send(in, GetLastEventRemoteMessage.class).getResponseResult();
@@ -144,6 +135,17 @@ public interface ISensor {
 			SetLastEventRemoteMessage in = new SetLastEventRemoteMessage();
 			in.setLastEvent(lastEvent);
 			client.send(in, SetLastEventRemoteMessage.class);
+		}
+
+		public AbstractProcess getSmlConfiguration() {
+			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
+			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
+			in.setSmlConfiguration(smlConfiguration);
+			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
 		public void start() {
@@ -183,38 +185,13 @@ public interface ISensor {
 					.getResponseResult();
 		}
 
-	}
+		public Object execute(Object value) {
+			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
+			in.setValue(value);
 
-	public class GetSmlConfigurationRemoteMessage extends RemoteMessageBase<AbstractPhysicalProcess> {
-
-		public GetSmlConfigurationRemoteMessage() {
-			super("getSmlConfiguration");
+			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
 		}
 
-	}
-
-	public class SetSmlConfigurationRemoteMessage extends RemoteMessageBase<Object> {
-
-		private AbstractPhysicalProcess smlConfiguration;
-
-		public SetSmlConfigurationRemoteMessage() {
-			super("setSmlConfiguration", AbstractPhysicalProcess.class.getName());
-		}
-
-		public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-			this.smlConfiguration = smlConfiguration;
-		}
-
-		public AbstractPhysicalProcess getSmlConfiguration() {
-			return smlConfiguration;
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-			result.add(getSmlConfiguration());
-			return result;
-		}
 	}
 
 	public class GetLastEventRemoteMessage extends RemoteMessageBase<Event> {

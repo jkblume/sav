@@ -90,20 +90,20 @@ public abstract class AbstractSerialTechnicalSensor implements IPort<ISensor>, I
 		return base.as(c);
 	}
 
-	public AbstractPhysicalProcess getSmlConfiguration() {
-		return base.getSmlConfiguration();
-	}
-
-	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-		base.setSmlConfiguration(smlConfiguration);
-	}
-
 	public Event getLastEvent() {
 		return base.getLastEvent();
 	}
 
 	public void setLastEvent(Event lastEvent) {
 		base.setLastEvent(lastEvent);
+	}
+
+	public AbstractProcess getSmlConfiguration() {
+		return base.getSmlConfiguration();
+	}
+
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		base.setSmlConfiguration(smlConfiguration);
 	}
 
 }

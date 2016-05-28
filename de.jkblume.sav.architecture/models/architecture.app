@@ -23,10 +23,7 @@ app SavArchitecture {
 	components:
 	component JLogicalSensor implements LogicalSensor{}
 	component JTechnicalSensor implements TechnicalSensor{}
-	
 	component JVisualizer implements Visualizer{}
-	
-	component JReasoner implements Reasoner{}
 	
 	sensors:
 

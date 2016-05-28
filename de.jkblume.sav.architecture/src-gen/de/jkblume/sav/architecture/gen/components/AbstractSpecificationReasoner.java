@@ -31,83 +31,126 @@ import org.smags.reflection.ReflectionHelper;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
-@Component(name = "TechnicalSensor", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "TechnicalSensor", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractTechnicalSensor extends AbstractComponent implements INotifyPropertyChanged, ISensor {
+@Component(name = "SpecificationReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "SpecificationReasoner", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+public abstract class AbstractSpecificationReasoner extends AbstractLogicalSensor
+		implements
+			INotifyPropertyChanged,
+			ISpecificationReasoningStrategy {
 
 	@RequirementA
-	private IProcess iProcess;
+	private List<IProcess> iProcesss = new ArrayList<IProcess>();
 
-	public IProcess getIProcess() {
-		return this.iProcess;
-
+	public List<IProcess> getIProcesss() {
+		return this.iProcesss;
 	}
 
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
+	public void addIProcess(IProcess item) {
+		this.iProcesss.add(item);
+		handleIProcessAdded(item);
 	}
 
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
+	public void removeIProcess(IProcess item) {
+		this.iProcesss.remove(item);
+		handleIProcessRemoved(item);
+	}
+
+	public abstract void handleIProcessAdded(IProcess item);
+	public abstract void handleIProcessRemoved(IProcess item);
+
+	private final List<ISpecificationReasoningStrategy> iSpecificationReasoningStrategyRoles = new ArrayList<ISpecificationReasoningStrategy>();
 
 	private final List<ISensor> iSensorRoles = new ArrayList<ISensor>();
 
-	public AbstractTechnicalSensor(String name) {
+	public AbstractSpecificationReasoner(String name) {
 		super(name);
 	}
 
-	public Event getLastEvent() {
-		return (Event) getSharedMemory().getValue(AbstractTechnicalSensor.class, "lastEvent");
+	public Boolean getInjectorProvided() {
+		return (Boolean) getSharedMemory().getValue(AbstractSpecificationReasoner.class, "injectorProvided");
 	}
 
-	public void setLastEvent(Event lastEvent) {
-		Event oldValue = getLastEvent();
-		getSharedMemory().setValue(AbstractTechnicalSensor.class, "lastEvent", lastEvent);
-		notifyPropertyChanged(this, "lastEvent", oldValue, lastEvent);
+	public void setInjectorProvided(Boolean injectorProvided) {
+		Boolean oldValue = getInjectorProvided();
+		getSharedMemory().setValue(AbstractSpecificationReasoner.class, "injectorProvided", injectorProvided);
+		notifyPropertyChanged(this, "injectorProvided", oldValue, injectorProvided);
 	}
 
-	public AbstractProcess getSmlConfiguration() {
-		return (AbstractProcess) getSharedMemory().getValue(AbstractTechnicalSensor.class, "smlConfiguration");
+	public Boolean getExtractorProvided() {
+		return (Boolean) getSharedMemory().getValue(AbstractSpecificationReasoner.class, "extractorProvided");
 	}
 
-	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-		AbstractProcess oldValue = getSmlConfiguration();
-		getSharedMemory().setValue(AbstractTechnicalSensor.class, "smlConfiguration", smlConfiguration);
-		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
+	public void setExtractorProvided(Boolean extractorProvided) {
+		Boolean oldValue = getExtractorProvided();
+		getSharedMemory().setValue(AbstractSpecificationReasoner.class, "extractorProvided", extractorProvided);
+		notifyPropertyChanged(this, "extractorProvided", oldValue, extractorProvided);
 	}
 
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
+		if (type == ISpecificationReasoningStrategy.class)
+			return iSpecificationReasoningStrategyRoles.size() > 0
+					? (T) iSpecificationReasoningStrategyRoles.get(0)
+					: (T) this;
+
 		if (type == ISensor.class)
 			return iSensorRoles.size() > 0 ? (T) iSensorRoles.get(0) : (T) this;
 
-		return null;
+		return super.innerGetPort(type);
 	}
 
 	@Override
 	public boolean innerBindPort(IPort port) {
+
+		if (port instanceof ISpecificationReasoningStrategy) {
+			iSpecificationReasoningStrategyRoles.add(0, (ISpecificationReasoningStrategy) port);
+			return true;
+		}
 
 		if (port instanceof ISensor) {
 			iSensorRoles.add(0, (ISensor) port);
 			return true;
 		}
 
-		return false;
+		return super.innerBindPort(port);
 	}
 
 	@Override
 	public boolean innerUnbindPort(IPort port) {
+
+		if (port instanceof ISpecificationReasoningStrategy && iSpecificationReasoningStrategyRoles.contains(port)) {
+			iSpecificationReasoningStrategyRoles.remove(port);
+			return true;
+		}
 
 		if (port instanceof ISensor && iSensorRoles.contains(port)) {
 			iSensorRoles.remove(port);
 			return true;
 		}
 
-		return false;
+		return super.innerUnbindPort(port);
+	}
+
+	public void buildClassifier() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("buildClassifier", this);
+
+		if (countInCallStack > 1 || iSpecificationReasoningStrategyRoles.size() == 0)
+			buildClassifierImpl();
+		else
+			iSpecificationReasoningStrategyRoles.get(0).buildClassifier();
+
+	}
+
+	public DataComponent getQualityOfService() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("getQualityOfService", this);
+
+		if (countInCallStack > 1 || iSpecificationReasoningStrategyRoles.size() == 0)
+			return getQualityOfServiceImpl();
+		else
+			return iSpecificationReasoningStrategyRoles.get(0).getQualityOfService();
+
 	}
 
 	public void start() {
@@ -187,6 +230,8 @@ public abstract class AbstractTechnicalSensor extends AbstractComponent implemen
 
 	}
 
+	public abstract void buildClassifierImpl();
+	public abstract DataComponent getQualityOfServiceImpl();
 	public abstract void startImpl();
 	public abstract void stopImpl();
 	public abstract Boolean initializeImpl();

@@ -22,9 +22,9 @@ public class DifferenceProcessor extends AbstractDifferenceProcessor {
 		// nothing to do here
 	}
 	
-	public IOPropertyList execute(IOPropertyList input) {		
-		DataRecord minuend = (DataRecord) input.getComponent(1);
-		DataRecord subtrahend = (DataRecord) input.getComponent(2);
+	public Object execute(Object input) {		
+		DataRecord minuend = (DataRecord) ((IOPropertyList) input).getComponent(1);
+		DataRecord subtrahend = (DataRecord) ((IOPropertyList) input).getComponent(2);
 		
 		Quantity xQuantityMinuend = (Quantity) minuend.getComponent("x");
 		Quantity yQuantityMinuend = (Quantity) minuend.getComponent("y");

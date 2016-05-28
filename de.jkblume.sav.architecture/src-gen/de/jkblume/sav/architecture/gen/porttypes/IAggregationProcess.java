@@ -28,22 +28,22 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "IReasoner", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface IReasoner extends IProcess {
+@PortTypeA(name = "IAggregationProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface IAggregationProcess extends IProcess {
 
-	public static Class remotePortClass = IReasonerRemote.class;
-	public static Class proxyComponentClass = IReasonerRemoteProxy.class;
-
-	public void buildClassifier();
+	public static Class remotePortClass = IAggregationProcessRemote.class;
+	public static Class proxyComponentClass = IAggregationProcessRemoteProxy.class;
 
 	public <T> T as(Class<T> c);
 
 	/*--------- REMOTE ---------*/
 
-	public class IReasonerRemote extends AbstractRemotePort<IReasoner>implements IReasoner {
+	public class IAggregationProcessRemote extends AbstractRemotePort<IAggregationProcess>
+			implements
+				IAggregationProcess {
 
-		public IReasonerRemote(String name) {
-			super(name, IReasoner.class);
+		public IAggregationProcessRemote(String name) {
+			super(name, IAggregationProcess.class);
 		}
 
 		public AbstractProcess getSmlConfiguration() {
@@ -54,12 +54,8 @@ public interface IReasoner extends IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public void buildClassifier() {
-			base.buildClassifier();
-		}
-
-		public IOPropertyList execute(IOPropertyList value) {
-			IOPropertyList result = base.execute(value);
+		public Object execute(Object value) {
+			Object result = base.execute(value);
 			return result;
 		}
 
@@ -70,9 +66,11 @@ public interface IReasoner extends IProcess {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "IReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "IReasonerRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class IReasonerRemoteProxy extends RemoteProxyComponent<IReasoner>implements IReasoner {
-		public IReasonerRemoteProxy(String name) {
+	@Component(name = "IAggregationProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "IAggregationProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class IAggregationProcessRemoteProxy extends RemoteProxyComponent<IAggregationProcess>
+			implements
+				IAggregationProcess {
+		public IAggregationProcessRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -102,33 +100,13 @@ public interface IReasoner extends IProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public void buildClassifier() {
-			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
-
-			client.send(in, BuildClassifierRemoteMessage.class);
-		}
-
-		public IOPropertyList execute(IOPropertyList value) {
+		public Object execute(Object value) {
 			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
 			in.setValue(value);
 
 			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
 		}
 
-	}
-
-	public class BuildClassifierRemoteMessage extends RemoteMessageBase<Object> {
-
-		public BuildClassifierRemoteMessage() {
-			super("buildClassifier");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
 	}
 
 }

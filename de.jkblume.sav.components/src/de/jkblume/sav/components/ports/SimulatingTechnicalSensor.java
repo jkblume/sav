@@ -114,4 +114,16 @@ public class SimulatingTechnicalSensor extends AbstractSimulatingTechnicalSensor
 		
 	}
 
+	@Override
+	public Object execute(Object value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

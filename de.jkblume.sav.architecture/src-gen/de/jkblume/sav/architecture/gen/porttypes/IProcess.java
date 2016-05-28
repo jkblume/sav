@@ -34,7 +34,7 @@ public interface IProcess {
 	public static Class remotePortClass = IProcessRemote.class;
 	public static Class proxyComponentClass = IProcessRemoteProxy.class;
 
-	public IOPropertyList execute(IOPropertyList value);
+	public Object execute(Object value);
 
 	public AbstractProcess getSmlConfiguration();
 	public void setSmlConfiguration(AbstractProcess smlConfiguration);
@@ -57,8 +57,8 @@ public interface IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public IOPropertyList execute(IOPropertyList value) {
-			IOPropertyList result = base.execute(value);
+		public Object execute(Object value) {
+			Object result = base.execute(value);
 			return result;
 		}
 
@@ -101,7 +101,7 @@ public interface IProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public IOPropertyList execute(IOPropertyList value) {
+		public Object execute(Object value) {
 			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
 			in.setValue(value);
 
@@ -142,19 +142,19 @@ public interface IProcess {
 		}
 	}
 
-	public class ExecuteRemoteMessage extends RemoteMessageBase<IOPropertyList> {
+	public class ExecuteRemoteMessage extends RemoteMessageBase<Object> {
 
-		private IOPropertyList value;
+		private Object value;
 
 		public ExecuteRemoteMessage() {
-			super("execute", IOPropertyList.class.getName());
+			super("execute", Object.class.getName());
 		}
 
-		public void setValue(IOPropertyList value) {
+		public void setValue(Object value) {
 			this.value = value;
 		}
 
-		public IOPropertyList getValue() {
+		public Object getValue() {
 			return value;
 		}
 

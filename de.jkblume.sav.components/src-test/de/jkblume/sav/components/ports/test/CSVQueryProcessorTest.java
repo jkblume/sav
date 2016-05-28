@@ -13,7 +13,7 @@ import org.vast.data.TextImpl;
 import org.vast.sensorML.SMLUtils;
 
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
-import de.jkblume.sav.components.ports.CSVQueryProcessor;
+import de.jkblume.sav.components.ports.CsvProcessor;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.DataComponent;
@@ -23,7 +23,7 @@ public class CSVQueryProcessorTest {
 
 	@Test
 	public void testCsvQueryDescriptionValidation() throws FileNotFoundException, IOException {
-		CSVQueryProcessor processor = createProcessUnderTest();
+		CsvProcessor processor = createProcessUnderTest();
 		
 		assertTrue("Problem with inputs", processor.validateInputs());
 		assertTrue("Problem with outputs", processor.validateOutputs());
@@ -32,7 +32,7 @@ public class CSVQueryProcessorTest {
 	
 	@Test
 	public void testCsvQueryExecute() throws FileNotFoundException, IOException {
-		CSVQueryProcessor processor = createProcessUnderTest();
+		CsvProcessor processor = createProcessUnderTest();
 		processor.setup();
 		
 		Text input = new TextImpl();
@@ -41,17 +41,17 @@ public class CSVQueryProcessorTest {
 		IOPropertyList list = new IOPropertyList();
 		list.add(input);
 		
-		IOPropertyList output = processor.execute(list);
+		IOPropertyList output = (IOPropertyList) processor.execute(list);
 		
 		DataComponent component = output.getComponent(0);
 		assertTrue(component instanceof Text);
 		assertEquals("sensor", ((Text) component).getValue());
 	}
 	
-	private CSVQueryProcessor createProcessUnderTest() throws FileNotFoundException, IOException {
+	private CsvProcessor createProcessUnderTest() throws FileNotFoundException, IOException {
         AbstractProcess process = parseDescription("res-test/csv_process.xml");
         
-        CSVQueryProcessor operator = new CSVQueryProcessor("name");
+        CsvProcessor operator = new CsvProcessor("name");
         IProcess base = new TestSimplePortBase();
         operator.setBase(base);
         operator.setSmlConfiguration(process);
@@ -70,7 +70,7 @@ public class CSVQueryProcessorTest {
 		private AbstractProcess process;
 		
 		@Override
-		public IOPropertyList execute(IOPropertyList value) {
+		public Object execute(Object value) {
 			// TODO Auto-generated method stub
 			return null;
 		}

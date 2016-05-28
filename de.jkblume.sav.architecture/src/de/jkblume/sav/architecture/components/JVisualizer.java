@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.jkblume.sav.architecture.gen.components.AbstractVisualizer;
-import de.jkblume.sav.architecture.gen.porttypes.IMyPushSensorSubject;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.sensorml.v20.AbstractPhysicalProcess;

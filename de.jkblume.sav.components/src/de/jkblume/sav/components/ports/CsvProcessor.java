@@ -5,7 +5,7 @@ import org.vast.data.CountImpl;
 import org.vast.data.QuantityImpl;
 import org.vast.data.TextImpl;
 
-import de.jkblume.sav.components.gen.ports.AbstractCSVQueryProcessor;
+import de.jkblume.sav.components.gen.ports.AbstractCsvProcessor;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
@@ -16,7 +16,7 @@ import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 
-public class CSVQueryProcessor extends AbstractCSVQueryProcessor {
+public class CsvProcessor extends AbstractCsvProcessor {
 
 	private static final String COLUMN_PARAMETER_NAME = "column";
 	private static final String SEPARATOR_PARAMETER_NAME = "separator";
@@ -25,7 +25,7 @@ public class CSVQueryProcessor extends AbstractCSVQueryProcessor {
 	private String separator;
 	private DataType dataType;
 	
-	public CSVQueryProcessor(String name) {
+	public CsvProcessor(String name) {
 		super(name);
 	}
 
@@ -57,8 +57,8 @@ public class CSVQueryProcessor extends AbstractCSVQueryProcessor {
 		// nothing to do here
 	}
 
-	public IOPropertyList execute(IOPropertyList input) {
-		DataComponent extractedInputFromList = input.getComponent(0);
+	public Object execute(Object input) {
+		DataComponent extractedInputFromList = ((IOPropertyList) input).getComponent(0);
 		String string = ((Text) extractedInputFromList).getValue();			
 		String[] splitted = string.split(separator);
 		String columValue = splitted[column-1];

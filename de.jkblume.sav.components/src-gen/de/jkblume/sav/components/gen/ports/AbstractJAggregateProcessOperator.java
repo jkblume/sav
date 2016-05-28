@@ -29,13 +29,13 @@ import org.smags.componentmodel.annotations.RequirementA;
 
 public abstract class AbstractJAggregateProcessOperator
 		implements
-			IPort<IOrchestratorProcess>,
+			IPort<IAggregationProcess>,
 			INotifyPropertyChanged,
-			IOrchestratorProcess {
+			IAggregationProcess {
 
 	private String name;
 	private boolean isActive = true;
-	protected IOrchestratorProcess base;
+	protected IAggregationProcess base;
 
 	@RequirementA
 	private List<IProcess> iProcesss = new ArrayList<IProcess>();
@@ -82,12 +82,12 @@ public abstract class AbstractJAggregateProcessOperator
 	}
 
 	@Override
-	public IOrchestratorProcess getBase() {
+	public IAggregationProcess getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(IOrchestratorProcess base) {
+	public void setBase(IAggregationProcess base) {
 		this.base = base;
 	}
 

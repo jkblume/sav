@@ -79,16 +79,6 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 		super(name);
 	}
 
-	public AbstractPhysicalProcess getSmlConfiguration() {
-		return (AbstractPhysicalProcess) getSharedMemory().getValue(AbstractLogicalSensor.class, "smlConfiguration");
-	}
-
-	public void setSmlConfiguration(AbstractPhysicalProcess smlConfiguration) {
-		AbstractPhysicalProcess oldValue = getSmlConfiguration();
-		getSharedMemory().setValue(AbstractLogicalSensor.class, "smlConfiguration", smlConfiguration);
-		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
-	}
-
 	public Event getLastEvent() {
 		return (Event) getSharedMemory().getValue(AbstractLogicalSensor.class, "lastEvent");
 	}
@@ -97,6 +87,16 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 		Event oldValue = getLastEvent();
 		getSharedMemory().setValue(AbstractLogicalSensor.class, "lastEvent", lastEvent);
 		notifyPropertyChanged(this, "lastEvent", oldValue, lastEvent);
+	}
+
+	public AbstractProcess getSmlConfiguration() {
+		return (AbstractProcess) getSharedMemory().getValue(AbstractLogicalSensor.class, "smlConfiguration");
+	}
+
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		AbstractProcess oldValue = getSmlConfiguration();
+		getSharedMemory().setValue(AbstractLogicalSensor.class, "smlConfiguration", smlConfiguration);
+		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
 	}
 
 	@Override
@@ -196,11 +196,23 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 	}
 
+	public Object execute(Object value) {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
+
+		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+			return executeImpl(value);
+		else
+			return iSensorRoles.get(0).execute(value);
+
+	}
+
 	public abstract void startImpl();
 	public abstract void stopImpl();
 	public abstract Boolean initializeImpl();
 	public abstract Boolean isRunningImpl();
 	public abstract String getIdImpl();
 	public abstract IOPropertyList retrieveValuesImpl();
+	public abstract Object executeImpl(Object value);
 
 }
