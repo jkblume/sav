@@ -14,12 +14,8 @@ public class MySMLUtils {
 
 	public static Event createEvent(IOPropertyList values) {
 		Event event = new EventImpl();
-		for (AbstractSWEIdentifiable value : values) {
-			if (value instanceof DataComponent)
-				event.addProperty((DataComponent) value);
-		}	
 		
-//		event.getPropertyList().addAll((Collection<? extends DataComponent>) values);
+		event.getPropertyList().addAll((Collection<? extends DataComponent>) values);
 		
 		TimeInstantImpl timeInstant = new TimeInstantImpl();
 		TimePositionImpl timePosition = new TimePositionImpl();

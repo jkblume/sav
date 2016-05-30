@@ -27,6 +27,9 @@ public class UI extends Application {
 	private static VBox chartBox;
 
 	private static double firstTimestamp = 0;
+	private static double currentTimestamp = 0;
+	
+	private static NumberAxis xAxis;
 	
 	public static void initialize() {
 		if  (primaryStage == null) {
@@ -53,9 +56,14 @@ public class UI extends Application {
 					targetStage.show();
 				}
 				
-				NumberAxis xAxis = new NumberAxis();
+				xAxis = new NumberAxis();
+				xAxis.setAutoRanging(false);
+				
 				NumberAxis yAxis = new NumberAxis();
-				xAxis.setLabel("Number of Month");
+				yAxis.setAutoRanging(false);
+				yAxis.setLowerBound(600);
+				yAxis.setUpperBound(1000);
+				
 				// creating the chart
 				LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
 				lineChart.setTitle(sensorId);
@@ -73,15 +81,18 @@ public class UI extends Application {
 
 			@Override
 			public void run() {
-				if (firstTimestamp == 0.0) {
-					firstTimestamp = getTimestamp(event);
-				}
 				
 				LineChart chart = charts.get(sensorId);
 
 				double value = getValue(event);
-				double timestamp = getTimestamp(event) - firstTimestamp;
-				System.out.println("Retrieved " +value);
+				double timestamp = getTimestamp(event);
+				
+				if (xAxis != null) {
+					xAxis.setLowerBound(timestamp - 10000);
+					xAxis.setUpperBound(timestamp + 10000);
+					xAxis.setTickUnit(100 / 20000);
+				}
+				
 				XYChart.Data point = new XYChart.Data(timestamp, value);
 
 				Object object = chart.getData().get(0);
@@ -91,7 +102,7 @@ public class UI extends Application {
 	}
 
 	private static double getValue(Event event) {
-		DataComponent dataComponent = event.getPropertyList().get(0);
+		DataComponent dataComponent = event.getPropertyList().get("flex");
 		return ((Quantity) dataComponent).getValue();
 	}
 

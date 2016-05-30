@@ -24,6 +24,8 @@ import de.jkblume.sav.architecture.components.JAggregateProcess;
 import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
+import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
+import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
 import de.jkblume.sav.components.ports.RegexProcessor;
 import de.jkblume.sav.components.ports.SerialTechnicalSensor;
 import de.jkblume.sav.components.ports.SysoVisualisationStrategy;
@@ -45,7 +47,10 @@ public class Starter {
 		utils = new SMLUtils(SMLUtils.V2_0);
 		
 		// create visualization strategy
-		ReconfigurationScript rs = createVisualizationStrategyScript();
+		ReconfigurationScript rs = createDiagramVisualizationScript();
+		re.getReconfigurationEngine().executeScript(rs);
+
+		rs = createCubeVisualizationScript();
 		re.getReconfigurationEngine().executeScript(rs);
 		
 		// create serial technical sensor for glove
@@ -77,10 +82,23 @@ public class Starter {
 		re.getReconfigurationEngine().executeScript(rs);
 }
 
+	private static ReconfigurationScript createCubeVisualizationScript() {
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+
+		ops.add(new CreateComponentInstanceOperation("v2", JVisualizer.class));
+		ops.add(new CreatePortInstanceOperation("vs2", Cube3DVisualisationStrategy.class));
+		ops.add(new BindPortOperation("v2", "vs2", "IVisualisationStrategy"));
+		ops.add(new SetupComponentOperation("v2"));
+		ops.add(new SetupPortOperation("vs2"));
+		
+		return new ReconfigurationScript(ops);
+	}
+
 	private static ReconfigurationScript connectSensorScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
 		ops.add(new ConnectOperation("jtps1", "v", "ISensor"));
+		ops.add(new ConnectOperation("jtps1", "v2", "ISensor"));
 		
 		return new ReconfigurationScript(ops);
 	}
@@ -163,11 +181,11 @@ public class Starter {
 		return new ReconfigurationScript(ops);
 	}
 
-	private static ReconfigurationScript createVisualizationStrategyScript() {
+	private static ReconfigurationScript createDiagramVisualizationScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
 		ops.add(new CreateComponentInstanceOperation("v", JVisualizer.class));
-		ops.add(new CreatePortInstanceOperation("vs", SysoVisualisationStrategy.class));
+		ops.add(new CreatePortInstanceOperation("vs", DiagramVisualisationStrategy.class));
 		ops.add(new BindPortOperation("v", "vs", "IVisualisationStrategy"));
 		ops.add(new SetupComponentOperation("v"));
 		ops.add(new SetupPortOperation("vs"));

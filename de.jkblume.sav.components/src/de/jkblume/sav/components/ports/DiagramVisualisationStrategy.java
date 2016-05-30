@@ -7,12 +7,12 @@ import de.jkblume.sav.components.utils.UI;
 import javafx.application.Application;
 import net.opengis.sensorml.v20.Event;
 
-public class JavaFXVisualisationStrategy extends AbstractJavaFXVisualisationStrategy {
+public class DiagramVisualisationStrategy extends AbstractJavaFXVisualisationStrategy {
 
 
 	private Thread uiThread;
 	
-	public JavaFXVisualisationStrategy(String name) {
+	public DiagramVisualisationStrategy(String name) {
 		super(name);
 	}
 

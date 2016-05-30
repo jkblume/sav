@@ -24,7 +24,8 @@ app SavComponents {
 	implementation port RegexProcessor implements IProcess{}
 	implementation port DifferenceProcessor implements IProcess{}
 	implementation port SysoVisualisationStrategy implements IVisualisationStrategy{}
-	implementation port JavaFXVisualisationStrategy implements IVisualisationStrategy{}
+	implementation port DiagramVisualisationStrategy implements IVisualisationStrategy{}
+	implementation port Cube3DVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port SerialTechnicalSensor implements ISensor{}
 	implementation port SimulatingTechnicalSensor implements ISensor{}
 	

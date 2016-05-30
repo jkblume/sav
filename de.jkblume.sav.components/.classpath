@@ -10,5 +10,9 @@
 	<classpathentry exported="true" kind="lib" path="/home/jkb/wekafiles/packages/HMM/HMM.jar"/>
 	<classpathentry kind="lib" path="/home/jkb/Development/libraries/weka-3-8-0/weka.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/RXTXcomm.jar"/>
+	<classpathentry kind="lib" path="/home/jkb/Development/libraries/jogamp-all-platforms/jar/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="/home/jkb/Development/libraries/jogamp-all-platforms/jar/gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="/home/jkb/Development/libraries/jogamp-all-platforms/jar/jogl-all.jar"/>
+	<classpathentry kind="lib" path="/home/jkb/Development/libraries/jogamp-all-platforms/jar/jogl-all-natives-linux-amd64.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
