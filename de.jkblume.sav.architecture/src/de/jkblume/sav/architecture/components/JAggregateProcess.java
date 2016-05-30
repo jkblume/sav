@@ -1,5 +1,5 @@
 
-package de.jkblume.sav.components.ports;
+package de.jkblume.sav.architecture.components;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,14 +9,16 @@ import java.util.Map;
 import org.vast.process.SMLException;
 import org.vast.sensorML.SMLHelper;
 
+import de.jkblume.sav.architecture.gen.components.AbstractAggregateProcess;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
-import de.jkblume.sav.components.gen.ports.AbstractJAggregateProcessOperator;
 import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.sensorml.v20.Link;
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 
-public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator {
+public class JAggregateProcess extends AbstractAggregateProcess {
+
 	
 	private AggregateProcess aggregateProcess;
 
@@ -24,7 +26,7 @@ public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator
 	private Map<String, IProcess> id2process = new HashMap<>();
 	private Map<String, ProcessTreeNode> name2node = new HashMap<>();
 	
-	public JAggregateProcessOperator(String name) {
+	public JAggregateProcess(String name) {
 		super(name);
 	}
 	
@@ -81,10 +83,11 @@ public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator
 		// TODO: IMPLEMENT
 	}
 	
-	private IOPropertyList result = new IOPropertyList();
+	private IOPropertyList result;
 	
 	@Override
-	public Object execute(Object value) {
+	public Object executeImpl(Object value) {
+		result = new IOPropertyList();
 		for (ProcessTree tree : trees) {
 			try {
 				executeForProcess(tree.root, (IOPropertyList) value);
@@ -101,22 +104,29 @@ public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator
 			return;
 		}
 		IOPropertyList output = (IOPropertyList) node.process.execute(input);
+		if (output == null) {
+			return;
+		}
 		for (ProcessTreeNode child : node.children) {
 			executeForProcess(child, output);
 		};
 	}
 
 	private void fillResultWithOutput(ProcessTreeNode node, IOPropertyList output) throws SMLException {
+		DataComponent component = result.getComponent(node.destinationPath[1]);
+		if (component == null) {
+			String pathToOutputComponent = node.destinationPath[0] + "/" + node.destinationPath[1];
+			component = SMLHelper.findComponentByPath(aggregateProcess, pathToOutputComponent);
+			result.add(node.destinationPath[1], component);
+		}
+		
 		if (node.isOutputPartial()) {
-			DataComponent component = result.getComponent(node.destinationPath[1]);
-			if (component == null) {
-				String pathToOutputComponent = node.destinationPath[0] + "/" + node.destinationPath[1];
-				component = SMLHelper.findComponentByPath(aggregateProcess, pathToOutputComponent);
-				result.add(node.destinationPath[1], component);
-			}
-			component.getComponent(node.destinationPath[2]).setData(output.getComponent(0).getData());
+			DataComponent component2 = component.getComponent(node.destinationPath[2]);
+			DataComponent component3 = output.getComponent(0);
+			DataBlock data = component3.getData();
+			component2.setData(data);
 		} else {
-			result.addAll(output);
+			component.setData(((DataComponent) output.getComponent(0)).getData());
 		}
 	}
 
@@ -184,5 +194,4 @@ public class JAggregateProcessOperator extends AbstractJAggregateProcessOperator
 			return sb.toString();
 		}
 	}
-
 }

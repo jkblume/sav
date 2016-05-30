@@ -7,12 +7,8 @@
 	<classpathentry kind="src" path="res-test"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/de.jkblume.sav.architecture"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/home/jkb/Development/libraries/rxtx-2.1-7-bins-r2/RXTXcomm.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/jkb/Development/libraries/rxtx-2.1-7-bins-r2/Linux/x86_64-unknown-linux-gnu"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="/home/jkb/wekafiles/packages/HMM/HMM.jar"/>
 	<classpathentry kind="lib" path="/home/jkb/Development/libraries/weka-3-8-0/weka.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/RXTXcomm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

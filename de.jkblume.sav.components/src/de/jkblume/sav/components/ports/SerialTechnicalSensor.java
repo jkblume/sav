@@ -4,6 +4,7 @@ package de.jkblume.sav.components.ports;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
@@ -31,9 +32,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 
 	private SerialPort serialPort;
 	private BufferedReader inputReader;
-	
-	private boolean running;
-	
+		
 	private IOPropertyList lastValue;
 	
 	public SerialTechnicalSensor(String name) {
@@ -42,7 +41,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 
 	public void setup() {
 		if (!validateSmlConfiguration()) {
-			throw new IllegalStateException("There is an error during validation of sensor " + base.getId() + "'s configuration");
+			throw new IllegalStateException("There is an error during validation of sensor " + getId() + "'s configuration");
 		}
 	}
 
@@ -72,7 +71,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 			portId = CommPortIdentifier.getPortIdentifier(serialPortParameter.getValue());
 		} catch (NoSuchPortException e) {
 			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 		
@@ -104,7 +103,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		}
 
 		// initially deactive/stop data notifications, so the sensor is not running
-		serialPort.notifyOnDataAvailable(false);
+		serialPort.notifyOnDataAvailable(true);
 			
 		// add event port
 		try {
@@ -121,7 +120,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 							return;
 						}
 						
-						DataComponent outputComponent = getSmlConfiguration().getOutputComponent("output1");
+						DataComponent outputComponent = getSmlConfiguration().getOutputComponent("output");
 						Text input =  (Text) outputComponent.copy();
 						input.setValue(inputString);						
 						
@@ -146,20 +145,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	}
 
 	private Boolean validateSmlConfiguration() {
-		boolean result = true;
-		
-		AbstractPhysicalProcess description = (AbstractPhysicalProcess) getSmlConfiguration();
-		IOPropertyList parameterList = description.getParameterList();
-		
-		if (parameterList == null) {
-			return false;
-		}
-				
-		result &= parameterList.contains(SERIAL_PORT_PARAMETER_NAME);
-		result &= parameterList.contains(TIMEOUT_PARAMETER_NAME);
-		result &= parameterList.contains(BAUDRATE_PARAMETER_NAME);
-	
-		return result;
+		return true;
 	}
 
 	@Override
@@ -169,19 +155,17 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 
 	@Override
 	public void start() {
-		running = true;
-		serialPort.notifyOnDataAvailable(true);
+		base.start();
 	}
 
 	@Override
 	public void stop() {
-		running = false;
-		serialPort.notifyOnDataAvailable(false);
+		base.stop();
 	}
 
 	@Override
 	public Boolean isRunning() {
-		return running;
+		return base.isRunning();
 	}
 
 	@Override
@@ -192,6 +176,11 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	@Override
 	public void setLastEvent(Event lastEvent) {
 		base.setLastEvent(lastEvent);
+	}
+	
+	@Override
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		base.setSmlConfiguration(smlConfiguration);
 	}
 
 	@Override
@@ -210,9 +199,4 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-		// TODO Auto-generated method stub
-		
-	}}
+}

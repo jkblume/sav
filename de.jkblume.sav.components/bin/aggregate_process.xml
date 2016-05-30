@@ -86,7 +86,7 @@
 					</sml:parameters>
 				</sml:SimpleProcess>
 			</sml:component>
-			
+
 			<sml:component name="gyroscope_csv_preprocessing">
 				<sml:SimpleProcess gml:id="gyroscope_csv_preprocessing">
 					<sml:inputs>
@@ -226,7 +226,7 @@
 					</sml:parameters>
 				</sml:SimpleProcess>
 			</sml:component>
-			
+
 			<sml:component name="gyroscope_csv_process_x">
 				<sml:SimpleProcess gml:id="gyroscope_csv_process_x">
 					<sml:inputs>
@@ -343,7 +343,7 @@
 						ref="components/acceleration_csv_preprocessing/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
-			
+
 			<sml:connection>
 				<sml:Link>
 					<sml:source ref="inputs/input1" />
@@ -378,13 +378,12 @@
 						ref="components/acceleration_csv_process_z/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
-			
+
 			<sml:connection>
 				<sml:Link>
 					<sml:source
 						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
-					<sml:destination
-						ref="components/gyroscope_csv_process_x/inputs/input1" />
+					<sml:destination ref="components/gyroscope_csv_process_x/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
@@ -392,8 +391,7 @@
 				<sml:Link>
 					<sml:source
 						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
-					<sml:destination
-						ref="components/gyroscope_csv_process_y/inputs/input1" />
+					<sml:destination ref="components/gyroscope_csv_process_y/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
@@ -401,8 +399,7 @@
 				<sml:Link>
 					<sml:source
 						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
-					<sml:destination
-						ref="components/gyroscope_csv_process_z/inputs/input1" />
+					<sml:destination ref="components/gyroscope_csv_process_z/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
@@ -426,7 +423,7 @@
 					<sml:destination ref="outputs/acceleration/z" />
 				</sml:Link>
 			</sml:connection>
-			
+
 			<sml:connection>
 				<sml:Link>
 					<sml:source ref="components/gyroscope_csv_process_x/outputs/output1" />

@@ -27,13 +27,13 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractCSVQueryProcessor implements IPort<IProcess>, INotifyPropertyChanged, IProcess {
+public abstract class AbstractRegexProcessor implements IPort<IProcess>, INotifyPropertyChanged, IProcess {
 
 	private String name;
 	private boolean isActive = true;
 	protected IProcess base;
 
-	public AbstractCSVQueryProcessor(String name) {
+	public AbstractRegexProcessor(String name) {
 		this.name = name;
 	}
 

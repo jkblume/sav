@@ -11,10 +11,9 @@ import org.junit.Test;
 import org.vast.data.TextImpl;
 import org.vast.sensorML.SMLUtils;
 
-import de.jkblume.sav.architecture.gen.porttypes.IAggregationProcess;
+import de.jkblume.sav.architecture.components.JAggregateProcess;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.components.ports.CsvProcessor;
-import de.jkblume.sav.components.ports.JAggregateProcessOperator;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
@@ -26,7 +25,7 @@ public class JAggregateProcessOperatorTest {
 
 	@Test
 	public void testExecuteMethod() throws FileNotFoundException, IOException {
-		JAggregateProcessOperator operator = createAggregateProcess("res-test/aggregate_process.xml");
+		JAggregateProcess operator = createAggregateProcess("res-test/aggregate_process.xml");
 		
 		AggregateProcess aggregateProcess = (AggregateProcess) operator.getSmlConfiguration();
 		for (AbstractProcess description : aggregateProcess.getComponentList()) {
@@ -66,12 +65,10 @@ public class JAggregateProcessOperatorTest {
 		assertEquals("The z value is not processed correctly. ",6.0, ((Quantity) z).getValue(), 0);
 	}
 	
-	private JAggregateProcessOperator createAggregateProcess(String fileName) throws FileNotFoundException, IOException {
+	private JAggregateProcess createAggregateProcess(String fileName) throws FileNotFoundException, IOException {
         AbstractProcess process = parseDescription(fileName);
         System.out.println(((AggregateProcess) process).getConnectionList().size());
-        JAggregateProcessOperator operator = new JAggregateProcessOperator(fileName);
-        IAggregationProcess base = new TestAggregatorBase();
-        operator.setBase(base);
+        JAggregateProcess operator = new JAggregateProcess(fileName);
         operator.setSmlConfiguration(process);
         return operator;
 	}
@@ -89,35 +86,6 @@ public class JAggregateProcessOperatorTest {
         SMLUtils utils = new SMLUtils("");
         AbstractProcess process = utils.readProcess(is);
         return process;
-	}
-	
-	private class TestAggregatorBase implements IAggregationProcess {
-		
-		private AbstractProcess process;
-		
-		@Override
-		public Object execute(Object value) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public AbstractProcess getSmlConfiguration() {
-			return process;
-		}
-
-		@Override
-		public void setSmlConfiguration(AbstractProcess processDescription) {
-			this.process = processDescription;
-		}
-
-		@Override
-		public <T> T as(Class<T> c) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		
 	}
 	
 	private class TestCsvProcessorBase implements IProcess {

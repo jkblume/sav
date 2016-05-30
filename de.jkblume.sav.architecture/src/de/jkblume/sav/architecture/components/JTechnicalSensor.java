@@ -28,6 +28,7 @@ import org.smags.componentmodel.annotations.ParameterA;
 
 public class JTechnicalSensor extends AbstractTechnicalSensor {
 
+	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
 	private Thread pollingThread;
 	private boolean running;
 	
@@ -39,10 +40,6 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 	}
 
 	public void setup() {
-		if (!validateSmlConfiguration()) {
-			throw new IllegalStateException("Failure during validation of sensor " + id + "'s configuration");
-		}
-		
 		pollingThread = new Thread(new Runnable() {
 			
 			@Override
@@ -50,18 +47,15 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 				while (isRunning()) {
 					IOPropertyList values = retrieveValues();
 					
-					if (getIProcess() != null) {
-						values = (IOPropertyList) getIProcess().execute(values);
-					}
-					
-					Event currentEvent = MySMLUtils.createEvent(values);
-					setLastEvent(currentEvent);
-					
-					try {
-						Thread.sleep(samplingRate);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					if (values != null) {
+						
+						if (getIProcess() != null) {
+							values = (IOPropertyList) getIProcess().execute(values);
+						}
+						
+						Event currentEvent = MySMLUtils.createEvent(values);
+						setLastEvent(currentEvent);
+						
 					}
 					
 					try {
@@ -70,6 +64,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+			
 				}
 		
 			}
@@ -92,7 +87,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 		result &= id != null;
 	
 		
-		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter("samplingRate");
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
 		result &= parameter != null && parameter instanceof Count;
 		if (result) {
 			samplingRate = ((Count) parameter).getValue();
@@ -106,7 +101,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 	}
 
 	public IOPropertyList retrieveValuesImpl() {
-		throw new IllegalStateException("This class need to be implemented by a implementation port!");
+		throw new IllegalStateException("This method need to be implemented by an implementation port!");
 	}
 
 	public void startImpl() {

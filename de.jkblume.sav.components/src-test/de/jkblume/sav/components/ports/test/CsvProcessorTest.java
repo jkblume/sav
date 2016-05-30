@@ -19,7 +19,7 @@ import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Text;
 
-public class CSVQueryProcessorTest {
+public class CsvProcessorTest {
 
 	@Test
 	public void testCsvQueryDescriptionValidation() throws FileNotFoundException, IOException {

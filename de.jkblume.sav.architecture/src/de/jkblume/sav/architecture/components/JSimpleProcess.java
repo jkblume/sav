@@ -1,11 +1,11 @@
 
-package de.jkblume.sav.components.ports;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
+package de.jkblume.sav.architecture.components;
 
 import de.jkblume.sav.architecture.gen.components.*;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.porttypes.*;
 
@@ -21,35 +21,35 @@ import net.opengis.sensorml.v20.AbstractPhysicalProcess;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.sensorml.v20.IOPropertyList;
 
-import de.jkblume.sav.architecture.gen.porttypes.*;
-
-import de.jkblume.sav.components.gen.ports.*;
-import org.smags.componentmodel.IPort;
 import java.util.*;
+import org.smags.componentmodel.annotations.ParameterA;
 
-public class ReqexProcessor extends AbstractReqexProcessor {
+public class JSimpleProcess extends AbstractSimpleProcess {
 
-	public ReqexProcessor(String name) {
+	public JSimpleProcess(String name) {
 		super(name);
 	}
 
 	public void setup() {
-		//TODO: IMPLEMENT
+		//TODO:Implement
 	}
 
 	public void destroy() {
+		//TODO:Implement
+	}
+
+	public Object executeImpl(Object value) {
 		//TODO: IMPLEMENT
+		return null;
 	}
 
-	public Object execute(Object value) {
-		Object result = base.execute(value);
-		return result;
-	}
-
+	@Override
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
-		if (sender == this) {
 
+		if (propertyName.equals("smlConfiguration")) {
+			//TODO:Implement
 		}
+
 	}
 
 }

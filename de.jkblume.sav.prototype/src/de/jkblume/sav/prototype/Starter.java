@@ -14,86 +14,164 @@ import org.smags.runtime.reconfigurtion.operations.ConnectOperation;
 import org.smags.runtime.reconfigurtion.operations.CreateComponentInstanceOperation;
 import org.smags.runtime.reconfigurtion.operations.CreatePortInstanceOperation;
 import org.smags.runtime.reconfigurtion.operations.SetComponentParameterOperation;
+import org.smags.runtime.reconfigurtion.operations.SetPortParameterOperation;
 import org.smags.runtime.reconfigurtion.operations.SetupComponentOperation;
 import org.smags.runtime.reconfigurtion.operations.SetupPortOperation;
 import org.vast.sensorML.SMLUtils;
 import org.vast.xml.XMLReaderException;
 
+import de.jkblume.sav.architecture.components.JAggregateProcess;
+import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
-import de.jkblume.sav.components.ports.JavaFXVisualisationStrategy;
-import de.jkblume.sav.components.ports.SimulatingTechnicalSensor;
+import de.jkblume.sav.components.ports.RegexProcessor;
+import de.jkblume.sav.components.ports.SerialTechnicalSensor;
+import de.jkblume.sav.components.ports.SysoVisualisationStrategy;
 import net.opengis.sensorml.v20.AbstractProcess;
+import net.opengis.sensorml.v20.AggregateProcess;
 
 public class Starter {
+	
+	private static SMLUtils utils;
+	
+	private static AggregateProcess aggregatorProcess;
 	
 	public static void main(String[] args) throws FileNotFoundException, XMLReaderException, InterruptedException {
 		RuntimeEnvironment re = RuntimeEnvironment.instance();
 
-		//Initializing the MAPE-K Feedback loop 
+		// Initializing the MAPE-K Feedback loop
 		re.initializeAdaptationArchitecture();
 
+		utils = new SMLUtils(SMLUtils.V2_0);
+		
+		// create visualization strategy
+		ReconfigurationScript rs = createVisualizationStrategyScript();
+		re.getReconfigurationEngine().executeScript(rs);
+		
+		// create serial technical sensor for glove
+		rs = createSerialSensorScript();
+		re.getReconfigurationEngine().executeScript(rs);
+
+		// create processes for the glove sensor
+		rs = createAggregateProcessScript();
+		re.getReconfigurationEngine().executeScript(rs);
+		
+		rs = createChildProcessesScript();
+		re.getReconfigurationEngine().executeScript(rs);
+		
+		rs = setupAggregateProcessScript();
+		re.getReconfigurationEngine().executeScript(rs);
+		
+
+		rs = connectAggregateProcessScript();
+		re.getReconfigurationEngine().executeScript(rs);
+		
+		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
+		simulatingSensor.initialize();
+		simulatingSensor.start();
+
+		Thread.sleep(1000);
+
+
+		rs = connectSensorScript();
+		re.getReconfigurationEngine().executeScript(rs);
+}
+
+	private static ReconfigurationScript connectSensorScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		SMLUtils utils = new SMLUtils(SMLUtils.V2_0);
+		ops.add(new ConnectOperation("jtps1", "v", "ISensor"));
 		
-        InputStream is = new FileInputStream("res/ssp1.xml");
-        AbstractProcess sspDesc1 = utils.readProcess(is);
-        
-        is = new FileInputStream("res/ssp2.xml");
-        AbstractProcess sspDesc2 = utils.readProcess(is);
-        
+		return new ReconfigurationScript(ops);
+	}
+
+	private static ReconfigurationScript connectAggregateProcessScript() {
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+		
+		ops.add(new ConnectOperation("ap", "jtps1", "IProcess"));
+		
+		return new ReconfigurationScript(ops);
+	}
+
+	private static ReconfigurationScript setupAggregateProcessScript() {
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+		
+		ops.add(new SetupComponentOperation("ap"));
+		
+		return new ReconfigurationScript(ops);
+	}
+
+	private static ReconfigurationScript createChildProcessesScript() {
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+
+		ops.add(new CreateComponentInstanceOperation("spX", JSimpleProcess.class));
+		ops.add(new CreatePortInstanceOperation("regexX", RegexProcessor.class));
+		ops.add(new BindPortOperation("spX", "regexX", "IProcess"));
+		ops.add(new SetPortParameterOperation("regexX", "smlConfiguration", aggregatorProcess.getComponent("gyroscope_regex_x")));
+		ops.add(new SetupPortOperation("regexX"));
+		ops.add(new ConnectOperation("spX", "ap", "IProcess"));
+		
+		ops.add(new CreateComponentInstanceOperation("spY", JSimpleProcess.class));
+		ops.add(new CreatePortInstanceOperation("regexY", RegexProcessor.class));
+		ops.add(new BindPortOperation("spY", "regexY", "IProcess"));
+		ops.add(new SetPortParameterOperation("regexY", "smlConfiguration", aggregatorProcess.getComponent("gyroscope_regex_y")));
+		ops.add(new SetupPortOperation("regexY"));
+		ops.add(new ConnectOperation("spY", "ap", "IProcess"));
+		
+		ops.add(new CreateComponentInstanceOperation("spZ", JSimpleProcess.class));
+		ops.add(new CreatePortInstanceOperation("regexZ", RegexProcessor.class));
+		ops.add(new BindPortOperation("spZ", "regexZ", "IProcess"));
+		ops.add(new SetPortParameterOperation("regexZ", "smlConfiguration", aggregatorProcess.getComponent("gyroscope_regex_z")));
+		ops.add(new SetupPortOperation("regexZ"));
+		ops.add(new ConnectOperation("spZ", "ap", "IProcess"));
+		
+		ops.add(new CreateComponentInstanceOperation("spF", JSimpleProcess.class));
+		ops.add(new CreatePortInstanceOperation("regexF", RegexProcessor.class));
+		ops.add(new BindPortOperation("spF", "regexF", "IProcess"));
+		ops.add(new SetPortParameterOperation("regexF", "smlConfiguration", aggregatorProcess.getComponent("regex_f")));
+		ops.add(new SetupPortOperation("regexF"));
+		ops.add(new ConnectOperation("spF", "ap", "IProcess"));
+		
+		return new ReconfigurationScript(ops);
+	}
+
+	private static ReconfigurationScript createAggregateProcessScript() throws FileNotFoundException, XMLReaderException {
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+		
+		InputStream is = new FileInputStream("res/glove_aggregator_process.xml");
+		aggregatorProcess = (AggregateProcess) utils.readProcess(is);
+
+		ops.add(new CreateComponentInstanceOperation("ap", JAggregateProcess.class));
+		ops.add(new SetComponentParameterOperation("ap", "smlConfiguration", aggregatorProcess));
+		
+		return new ReconfigurationScript(ops);
+	}
+
+	private static ReconfigurationScript createSerialSensorScript() throws FileNotFoundException, XMLReaderException {
+		InputStream is = new FileInputStream("res/serial_sensor_glove.xml");
+		AbstractProcess serialSensorGloveDescription = utils.readProcess(is);
+		
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalSensor.class));
+		ops.add(new CreatePortInstanceOperation("ssp1", SerialTechnicalSensor.class));
+		ops.add(new BindPortOperation("jtps1", "ssp1", "ISensor"));
+		ops.add(new SetComponentParameterOperation("jtps1", "smlConfiguration", serialSensorGloveDescription));
+		ops.add(new SetupComponentOperation("jtps1"));
+		ops.add(new SetupPortOperation("ssp1"));
+		
+		
+		return new ReconfigurationScript(ops);
+	}
+
+	private static ReconfigurationScript createVisualizationStrategyScript() {
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
 		ops.add(new CreateComponentInstanceOperation("v", JVisualizer.class));
-		ops.add(new CreatePortInstanceOperation("vs", JavaFXVisualisationStrategy.class));
+		ops.add(new CreatePortInstanceOperation("vs", SysoVisualisationStrategy.class));
 		ops.add(new BindPortOperation("v", "vs", "IVisualisationStrategy"));
 		ops.add(new SetupComponentOperation("v"));
 		ops.add(new SetupPortOperation("vs"));
 		
-		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalSensor.class));
-		ops.add(new CreatePortInstanceOperation("ssp1", SimulatingTechnicalSensor.class));
-		ops.add(new BindPortOperation("jtps1", "ssp1", "ISensor"));
-		ops.add(new SetComponentParameterOperation("jtps1", "smlConfiguration", sspDesc1));
-		ops.add(new SetupComponentOperation("jtps1"));
-		ops.add(new SetupPortOperation("ssp1"));
-		
-		ops.add(new CreateComponentInstanceOperation("jtps2", JTechnicalSensor.class));
-		ops.add(new CreatePortInstanceOperation("ssp2", SimulatingTechnicalSensor.class));
-		ops.add(new BindPortOperation("jtps2", "ssp2", "ISensor"));
-		ops.add(new SetComponentParameterOperation("jtps2", "smlConfiguration", sspDesc2));
-		ops.add(new SetupComponentOperation("jtps2"));
-		ops.add(new SetupPortOperation("ssp2"));
-		
-
-		
-		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
-
-		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
-		simulatingSensor.start();
-		
-		Thread.sleep(1000);
-		
-		ops = new ArrayList<ReconfigurtionOperation>();
-		ops.add(new ConnectOperation("jtps1", "v", "ISensor"));
-		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
-
-		simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps2");
-		simulatingSensor.start();
-		
-		Thread.sleep(10000);
-		
-		ops.add(new CreateComponentInstanceOperation("v2", JVisualizer.class));
-		ops.add(new CreatePortInstanceOperation("vs2", JavaFXVisualisationStrategy.class));
-		ops.add(new BindPortOperation("v2", "vs2", "IVisualisationStrategy"));
-		ops.add(new SetupComponentOperation("v2"));
-		ops.add(new SetupPortOperation("vs2"));
-		
-		
-		ops = new ArrayList<ReconfigurtionOperation>();
-		ops.add(new ConnectOperation("jtps2", "v", "ISensor"));
-		re.getReconfigurationEngine().executeScript(new ReconfigurationScript(ops));
-
-		
-		
+		return new ReconfigurationScript(ops);
 	}
 }

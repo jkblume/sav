@@ -17,10 +17,6 @@ meta architecture SavMetaArchitecture{
 		Object execute(Object value);
 	}
 	
-	port type IAggregationProcess extends IProcess {
-		requires IProcess[0 to *];
-	}
-	
 	port type ISensor extends IProcess {
 		parameter lastEvent : Event;
 		
@@ -61,6 +57,15 @@ meta architecture SavMetaArchitecture{
 		
 	component types:
 		
+	component type SimpleProcess {
+		provides IProcess;
+	}
+	
+	component type AggregateProcess {
+		provides IProcess;
+		requires IProcess[0 to *];
+	}
+	
 	component type TechnicalSensor {
 		provides ISensor;
 	}
