@@ -52,5 +52,11 @@ public class DifferenceProcessor extends AbstractDifferenceProcessor {
 		}
 	}
 
+	@Override
+	public Boolean validateSmlConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

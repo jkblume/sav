@@ -40,35 +40,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 	}
 
 	public void setup() {
-		pollingThread = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while (isRunning()) {
-					IOPropertyList values = retrieveValues();
-					
-					if (values != null) {
-						
-						if (getIProcess() != null) {
-							values = (IOPropertyList) getIProcess().execute(values);
-						}
-						
-						Event currentEvent = MySMLUtils.createEvent(values);
-						setLastEvent(currentEvent);
-						
-					}
-					
-					try {
-						Thread.sleep(samplingRate);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			
-				}
-		
-			}
-		});
+		pollingThread = new PollThread(this);
 	}
 
 	public void destroy() {
@@ -80,24 +52,27 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 		return validateSmlConfiguration();
 	}
 
-	private Boolean validateSmlConfiguration() {
+	@Override
+	public Boolean validateSmlConfigurationImpl() {
 		boolean result = true;
 		
-		id = getSmlConfiguration().getId();
-		result &= id != null;
-	
+		result &= getSmlConfiguration().getId() != null;
 		
 		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
 		result &= parameter != null && parameter instanceof Count;
-		if (result) {
-			samplingRate = ((Count) parameter).getValue();
-		}
-		
+
 		return result;
 	}
 
+	@Override
 	public String getIdImpl() {
-		return id;
+		return getSmlConfiguration().getId();
+	}
+	
+	@Override
+	public Integer getSamplingRateImpl() {
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
+		return ((Count) parameter).getValue();
 	}
 
 	public IOPropertyList retrieveValuesImpl() {
@@ -143,9 +118,11 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 
 	@Override
 	public Object executeImpl(Object value) {
-		// TODO Auto-generated method stub
-		return null;
+		if (getIProcess() != null) {
+			value = (IOPropertyList) getIProcess().execute(value);
+		}
+		
+		return value;
 	}
-
 
 }

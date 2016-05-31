@@ -81,6 +81,17 @@ public abstract class AbstractSimpleProcess extends AbstractComponent implements
 		return false;
 	}
 
+	public Boolean validateSmlConfiguration() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
+
+		if (countInCallStack > 1 || iProcessRoles.size() == 0)
+			return validateSmlConfigurationImpl();
+		else
+			return iProcessRoles.get(0).validateSmlConfiguration();
+
+	}
+
 	public Object execute(Object value) {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
@@ -92,6 +103,7 @@ public abstract class AbstractSimpleProcess extends AbstractComponent implements
 
 	}
 
+	public abstract Boolean validateSmlConfigurationImpl();
 	public abstract Object executeImpl(Object value);
 
 }

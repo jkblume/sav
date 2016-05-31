@@ -32,11 +32,7 @@ public class JAggregateProcess extends AbstractAggregateProcess {
 	
 	@Override
 	public void setup() {
-		if (getSmlConfiguration() instanceof AggregateProcess) {
-			aggregateProcess = (AggregateProcess) getSmlConfiguration();
-		} else {
-			throw new IllegalArgumentException("SensorML description is not an AggregateProcess");
-		}
+		validateSmlConfiguration();
 		
 		for (Link link : aggregateProcess.getConnectionList()) {
 			String[] destinationPath = link.getDestination().split("/");
@@ -147,6 +143,16 @@ public class JAggregateProcess extends AbstractAggregateProcess {
 		id2process.remove(item.getSmlConfiguration().getId());
 	}
 	
+	@Override
+	public Boolean validateSmlConfigurationImpl() {
+		if (getSmlConfiguration() instanceof AggregateProcess) {
+			aggregateProcess = (AggregateProcess) getSmlConfiguration();
+		} else {
+			return false;
+		}
+		return true;
+	}
+	
 	private class ProcessTree {
 		public ProcessTreeNode root;
 		
@@ -194,4 +200,5 @@ public class JAggregateProcess extends AbstractAggregateProcess {
 			return sb.toString();
 		}
 	}
+
 }

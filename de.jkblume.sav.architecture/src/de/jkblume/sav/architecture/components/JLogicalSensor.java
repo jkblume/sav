@@ -13,11 +13,9 @@ import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
 
 public class JLogicalSensor extends AbstractLogicalSensor {
+	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
 	private Thread pollingThread;
 	private boolean running;
-	
-	private String id;
-	private int samplingRate;
 	
 	public JLogicalSensor(String name) {
 		super(name);
@@ -26,30 +24,10 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 	public void setup() {
 		Boolean initializationSuccess = initialize();
 		if (!initializationSuccess) {
-			throw new IllegalStateException("Failure during initialization of sensor " + id);
+			throw new IllegalStateException("Failure during initialization of sensor " + getId());
 		}
 		
-		pollingThread = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				IOPropertyList values = retrieveValues();				
-				
-				// process values
-				if (getIProcess() != null) {
-					values = (IOPropertyList) getIProcess().execute(values);
-				} 
-				
-				Event currentEvent = MySMLUtils.createEvent(values);
-				setLastEvent(currentEvent);
-				
-				try {
-					Thread.sleep(samplingRate);
-				} catch (InterruptedException e) {
-					System.out.println("Polling thread of sensor " + id + " was interupted");
-				}
-			}
-		});
+		pollingThread = new PollThread(this);
 	}
 
 	public void destroy() {
@@ -108,7 +86,13 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 
 	@Override
 	public String getIdImpl() {
-		return id;
+		return getSmlConfiguration().getId();
+	}
+	
+	@Override
+	public Integer getSamplingRateImpl() {
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
+		return ((Count) parameter).getValue();
 	}
 
 	@Override
@@ -126,15 +110,11 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 	public Boolean validateSmlConfigurationImpl() {
 		boolean result = true;
 		
-		id = getSmlConfiguration().getId();
-		result &= id != null;
+		result &= getSmlConfiguration().getId() != null;
 	
 		
-		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter("samplingRate");
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
 		result &= parameter != null && parameter instanceof Count;
-		if (result) {
-			samplingRate = ((Count) parameter).getValue();
-		}
 		
 		return result;
 	}
@@ -149,4 +129,5 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

@@ -105,4 +105,10 @@ public class RegexProcessor extends AbstractReqexProcessor {
 		return parameterList.get(parameterName);
 	}
 
+	@Override
+	public Boolean validateSmlConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

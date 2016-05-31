@@ -144,7 +144,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		return true;
 	}
 
-	private Boolean validateSmlConfiguration() {
+	public Boolean validateSmlConfiguration() {
 		return true;
 	}
 
@@ -196,7 +196,11 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 
 	@Override
 	public Object execute(Object value) {
-		// TODO Auto-generated method stub
-		return null;
+		return base.execute(value);
+	}
+
+	@Override
+	public Integer getSamplingRate() {
+		return base.getSamplingRate();
 	}
 }

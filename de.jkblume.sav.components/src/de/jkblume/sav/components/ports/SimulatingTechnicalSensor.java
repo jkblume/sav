@@ -126,4 +126,16 @@ public class SimulatingTechnicalSensor extends AbstractSimulatingTechnicalSensor
 		
 	}
 
+	@Override
+	public Integer getSamplingRate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean validateSmlConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

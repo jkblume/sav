@@ -1,11 +1,11 @@
 
-package de.jkblume.sav.architecture.components;
+package de.jkblume.sav.components.ports;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.components.*;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.porttypes.*;
 
@@ -21,41 +21,50 @@ import net.opengis.sensorml.v20.AbstractPhysicalProcess;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.sensorml.v20.IOPropertyList;
 
+import de.jkblume.sav.architecture.gen.porttypes.*;
+
+import de.jkblume.sav.components.gen.ports.*;
+import org.smags.componentmodel.IPort;
 import java.util.*;
-import org.smags.componentmodel.annotations.ParameterA;
 
-public class JSimpleProcess extends AbstractSimpleProcess {
+public class OntologyReasoner extends AbstractOntologyReasoner {
 
-	public JSimpleProcess(String name) {
+	public OntologyReasoner(String name) {
 		super(name);
 	}
 
 	public void setup() {
-		//TODO:Implement
+		//TODO: IMPLEMENT
 	}
 
 	public void destroy() {
-		//TODO:Implement
-	}
-
-	public Object executeImpl(Object value) {
 		//TODO: IMPLEMENT
-		return null;
 	}
 
-	@Override
+	public void buildClassifier() {
+		base.buildClassifier();
+	}
+	public DataComponent getQualityOfService() {
+		DataComponent result = base.getQualityOfService();
+		return result;
+	}
+
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
+		if (sender == this) {
 
-		if (propertyName.equals("smlConfiguration")) {
-			//TODO:Implement
 		}
-
 	}
 
 	@Override
-	public Boolean validateSmlConfigurationImpl() {
+	public void handleIProcessAdded(IProcess item) {
 		// TODO Auto-generated method stub
-		return null;
+		
+	}
+
+	@Override
+	public void handleIProcessRemoved(IProcess item) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

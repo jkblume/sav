@@ -14,6 +14,7 @@ meta architecture SavMetaArchitecture{
 		
 	port type IProcess {
 		parameter smlConfiguration : AbstractProcess;
+		Boolean validateSmlConfiguration();
 		Object execute(Object value);
 	}
 	
@@ -25,6 +26,7 @@ meta architecture SavMetaArchitecture{
 		Boolean initialize();
 		Boolean isRunning();
 		String getId();
+		Integer getSamplingRate();
 		IOPropertyList retrieveValues();
 		
 		requires IProcess[0 to 1];

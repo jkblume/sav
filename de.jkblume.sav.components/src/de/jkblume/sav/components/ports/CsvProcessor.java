@@ -154,5 +154,11 @@ public class CsvProcessor extends AbstractCsvProcessor {
 		}
 	}
 
+	@Override
+	public Boolean validateSmlConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

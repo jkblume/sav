@@ -84,6 +84,12 @@ public class RegexProcessorTest {
 			return null;
 		}
 
+		@Override
+		public Boolean validateSmlConfiguration() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 		
 	}
 	

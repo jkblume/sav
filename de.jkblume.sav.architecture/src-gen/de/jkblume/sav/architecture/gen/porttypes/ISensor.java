@@ -39,6 +39,7 @@ public interface ISensor extends IProcess {
 	public Boolean initialize();
 	public Boolean isRunning();
 	public String getId();
+	public Integer getSamplingRate();
 	public IOPropertyList retrieveValues();
 
 	public Event getLastEvent();
@@ -88,11 +89,19 @@ public interface ISensor extends IProcess {
 			String result = base.getId();
 			return result;
 		}
+		public Integer getSamplingRate() {
+			Integer result = base.getSamplingRate();
+			return result;
+		}
 		public IOPropertyList retrieveValues() {
 			IOPropertyList result = base.retrieveValues();
 			return result;
 		}
 
+		public Boolean validateSmlConfiguration() {
+			Boolean result = base.validateSmlConfiguration();
+			return result;
+		}
 		public Object execute(Object value) {
 			Object result = base.execute(value);
 			return result;
@@ -178,11 +187,25 @@ public interface ISensor extends IProcess {
 			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
 		}
 
+		public Integer getSamplingRate() {
+			GetSamplingRateRemoteMessage in = new GetSamplingRateRemoteMessage();
+
+			return ((GetSamplingRateRemoteMessage) client.send(in, GetSamplingRateRemoteMessage.class))
+					.getResponseResult();
+		}
+
 		public IOPropertyList retrieveValues() {
 			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
 
 			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
 					.getResponseResult();
+		}
+
+		public Boolean validateSmlConfiguration() {
+			ValidateSmlConfigurationRemoteMessage in = new ValidateSmlConfigurationRemoteMessage();
+
+			return ((ValidateSmlConfigurationRemoteMessage) client.send(in,
+					ValidateSmlConfigurationRemoteMessage.class)).getResponseResult();
 		}
 
 		public Object execute(Object value) {
@@ -286,6 +309,20 @@ public interface ISensor extends IProcess {
 
 		public GetIdRemoteMessage() {
 			super("getId");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class GetSamplingRateRemoteMessage extends RemoteMessageBase<Integer> {
+
+		public GetSamplingRateRemoteMessage() {
+			super("getSamplingRate");
 		}
 
 		@Override
