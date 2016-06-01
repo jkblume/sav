@@ -18,23 +18,29 @@ meta architecture SavMetaArchitecture{
 		Object execute(Object value);
 	}
 	
-	port type ISensor extends IProcess {
+	port type ISensor extends IProcess{
 		parameter lastEvent : Event;
 		
 		void start();
 		void stop();
 		Boolean isRunning();
-		String getId();
-		Integer getSamplingRate();
 		IOPropertyList retrieveValues();
-		IOPropertyList retrieveOutputStructure();
 		
 		requires IProcess[0 to 1];
+		
+		// helper functions
+		String getId();
+		Integer getSamplingRate();
+		IOPropertyList retrieveOutputStructure();
+	}
+	
+	port type ILogicalSensor extends ISensor{
+		requires ISensor[0 to *];
 	}
 			
-	port type IReasoningProcess extends IProcess{
-		void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors);
-		void updateClassifier(Object trainingDate);
+	port type IReasoningStrategy {
+		void buildClassifier(List<ISensor> sensors);
+		Category classifyCurrentState(IOPropertyList input);
 		DataComponent getQualityOfService();
 		
 		parameter injectorProvided : Boolean;
@@ -42,14 +48,15 @@ meta architecture SavMetaArchitecture{
 		requires IProcess[0 to *];
 	}
 	
-	port type ISpecificationReasoningProcess extends IReasoningProcess {
+	port type ISpecificationReasoningStrategy extends IReasoningStrategy {
+	
 	}
 	
-	port type ILearningReasoningProcess extends IReasoningProcess {
+	port type ILearningReasoningStrategy extends IReasoningStrategy {
 		void startGesture(Category category);
 		void stopGesture(Category category);
 		void teachCurrentState(Category category);
-		Object classifyCurrentState(Object input);
+		void updateClassifier(Object trainingDate);
 	}
 	
 	port type IVisualisationStrategy {
@@ -70,7 +77,13 @@ meta architecture SavMetaArchitecture{
 	}
 	
 	component type LearningReasoningProcess {
-		provides ILearningReasoningProcess;
+		provides IProcess;
+		provides ILearningReasoningStrategy;
+	}
+	
+	component type SpecificationReasoningProcess {
+		provides IProcess;
+		provides ISpecificationReasoningStrategy;
 	}
 	
 	component type TechnicalSensor {
@@ -78,8 +91,7 @@ meta architecture SavMetaArchitecture{
 	}
 	
 	component type LogicalSensor {
-		provides ISensor;
-		requires ISensor[0 to *];
+		provides ILogicalSensor;
 	}
 	
 	component type Visualizer {

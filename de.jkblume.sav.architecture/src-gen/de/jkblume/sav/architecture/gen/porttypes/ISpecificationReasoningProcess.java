@@ -70,14 +70,15 @@ public interface ISpecificationReasoningProcess extends IReasoningProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
-			base.buildClassifier(reasoner, sourceSensors);
-		}
-		public void updateClassifier(Object trainingDate) {
-			base.updateClassifier(trainingDate);
+		public void buildClassifier(List<ISensor> sensors) {
+			base.buildClassifier(sensors);
 		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
+			return result;
+		}
+		public Category classifyCurrentState(IOPropertyList input) {
+			Category result = base.classifyCurrentState(input);
 			return result;
 		}
 
@@ -153,25 +154,25 @@ public interface ISpecificationReasoningProcess extends IReasoningProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
+		public void buildClassifier(List<ISensor> sensors) {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
-			in.setReasoner(reasoner);
-			in.setSourceSensors(sourceSensors);
+			in.setSensors(sensors);
 
 			client.send(in, BuildClassifierRemoteMessage.class);
-		}
-
-		public void updateClassifier(Object trainingDate) {
-			UpdateClassifierRemoteMessage in = new UpdateClassifierRemoteMessage();
-			in.setTrainingDate(trainingDate);
-
-			client.send(in, UpdateClassifierRemoteMessage.class);
 		}
 
 		public DataComponent getQualityOfService() {
 			GetQualityOfServiceRemoteMessage in = new GetQualityOfServiceRemoteMessage();
 
 			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
+					.getResponseResult();
+		}
+
+		public Category classifyCurrentState(IOPropertyList input) {
+			ClassifyCurrentStateRemoteMessage in = new ClassifyCurrentStateRemoteMessage();
+			in.setInput(input);
+
+			return ((ClassifyCurrentStateRemoteMessage) client.send(in, ClassifyCurrentStateRemoteMessage.class))
 					.getResponseResult();
 		}
 

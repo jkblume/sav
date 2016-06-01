@@ -37,7 +37,7 @@ public interface ILearningReasoningProcess extends IReasoningProcess {
 	public void startGesture(Category category);
 	public void stopGesture(Category category);
 	public void teachCurrentState(Category category);
-	public Object classifyCurrentState(Object input);
+	public void updateClassifier(Object trainingDate);
 
 	public <T> T as(Class<T> c);
 
@@ -84,19 +84,19 @@ public interface ILearningReasoningProcess extends IReasoningProcess {
 		public void teachCurrentState(Category category) {
 			base.teachCurrentState(category);
 		}
-		public Object classifyCurrentState(Object input) {
-			Object result = base.classifyCurrentState(input);
-			return result;
-		}
-
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
-			base.buildClassifier(reasoner, sourceSensors);
-		}
 		public void updateClassifier(Object trainingDate) {
 			base.updateClassifier(trainingDate);
 		}
+
+		public void buildClassifier(List<ISensor> sensors) {
+			base.buildClassifier(sensors);
+		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
+			return result;
+		}
+		public Category classifyCurrentState(IOPropertyList input) {
+			Category result = base.classifyCurrentState(input);
 			return result;
 		}
 
@@ -193,22 +193,6 @@ public interface ILearningReasoningProcess extends IReasoningProcess {
 			client.send(in, TeachCurrentStateRemoteMessage.class);
 		}
 
-		public Object classifyCurrentState(Object input) {
-			ClassifyCurrentStateRemoteMessage in = new ClassifyCurrentStateRemoteMessage();
-			in.setInput(input);
-
-			return ((ClassifyCurrentStateRemoteMessage) client.send(in, ClassifyCurrentStateRemoteMessage.class))
-					.getResponseResult();
-		}
-
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
-			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
-			in.setReasoner(reasoner);
-			in.setSourceSensors(sourceSensors);
-
-			client.send(in, BuildClassifierRemoteMessage.class);
-		}
-
 		public void updateClassifier(Object trainingDate) {
 			UpdateClassifierRemoteMessage in = new UpdateClassifierRemoteMessage();
 			in.setTrainingDate(trainingDate);
@@ -216,10 +200,25 @@ public interface ILearningReasoningProcess extends IReasoningProcess {
 			client.send(in, UpdateClassifierRemoteMessage.class);
 		}
 
+		public void buildClassifier(List<ISensor> sensors) {
+			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
+			in.setSensors(sensors);
+
+			client.send(in, BuildClassifierRemoteMessage.class);
+		}
+
 		public DataComponent getQualityOfService() {
 			GetQualityOfServiceRemoteMessage in = new GetQualityOfServiceRemoteMessage();
 
 			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
+					.getResponseResult();
+		}
+
+		public Category classifyCurrentState(IOPropertyList input) {
+			ClassifyCurrentStateRemoteMessage in = new ClassifyCurrentStateRemoteMessage();
+			in.setInput(input);
+
+			return ((ClassifyCurrentStateRemoteMessage) client.send(in, ClassifyCurrentStateRemoteMessage.class))
 					.getResponseResult();
 		}
 
@@ -317,27 +316,27 @@ public interface ILearningReasoningProcess extends IReasoningProcess {
 		}
 	}
 
-	public class ClassifyCurrentStateRemoteMessage extends RemoteMessageBase<Object> {
+	public class UpdateClassifierRemoteMessage extends RemoteMessageBase<Object> {
 
-		private Object input;
+		private Object trainingDate;
 
-		public ClassifyCurrentStateRemoteMessage() {
-			super("classifyCurrentState", Object.class.getName());
+		public UpdateClassifierRemoteMessage() {
+			super("updateClassifier", Object.class.getName());
 		}
 
-		public void setInput(Object input) {
-			this.input = input;
+		public void setTrainingDate(Object trainingDate) {
+			this.trainingDate = trainingDate;
 		}
 
-		public Object getInput() {
-			return input;
+		public Object getTrainingDate() {
+			return trainingDate;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
 
-			result.add(getInput());
+			result.add(getTrainingDate());
 
 			return result;
 		}

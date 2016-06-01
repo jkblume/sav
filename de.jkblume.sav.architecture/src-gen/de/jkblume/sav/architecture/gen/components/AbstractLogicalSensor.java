@@ -32,7 +32,10 @@ import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
 @Component(name = "LogicalSensor", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "LogicalSensor", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractLogicalSensor extends AbstractComponent implements INotifyPropertyChanged, ISensor {
+public abstract class AbstractLogicalSensor extends AbstractComponent
+		implements
+			INotifyPropertyChanged,
+			ILogicalSensor {
 
 	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
@@ -73,7 +76,7 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 	public abstract void handleIProcessConnected(IProcess item);
 	public abstract void handleIProcessDisconnected(IProcess item);
 
-	private final List<ISensor> iSensorRoles = new ArrayList<ISensor>();
+	private final List<ILogicalSensor> iLogicalSensorRoles = new ArrayList<ILogicalSensor>();
 
 	public AbstractLogicalSensor(String name) {
 		super(name);
@@ -102,8 +105,8 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
-		if (type == ISensor.class)
-			return iSensorRoles.size() > 0 ? (T) iSensorRoles.get(0) : (T) this;
+		if (type == ILogicalSensor.class)
+			return iLogicalSensorRoles.size() > 0 ? (T) iLogicalSensorRoles.get(0) : (T) this;
 
 		return null;
 	}
@@ -111,8 +114,8 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 	@Override
 	public boolean innerBindPort(IPort port) {
 
-		if (port instanceof ISensor) {
-			iSensorRoles.add(0, (ISensor) port);
+		if (port instanceof ILogicalSensor) {
+			iLogicalSensorRoles.add(0, (ILogicalSensor) port);
 			return true;
 		}
 
@@ -122,8 +125,8 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 	@Override
 	public boolean innerUnbindPort(IPort port) {
 
-		if (port instanceof ISensor && iSensorRoles.contains(port)) {
-			iSensorRoles.remove(port);
+		if (port instanceof ILogicalSensor && iLogicalSensorRoles.contains(port)) {
+			iLogicalSensorRoles.remove(port);
 			return true;
 		}
 
@@ -134,10 +137,10 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			startImpl();
 		else
-			iSensorRoles.get(0).start();
+			iLogicalSensorRoles.get(0).start();
 
 	}
 
@@ -145,10 +148,10 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			stopImpl();
 		else
-			iSensorRoles.get(0).stop();
+			iLogicalSensorRoles.get(0).stop();
 
 	}
 
@@ -156,32 +159,10 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			return isRunningImpl();
 		else
-			return iSensorRoles.get(0).isRunning();
-
-	}
-
-	public String getId() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			return getIdImpl();
-		else
-			return iSensorRoles.get(0).getId();
-
-	}
-
-	public Integer getSamplingRate() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("getSamplingRate", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			return getSamplingRateImpl();
-		else
-			return iSensorRoles.get(0).getSamplingRate();
+			return iLogicalSensorRoles.get(0).isRunning();
 
 	}
 
@@ -189,10 +170,32 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			return retrieveValuesImpl();
 		else
-			return iSensorRoles.get(0).retrieveValues();
+			return iLogicalSensorRoles.get(0).retrieveValues();
+
+	}
+
+	public String getId() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
+
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
+			return getIdImpl();
+		else
+			return iLogicalSensorRoles.get(0).getId();
+
+	}
+
+	public Integer getSamplingRate() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("getSamplingRate", this);
+
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
+			return getSamplingRateImpl();
+		else
+			return iLogicalSensorRoles.get(0).getSamplingRate();
 
 	}
 
@@ -200,10 +203,10 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveOutputStructure", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			return retrieveOutputStructureImpl();
 		else
-			return iSensorRoles.get(0).retrieveOutputStructure();
+			return iLogicalSensorRoles.get(0).retrieveOutputStructure();
 
 	}
 
@@ -211,10 +214,10 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			return validateSmlConfigurationImpl();
 		else
-			return iSensorRoles.get(0).validateSmlConfiguration();
+			return iLogicalSensorRoles.get(0).validateSmlConfiguration();
 
 	}
 
@@ -222,19 +225,19 @@ public abstract class AbstractLogicalSensor extends AbstractComponent implements
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
 
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
 			return executeImpl(value);
 		else
-			return iSensorRoles.get(0).execute(value);
+			return iLogicalSensorRoles.get(0).execute(value);
 
 	}
 
 	public abstract void startImpl();
 	public abstract void stopImpl();
 	public abstract Boolean isRunningImpl();
+	public abstract IOPropertyList retrieveValuesImpl();
 	public abstract String getIdImpl();
 	public abstract Integer getSamplingRateImpl();
-	public abstract IOPropertyList retrieveValuesImpl();
 	public abstract IOPropertyList retrieveOutputStructureImpl();
 	public abstract Boolean validateSmlConfigurationImpl();
 	public abstract Object executeImpl(Object value);

@@ -28,31 +28,20 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "ISensor", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ISensor extends IProcess {
+@PortTypeA(name = "ILogicalSensor", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ILogicalSensor extends ISensor {
 
-	public static Class remotePortClass = ISensorRemote.class;
-	public static Class proxyComponentClass = ISensorRemoteProxy.class;
-
-	public void start();
-	public void stop();
-	public Boolean isRunning();
-	public IOPropertyList retrieveValues();
-	public String getId();
-	public Integer getSamplingRate();
-	public IOPropertyList retrieveOutputStructure();
-
-	public Event getLastEvent();
-	public void setLastEvent(Event lastEvent);
+	public static Class remotePortClass = ILogicalSensorRemote.class;
+	public static Class proxyComponentClass = ILogicalSensorRemoteProxy.class;
 
 	public <T> T as(Class<T> c);
 
 	/*--------- REMOTE ---------*/
 
-	public class ISensorRemote extends AbstractRemotePort<ISensor>implements ISensor {
+	public class ILogicalSensorRemote extends AbstractRemotePort<ILogicalSensor>implements ILogicalSensor {
 
-		public ISensorRemote(String name) {
-			super(name, ISensor.class);
+		public ILogicalSensorRemote(String name) {
+			super(name, ILogicalSensor.class);
 		}
 
 		public Event getLastEvent() {
@@ -114,9 +103,9 @@ public interface ISensor extends IProcess {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "ISensor", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ISensorRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class ISensorRemoteProxy extends RemoteProxyComponent<ISensor>implements ISensor {
-		public ISensorRemoteProxy(String name) {
+	@Component(name = "ILogicalSensor", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ILogicalSensorRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ILogicalSensorRemoteProxy extends RemoteProxyComponent<ILogicalSensor>implements ILogicalSensor {
+		public ILogicalSensorRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -216,136 +205,6 @@ public interface ISensor extends IProcess {
 			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
 		}
 
-	}
-
-	public class GetLastEventRemoteMessage extends RemoteMessageBase<Event> {
-
-		public GetLastEventRemoteMessage() {
-			super("getLastEvent");
-		}
-
-	}
-
-	public class SetLastEventRemoteMessage extends RemoteMessageBase<Object> {
-
-		private Event lastEvent;
-
-		public SetLastEventRemoteMessage() {
-			super("setLastEvent", Event.class.getName());
-		}
-
-		public void setLastEvent(Event lastEvent) {
-			this.lastEvent = lastEvent;
-		}
-
-		public Event getLastEvent() {
-			return lastEvent;
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-			result.add(getLastEvent());
-			return result;
-		}
-	}
-
-	public class StartRemoteMessage extends RemoteMessageBase<Object> {
-
-		public StartRemoteMessage() {
-			super("start");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class StopRemoteMessage extends RemoteMessageBase<Object> {
-
-		public StopRemoteMessage() {
-			super("stop");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class IsRunningRemoteMessage extends RemoteMessageBase<Boolean> {
-
-		public IsRunningRemoteMessage() {
-			super("isRunning");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<IOPropertyList> {
-
-		public RetrieveValuesRemoteMessage() {
-			super("retrieveValues");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class GetIdRemoteMessage extends RemoteMessageBase<String> {
-
-		public GetIdRemoteMessage() {
-			super("getId");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class GetSamplingRateRemoteMessage extends RemoteMessageBase<Integer> {
-
-		public GetSamplingRateRemoteMessage() {
-			super("getSamplingRate");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class RetrieveOutputStructureRemoteMessage extends RemoteMessageBase<IOPropertyList> {
-
-		public RetrieveOutputStructureRemoteMessage() {
-			super("retrieveOutputStructure");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
 	}
 
 }

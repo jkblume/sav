@@ -34,8 +34,8 @@ public interface IReasoningStrategy {
 	public static Class remotePortClass = IReasoningStrategyRemote.class;
 	public static Class proxyComponentClass = IReasoningStrategyRemoteProxy.class;
 
-	public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors);
-	public void updateClassifier(Object trainingDate);
+	public void buildClassifier(List<ISensor> sensors);
+	public Category classifyCurrentState(IOPropertyList input);
 	public DataComponent getQualityOfService();
 
 	public Boolean getInjectorProvided();
@@ -70,11 +70,12 @@ public interface IReasoningStrategy {
 			base.setExtractorProvided(extractorProvided);
 		}
 
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
-			base.buildClassifier(reasoner, sourceSensors);
+		public void buildClassifier(List<ISensor> sensors) {
+			base.buildClassifier(sensors);
 		}
-		public void updateClassifier(Object trainingDate) {
-			base.updateClassifier(trainingDate);
+		public Category classifyCurrentState(IOPropertyList input) {
+			Category result = base.classifyCurrentState(input);
+			return result;
 		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
@@ -133,19 +134,19 @@ public interface IReasoningStrategy {
 			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
+		public void buildClassifier(List<ISensor> sensors) {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
-			in.setReasoner(reasoner);
-			in.setSourceSensors(sourceSensors);
+			in.setSensors(sensors);
 
 			client.send(in, BuildClassifierRemoteMessage.class);
 		}
 
-		public void updateClassifier(Object trainingDate) {
-			UpdateClassifierRemoteMessage in = new UpdateClassifierRemoteMessage();
-			in.setTrainingDate(trainingDate);
+		public Category classifyCurrentState(IOPropertyList input) {
+			ClassifyCurrentStateRemoteMessage in = new ClassifyCurrentStateRemoteMessage();
+			in.setInput(input);
 
-			client.send(in, UpdateClassifierRemoteMessage.class);
+			return ((ClassifyCurrentStateRemoteMessage) client.send(in, ClassifyCurrentStateRemoteMessage.class))
+					.getResponseResult();
 		}
 
 		public DataComponent getQualityOfService() {
@@ -223,63 +224,51 @@ public interface IReasoningStrategy {
 
 	public class BuildClassifierRemoteMessage extends RemoteMessageBase<Object> {
 
-		private ISensor reasoner;
-
-		private List<ISensor> sourceSensors;
+		private List<ISensor> sensors;
 
 		public BuildClassifierRemoteMessage() {
-			super("buildClassifier", ISensor.class.getName(), List.class.getName());
+			super("buildClassifier", List.class.getName());
 		}
 
-		public void setReasoner(ISensor reasoner) {
-			this.reasoner = reasoner;
+		public void setSensors(List<ISensor> sensors) {
+			this.sensors = sensors;
 		}
 
-		public ISensor getReasoner() {
-			return reasoner;
-		}
-
-		public void setSourceSensors(List<ISensor> sourceSensors) {
-			this.sourceSensors = sourceSensors;
-		}
-
-		public List<ISensor> getSourceSensors() {
-			return sourceSensors;
+		public List<ISensor> getSensors() {
+			return sensors;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
 
-			result.add(getReasoner());
-
-			result.add(getSourceSensors());
+			result.add(getSensors());
 
 			return result;
 		}
 	}
 
-	public class UpdateClassifierRemoteMessage extends RemoteMessageBase<Object> {
+	public class ClassifyCurrentStateRemoteMessage extends RemoteMessageBase<Category> {
 
-		private Object trainingDate;
+		private IOPropertyList input;
 
-		public UpdateClassifierRemoteMessage() {
-			super("updateClassifier", Object.class.getName());
+		public ClassifyCurrentStateRemoteMessage() {
+			super("classifyCurrentState", IOPropertyList.class.getName());
 		}
 
-		public void setTrainingDate(Object trainingDate) {
-			this.trainingDate = trainingDate;
+		public void setInput(IOPropertyList input) {
+			this.input = input;
 		}
 
-		public Object getTrainingDate() {
-			return trainingDate;
+		public IOPropertyList getInput() {
+			return input;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
 
-			result.add(getTrainingDate());
+			result.add(getInput());
 
 			return result;
 		}

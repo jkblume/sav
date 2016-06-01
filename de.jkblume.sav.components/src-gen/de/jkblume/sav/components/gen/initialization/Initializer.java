@@ -9,6 +9,8 @@ import de.jkblume.sav.architecture.gen.components.*;
 
 import de.jkblume.sav.architecture.components.*;
 
+import de.jkblume.sav.components.components.*;
+
 import de.jkblume.sav.components.ports.*;
 
 import de.jkblume.sav.architecture.gen.porttypes.*;

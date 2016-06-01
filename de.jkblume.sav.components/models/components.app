@@ -28,8 +28,9 @@ app SavComponents {
 	implementation port Cube3DVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port SerialTechnicalSensor implements ISensor{}
 	implementation port SimulatingTechnicalSensor implements ISensor{}
-		
+	
 	components:
+	component SimpleLogicRuleReasoner implements SpecificationReasoningProcess{}	
 	
 	sensors:
 

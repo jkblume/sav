@@ -62,11 +62,12 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 			base.setExtractorProvided(extractorProvided);
 		}
 
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
-			base.buildClassifier(reasoner, sourceSensors);
+		public void buildClassifier(List<ISensor> sensors) {
+			base.buildClassifier(sensors);
 		}
-		public void updateClassifier(Object trainingDate) {
-			base.updateClassifier(trainingDate);
+		public Category classifyCurrentState(IOPropertyList input) {
+			Category result = base.classifyCurrentState(input);
+			return result;
 		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
@@ -126,19 +127,19 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
-		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
+		public void buildClassifier(List<ISensor> sensors) {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
-			in.setReasoner(reasoner);
-			in.setSourceSensors(sourceSensors);
+			in.setSensors(sensors);
 
 			client.send(in, BuildClassifierRemoteMessage.class);
 		}
 
-		public void updateClassifier(Object trainingDate) {
-			UpdateClassifierRemoteMessage in = new UpdateClassifierRemoteMessage();
-			in.setTrainingDate(trainingDate);
+		public Category classifyCurrentState(IOPropertyList input) {
+			ClassifyCurrentStateRemoteMessage in = new ClassifyCurrentStateRemoteMessage();
+			in.setInput(input);
 
-			client.send(in, UpdateClassifierRemoteMessage.class);
+			return ((ClassifyCurrentStateRemoteMessage) client.send(in, ClassifyCurrentStateRemoteMessage.class))
+					.getResponseResult();
 		}
 
 		public DataComponent getQualityOfService() {

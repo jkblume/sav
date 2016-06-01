@@ -18,7 +18,7 @@ app SavArchitecture {
 	}
 
 	ports:
-	
+	implementation port JReasoner implements ILogicalSensor{}
 
 	components:
 	component JSimpleProcess implements SimpleProcess{}
@@ -26,6 +26,7 @@ app SavArchitecture {
 	component JLogicalSensor implements LogicalSensor{}
 	component JTechnicalSensor implements TechnicalSensor{}
 	component JVisualizer implements Visualizer{}
+	
 	
 	sensors:
 
