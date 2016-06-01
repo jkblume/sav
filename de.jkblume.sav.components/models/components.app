@@ -23,14 +23,14 @@ app SavComponents {
 	implementation port CsvProcessor implements IProcess{}
 	implementation port RegexProcessor implements IProcess{}
 	implementation port DifferenceProcessor implements IProcess{}
-	implementation port SysoVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port DiagramVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port Cube3DVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port SerialTechnicalSensor implements ISensor{}
 	implementation port SimulatingTechnicalSensor implements ISensor{}
 	
 	components:
-	component SimpleLogicRuleReasoner implements SpecificationReasoningProcess{}	
+	
+	component SimpleRuleReasoner implements SpecificationReasonerProcess{}
 	
 	sensors:
 

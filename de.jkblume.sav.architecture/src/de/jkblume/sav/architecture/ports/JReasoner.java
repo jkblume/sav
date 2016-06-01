@@ -34,7 +34,8 @@ public class JReasoner extends AbstractJReasoner {
 	}
 
 	public void setup() {
-		//TODO: IMPLEMENT
+		IReasonerProcess learningReasoner = (IReasonerProcess) getIProcess();
+		learningReasoner.buildClassifier(getISensors());
 	}
 
 	public void destroy() {
@@ -68,6 +69,10 @@ public class JReasoner extends AbstractJReasoner {
 		return result;
 	}
 
+	public Boolean initialize() {
+		Boolean result = base.initialize();
+		return result;
+	}
 	public Boolean validateSmlConfiguration() {
 		Boolean result = base.validateSmlConfiguration();
 		return result;
@@ -105,12 +110,6 @@ public class JReasoner extends AbstractJReasoner {
 	public void handleIProcessDisconnected(IProcess item) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public Boolean initialize() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

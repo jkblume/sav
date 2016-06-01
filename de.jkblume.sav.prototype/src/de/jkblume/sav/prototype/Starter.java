@@ -21,14 +21,18 @@ import org.vast.sensorML.SMLUtils;
 import org.vast.xml.XMLReaderException;
 
 import de.jkblume.sav.architecture.components.JAggregateProcess;
+import de.jkblume.sav.architecture.components.JLogicalSensor;
 import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
+import de.jkblume.sav.architecture.ports.JReasoner;
+import de.jkblume.sav.components.components.SimpleRuleReasoner;
 import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
 import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
 import de.jkblume.sav.components.ports.RegexProcessor;
 import de.jkblume.sav.components.ports.SerialTechnicalSensor;
-import de.jkblume.sav.components.ports.SysoVisualisationStrategy;
+import de.jkblume.sav.prototype.ui.UI;
+import javafx.application.Application;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
 
@@ -45,6 +49,8 @@ public class Starter {
 		re.initializeAdaptationArchitecture();
 
 		utils = new SMLUtils(SMLUtils.V2_0);
+		
+//		Application.launch(UI.class, new String[] {});
 		
 		// create visualization strategy
 		ReconfigurationScript rs = createDiagramVisualizationScript();
@@ -70,16 +76,47 @@ public class Starter {
 
 		rs = connectAggregateProcessScript();
 		re.getReconfigurationEngine().executeScript(rs);
-		
-		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
-		simulatingSensor.start();
 
-		Thread.sleep(1000);
-
+//		Thread.sleep(1000);
 
 		rs = connectSensorScript();
 		re.getReconfigurationEngine().executeScript(rs);
+		
+		rs = createReasoningEngineScript();
+		re.getReconfigurationEngine().executeScript(rs);
+		
+		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
+		simulatingSensor.start();
+		
+		JLogicalSensor logicalSensor = (JLogicalSensor) re.getRuntimeModel().getComponentByName("ls");
+		logicalSensor.start();
 }
+
+	private static ReconfigurationScript createReasoningEngineScript() throws FileNotFoundException, XMLReaderException {
+		InputStream is = new FileInputStream("res/glove_reasoner.xml");
+		AbstractProcess gloveReasonerDesription = utils.readProcess(is);
+		
+		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+
+		ops.add(new CreateComponentInstanceOperation("ls", JLogicalSensor.class));
+		ops.add(new CreatePortInstanceOperation("rj", JReasoner.class));
+		ops.add(new BindPortOperation("ls", "rj", "ILogicalSensor"));
+		ops.add(new CreateComponentInstanceOperation("srr", SimpleRuleReasoner.class));
+		ops.add(new ConnectOperation("srr", "rj", "IProcess"));
+		ops.add(new ConnectOperation("srr", "ls", "IProcess"));
+		ops.add(new SetComponentParameterOperation("ls", "smlConfiguration", gloveReasonerDesription));
+		ops.add(new ConnectOperation("jtps1", "rj", "ISensor"));
+		ops.add(new ConnectOperation("jtps1", "ls", "ISensor"));
+		ops.add(new SetupComponentOperation("ls"));
+		ops.add(new SetupPortOperation("rj"));
+		ops.add(new SetupComponentOperation("srr"));
+		
+		ops.add(new CreateComponentInstanceOperation("v3", JVisualizer.class));
+		ops.add(new SetupComponentOperation("v3"));
+		ops.add(new ConnectOperation("ls", "v3", "ISensor"));
+		
+		return new ReconfigurationScript(ops);
+	}
 
 	private static ReconfigurationScript createCubeVisualizationScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();

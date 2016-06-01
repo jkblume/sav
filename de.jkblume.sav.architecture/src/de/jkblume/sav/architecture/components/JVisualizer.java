@@ -10,6 +10,7 @@ import net.opengis.gml.v32.TimeInstant;
 import net.opengis.sensorml.v20.AbstractPhysicalProcess;
 import net.opengis.sensorml.v20.Event;
 import net.opengis.sensorml.v20.IOPropertyList;
+import net.opengis.swe.v20.DataComponent;
 
 public class JVisualizer extends AbstractVisualizer {
 
@@ -83,8 +84,11 @@ public class JVisualizer extends AbstractVisualizer {
 
 	@Override
 	public void visualizeEventImpl(ISensor source, Event event) {
-		// TODO Auto-generated method stub
-		
+		String sensorId = source.getSmlConfiguration().getId();
+		System.out.println("### Sensor: " + sensorId);
+		for (DataComponent component : event.getPropertyList()) {
+			System.out.println("Value: " + component.toString());
+		}
 	}
 
 	@Override

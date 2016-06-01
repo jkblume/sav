@@ -28,11 +28,7 @@ public class SysoVisualisationStrategy extends AbstractSysoVisualisationStrategy
 
 	@Override
 	public void visualizeEvent(ISensor source, Event event) {
-		String sensorId = source.getSmlConfiguration().getId();
-		System.out.println("### Sensor: " + sensorId);
-		for (DataComponent component : event.getPropertyList()) {
-			System.out.println("Value: " + component.toString());
-		}
+		
 	}
 
 	@Override

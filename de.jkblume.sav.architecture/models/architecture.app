@@ -27,7 +27,6 @@ app SavArchitecture {
 	component JTechnicalSensor implements TechnicalSensor{}
 	component JVisualizer implements Visualizer{}
 	
-	
 	sensors:
 
 	initialization{

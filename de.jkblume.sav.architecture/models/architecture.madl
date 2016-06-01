@@ -9,7 +9,6 @@ meta architecture SavMetaArchitecture{
 	sensor units:
 
 	type libraries:
-	
 	port types:
 		
 	port type IProcess {
@@ -44,9 +43,9 @@ meta architecture SavMetaArchitecture{
 		requires ISensor[0 to *];
 	}
 			
-	port type IReasoningStrategy {
+	port type IReasonerProcess extends IProcess {
 		void buildClassifier(List<ISensor> sensors);
-		Category classifyCurrentState(IOPropertyList input);
+		Category classify(IOPropertyList input);
 		DataComponent getQualityOfService();
 		
 		parameter injectorProvided : Boolean;
@@ -54,11 +53,11 @@ meta architecture SavMetaArchitecture{
 		requires IProcess[0 to *];
 	}
 	
-	port type ISpecificationReasoningStrategy extends IReasoningStrategy {
+	port type ISpecificationReasonerProcess extends IReasonerProcess {
 	
 	}
 	
-	port type ILearningReasoningStrategy extends IReasoningStrategy {
+	port type ILearningReasonerProcess extends IReasonerProcess {
 		void startGesture(Category category);
 		void stopGesture(Category category);
 		void teachCurrentState(Category category);
@@ -81,14 +80,12 @@ meta architecture SavMetaArchitecture{
 		provides IAggregateProcess;
 	}
 	
-	component type LearningReasoningProcess {
-		provides IProcess;
-		provides ILearningReasoningStrategy;
+	component type LearningReasonerProcess {
+		provides ILearningReasonerProcess;
 	}
 	
-	component type SpecificationReasoningProcess {
-		provides IProcess;
-		provides ISpecificationReasoningStrategy;
+	component type SpecificationReasonerProcess {
+		provides ISpecificationReasonerProcess;
 	}
 	
 	component type TechnicalSensor {
