@@ -23,17 +23,18 @@ meta architecture SavMetaArchitecture{
 		
 		void start();
 		void stop();
-		Boolean initialize();
 		Boolean isRunning();
 		String getId();
 		Integer getSamplingRate();
 		IOPropertyList retrieveValues();
+		IOPropertyList retrieveOutputStructure();
 		
 		requires IProcess[0 to 1];
 	}
 			
-	port type IReasoningStrategy {
-		void buildClassifier();
+	port type IReasoningProcess extends IProcess{
+		void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors);
+		void updateClassifier(Object trainingDate);
 		DataComponent getQualityOfService();
 		
 		parameter injectorProvided : Boolean;
@@ -41,14 +42,14 @@ meta architecture SavMetaArchitecture{
 		requires IProcess[0 to *];
 	}
 	
-	port type ISpecificationReasoningStrategy extends IReasoningStrategy {
+	port type ISpecificationReasoningProcess extends IReasoningProcess {
 	}
 	
-	port type ILearningReasoningStrategy extends IReasoningStrategy {
+	port type ILearningReasoningProcess extends IReasoningProcess {
 		void startGesture(Category category);
 		void stopGesture(Category category);
 		void teachCurrentState(Category category);
-		void train();
+		Object classifyCurrentState(Object input);
 	}
 	
 	port type IVisualisationStrategy {
@@ -68,6 +69,10 @@ meta architecture SavMetaArchitecture{
 		requires IProcess[0 to *];
 	}
 	
+	component type LearningReasoningProcess {
+		provides ILearningReasoningProcess;
+	}
+	
 	component type TechnicalSensor {
 		provides ISensor;
 	}
@@ -75,14 +80,6 @@ meta architecture SavMetaArchitecture{
 	component type LogicalSensor {
 		provides ISensor;
 		requires ISensor[0 to *];
-	}
-	
-	component type LearningReasoner extends LogicalSensor {
-		provides ILearningReasoningStrategy;
-	}
-	
-	component type SpecificationReasoner extends LogicalSensor {
-		provides ISpecificationReasoningStrategy;
 	}
 	
 	component type Visualizer {

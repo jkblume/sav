@@ -27,7 +27,7 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractOntologyReasoner
+public abstract class AbstractSimpleLogicRuleReasoner
 		implements
 			IPort<ISpecificationReasoningStrategy>,
 			INotifyPropertyChanged,
@@ -57,7 +57,7 @@ public abstract class AbstractOntologyReasoner
 	public abstract void handleIProcessAdded(IProcess item);
 	public abstract void handleIProcessRemoved(IProcess item);
 
-	public AbstractOntologyReasoner(String name) {
+	public AbstractSimpleLogicRuleReasoner(String name) {
 		this.name = name;
 	}
 

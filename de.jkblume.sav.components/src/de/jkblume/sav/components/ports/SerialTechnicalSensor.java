@@ -41,38 +41,18 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 
 	public void setup() {
 		if (!validateSmlConfiguration()) {
-			throw new IllegalStateException("There is an error during validation of sensor " + getId() + "'s configuration");
+			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
-	}
-
-	public void destroy() {
-		//TODO: IMPLEMENT
-	}
-
-	public void notifyEventChanged(Object sender, Event argument) {
-	}
-
-	@Override
-	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
-		// TODO Auto-generated method stub
 		
-	}
 
-	@Override
-	public String getId() {
-		return base.getId();
-	}
-
-	@Override
-	public Boolean initialize() {
 		Text serialPortParameter = (Text) getSmlConfiguration().getParameter(SERIAL_PORT_PARAMETER_NAME);
-		CommPortIdentifier portId;
+		CommPortIdentifier portId = null;
 		try {
 			portId = CommPortIdentifier.getPortIdentifier(serialPortParameter.getValue());
 		} catch (NoSuchPortException e) {
 			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
 			e.printStackTrace();
-			return false;
+			return;
 		}
 		
 		Count timeoutParameter = (Count) getSmlConfiguration().getParameter(TIMEOUT_PARAMETER_NAME);
@@ -81,7 +61,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		} catch (PortInUseException e) {
 			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
 			System.err.println(e.getMessage());
-			return false;
+			return;
 		}
 		
 		Count baudrateParameter = (Count) getSmlConfiguration().getParameter(BAUDRATE_PARAMETER_NAME);
@@ -91,7 +71,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		} catch (UnsupportedCommOperationException e) {
 			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
 			System.err.println(e.getMessage());
-			return false;
+			return;
 		}
 		
 		try {
@@ -99,7 +79,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		} catch (IOException e) {
 			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
 			System.err.println(e.getMessage());
-			return false;
+			return;
 		}
 
 		// initially deactive/stop data notifications, so the sensor is not running
@@ -138,12 +118,28 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		} catch (TooManyListenersException e) {
 			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
 			System.err.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
+			return;
+		}		
 	}
 
+	public void destroy() {
+		//TODO: IMPLEMENT
+	}
+
+	public void notifyEventChanged(Object sender, Event argument) {
+	}
+
+	@Override
+	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getId() {
+		return base.getId();
+	}
+	
 	public Boolean validateSmlConfiguration() {
 		return true;
 	}
@@ -203,4 +199,10 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	public Integer getSamplingRate() {
 		return base.getSamplingRate();
 	}
+
+	@Override
+	public IOPropertyList retrieveOutputStructure() {
+		return base.retrieveOutputStructure();
+	}
+
 }

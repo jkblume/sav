@@ -72,7 +72,6 @@ public class Starter {
 		re.getReconfigurationEngine().executeScript(rs);
 		
 		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
-		simulatingSensor.initialize();
 		simulatingSensor.start();
 
 		Thread.sleep(1000);

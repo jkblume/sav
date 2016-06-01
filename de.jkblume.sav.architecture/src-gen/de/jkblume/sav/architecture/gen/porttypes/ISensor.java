@@ -36,11 +36,11 @@ public interface ISensor extends IProcess {
 
 	public void start();
 	public void stop();
-	public Boolean initialize();
 	public Boolean isRunning();
 	public String getId();
 	public Integer getSamplingRate();
 	public IOPropertyList retrieveValues();
+	public IOPropertyList retrieveOutputStructure();
 
 	public Event getLastEvent();
 	public void setLastEvent(Event lastEvent);
@@ -77,10 +77,6 @@ public interface ISensor extends IProcess {
 		public void stop() {
 			base.stop();
 		}
-		public Boolean initialize() {
-			Boolean result = base.initialize();
-			return result;
-		}
 		public Boolean isRunning() {
 			Boolean result = base.isRunning();
 			return result;
@@ -95,6 +91,10 @@ public interface ISensor extends IProcess {
 		}
 		public IOPropertyList retrieveValues() {
 			IOPropertyList result = base.retrieveValues();
+			return result;
+		}
+		public IOPropertyList retrieveOutputStructure() {
+			IOPropertyList result = base.retrieveOutputStructure();
 			return result;
 		}
 
@@ -169,12 +169,6 @@ public interface ISensor extends IProcess {
 			client.send(in, StopRemoteMessage.class);
 		}
 
-		public Boolean initialize() {
-			InitializeRemoteMessage in = new InitializeRemoteMessage();
-
-			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
-		}
-
 		public Boolean isRunning() {
 			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
 
@@ -198,6 +192,13 @@ public interface ISensor extends IProcess {
 			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
 
 			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
+					.getResponseResult();
+		}
+
+		public IOPropertyList retrieveOutputStructure() {
+			RetrieveOutputStructureRemoteMessage in = new RetrieveOutputStructureRemoteMessage();
+
+			return ((RetrieveOutputStructureRemoteMessage) client.send(in, RetrieveOutputStructureRemoteMessage.class))
 					.getResponseResult();
 		}
 
@@ -277,20 +278,6 @@ public interface ISensor extends IProcess {
 		}
 	}
 
-	public class InitializeRemoteMessage extends RemoteMessageBase<Boolean> {
-
-		public InitializeRemoteMessage() {
-			super("initialize");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
 	public class IsRunningRemoteMessage extends RemoteMessageBase<Boolean> {
 
 		public IsRunningRemoteMessage() {
@@ -337,6 +324,20 @@ public interface ISensor extends IProcess {
 
 		public RetrieveValuesRemoteMessage() {
 			super("retrieveValues");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class RetrieveOutputStructureRemoteMessage extends RemoteMessageBase<IOPropertyList> {
+
+		public RetrieveOutputStructureRemoteMessage() {
+			super("retrieveOutputStructure");
 		}
 
 		@Override

@@ -21,8 +21,7 @@ public class SerialSensorTest {
 	@Test
 	public void testSerialSensorConnect() throws FileNotFoundException, IOException, InterruptedException {
 		SerialTechnicalSensor technicalSensor = createSensorUnderTest();
-				
-		assertTrue(technicalSensor.initialize());
+		technicalSensor.setup();
 	}
 	
 	private SerialTechnicalSensor createSensorUnderTest() throws FileNotFoundException, IOException {

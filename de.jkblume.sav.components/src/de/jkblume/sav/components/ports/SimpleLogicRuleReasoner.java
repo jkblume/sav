@@ -27,9 +27,9 @@ import de.jkblume.sav.components.gen.ports.*;
 import org.smags.componentmodel.IPort;
 import java.util.*;
 
-public class OntologyReasoner extends AbstractOntologyReasoner {
+public class SimpleLogicRuleReasoner extends AbstractSimpleLogicRuleReasoner {
 
-	public OntologyReasoner(String name) {
+	public SimpleLogicRuleReasoner(String name) {
 		super(name);
 	}
 
@@ -41,8 +41,11 @@ public class OntologyReasoner extends AbstractOntologyReasoner {
 		//TODO: IMPLEMENT
 	}
 
-	public void buildClassifier() {
-		base.buildClassifier();
+	public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
+		base.buildClassifier(reasoner, sourceSensors);
+	}
+	public void updateClassifier(Object trainingDate) {
+		base.updateClassifier(trainingDate);
 	}
 	public DataComponent getQualityOfService() {
 		DataComponent result = base.getQualityOfService();
@@ -51,7 +54,7 @@ public class OntologyReasoner extends AbstractOntologyReasoner {
 
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
 		if (sender == this) {
-
+			
 		}
 	}
 
@@ -66,5 +69,6 @@ public class OntologyReasoner extends AbstractOntologyReasoner {
 		// TODO Auto-generated method stub
 		
 	}
+	
 
 }

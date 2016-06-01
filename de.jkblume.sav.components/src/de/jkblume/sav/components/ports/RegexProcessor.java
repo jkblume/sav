@@ -8,7 +8,7 @@ import org.vast.data.CountImpl;
 import org.vast.data.QuantityImpl;
 import org.vast.data.TextImpl;
 
-import de.jkblume.sav.components.gen.ports.AbstractReqexProcessor;
+import de.jkblume.sav.components.gen.ports.AbstractRegexProcessor;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.Count;
@@ -18,7 +18,7 @@ import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 
-public class RegexProcessor extends AbstractReqexProcessor {
+public class RegexProcessor extends AbstractRegexProcessor {
 
 	private static final String REGEX_PARAMETER_NAME = "regex";
 	private static final String GROUP_PARAMETER_NAME = "group";

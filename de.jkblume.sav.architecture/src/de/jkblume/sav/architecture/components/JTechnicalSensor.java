@@ -40,16 +40,15 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 	}
 
 	public void setup() {
+		if (!validateSmlConfiguration()) {
+			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
+		}
+		
 		pollingThread = new PollThread(this);
 	}
 
 	public void destroy() {
 		//TODO:Implement
-	}
-
-	@Override
-	public Boolean initializeImpl() {
-		return validateSmlConfiguration();
 	}
 
 	@Override
@@ -123,6 +122,14 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 		}
 		
 		return value;
+	}
+	
+	@Override
+	public IOPropertyList retrieveOutputStructureImpl() {
+		if (getIProcess() != null) {
+			return getIProcess().getSmlConfiguration().getOutputList();
+		}
+		return getSmlConfiguration().getOutputList();
 	}
 
 }

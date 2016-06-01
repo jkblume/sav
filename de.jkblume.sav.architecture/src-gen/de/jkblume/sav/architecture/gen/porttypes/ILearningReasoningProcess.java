@@ -28,11 +28,11 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "ILearningReasoningStrategy", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ILearningReasoningStrategy extends IReasoningStrategy {
+@PortTypeA(name = "ILearningReasoningProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ILearningReasoningProcess extends IReasoningProcess {
 
-	public static Class remotePortClass = ILearningReasoningStrategyRemote.class;
-	public static Class proxyComponentClass = ILearningReasoningStrategyRemoteProxy.class;
+	public static Class remotePortClass = ILearningReasoningProcessRemote.class;
+	public static Class proxyComponentClass = ILearningReasoningProcessRemoteProxy.class;
 
 	public void startGesture(Category category);
 	public void stopGesture(Category category);
@@ -43,12 +43,12 @@ public interface ILearningReasoningStrategy extends IReasoningStrategy {
 
 	/*--------- REMOTE ---------*/
 
-	public class ILearningReasoningStrategyRemote extends AbstractRemotePort<ILearningReasoningStrategy>
+	public class ILearningReasoningProcessRemote extends AbstractRemotePort<ILearningReasoningProcess>
 			implements
-				ILearningReasoningStrategy {
+				ILearningReasoningProcess {
 
-		public ILearningReasoningStrategyRemote(String name) {
-			super(name, ILearningReasoningStrategy.class);
+		public ILearningReasoningProcessRemote(String name) {
+			super(name, ILearningReasoningProcess.class);
 		}
 
 		public Boolean getInjectorProvided() {
@@ -65,6 +65,14 @@ public interface ILearningReasoningStrategy extends IReasoningStrategy {
 
 		public void setExtractorProvided(Boolean extractorProvided) {
 			base.setExtractorProvided(extractorProvided);
+		}
+
+		public AbstractProcess getSmlConfiguration() {
+			return base.getSmlConfiguration();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			base.setSmlConfiguration(smlConfiguration);
 		}
 
 		public void startGesture(Category category) {
@@ -92,6 +100,15 @@ public interface ILearningReasoningStrategy extends IReasoningStrategy {
 			return result;
 		}
 
+		public Boolean validateSmlConfiguration() {
+			Boolean result = base.validateSmlConfiguration();
+			return result;
+		}
+		public Object execute(Object value) {
+			Object result = base.execute(value);
+			return result;
+		}
+
 		@Override
 		public <T> T as(Class<T> c) {
 			return base.as(c);
@@ -99,11 +116,11 @@ public interface ILearningReasoningStrategy extends IReasoningStrategy {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "ILearningReasoningStrategy", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ILearningReasoningStrategyRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class ILearningReasoningStrategyRemoteProxy extends RemoteProxyComponent<ILearningReasoningStrategy>
+	@Component(name = "ILearningReasoningProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ILearningReasoningProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ILearningReasoningProcessRemoteProxy extends RemoteProxyComponent<ILearningReasoningProcess>
 			implements
-				ILearningReasoningStrategy {
-		public ILearningReasoningStrategyRemoteProxy(String name) {
+				ILearningReasoningProcess {
+		public ILearningReasoningProcessRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -142,6 +159,17 @@ public interface ILearningReasoningStrategy extends IReasoningStrategy {
 			SetExtractorProvidedRemoteMessage in = new SetExtractorProvidedRemoteMessage();
 			in.setExtractorProvided(extractorProvided);
 			client.send(in, SetExtractorProvidedRemoteMessage.class);
+		}
+
+		public AbstractProcess getSmlConfiguration() {
+			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
+			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
+			in.setSmlConfiguration(smlConfiguration);
+			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
 		public void startGesture(Category category) {
@@ -193,6 +221,20 @@ public interface ILearningReasoningStrategy extends IReasoningStrategy {
 
 			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
 					.getResponseResult();
+		}
+
+		public Boolean validateSmlConfiguration() {
+			ValidateSmlConfigurationRemoteMessage in = new ValidateSmlConfigurationRemoteMessage();
+
+			return ((ValidateSmlConfigurationRemoteMessage) client.send(in,
+					ValidateSmlConfigurationRemoteMessage.class)).getResponseResult();
+		}
+
+		public Object execute(Object value) {
+			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
+			in.setValue(value);
+
+			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
 		}
 
 	}

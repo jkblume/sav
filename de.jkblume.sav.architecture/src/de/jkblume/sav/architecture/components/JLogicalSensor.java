@@ -22,9 +22,8 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 	}
 
 	public void setup() {
-		Boolean initializationSuccess = initialize();
-		if (!initializationSuccess) {
-			throw new IllegalStateException("Failure during initialization of sensor " + getId());
+		if (!validateSmlConfiguration()) {
+			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
 		
 		pollingThread = new PollThread(this);
@@ -120,14 +119,20 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 	}
 
 	@Override
-	public Boolean initializeImpl() {
-		return validateSmlConfigurationImpl();
-	}
-
-	@Override
 	public Object executeImpl(Object value) {
-		// TODO Auto-generated method stub
-		return null;
+		if (getIProcess() != null) {
+			value = (IOPropertyList) getIProcess().execute(value);
+		}
+		
+		return value;
+	}
+	
+	@Override
+	public IOPropertyList retrieveOutputStructureImpl() {
+		if (getIProcess() != null) {
+			return getIProcess().getSmlConfiguration().getOutputList();
+		}
+		return getSmlConfiguration().getOutputList();
 	}
 
 }

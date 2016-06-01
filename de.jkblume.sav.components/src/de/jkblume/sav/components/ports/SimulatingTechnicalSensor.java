@@ -70,10 +70,7 @@ public class SimulatingTechnicalSensor extends AbstractSimulatingTechnicalSensor
 		String result = base.getId();
 		return result;
 	}
-	public Boolean initialize() {
-		Boolean result = base.initialize();
-		return result;
-	}
+	
 	public IOPropertyList retrieveValues() {
 		IOPropertyList values = new IOPropertyList();
 		Quantity value = new QuantityImpl();
@@ -137,5 +134,11 @@ public class SimulatingTechnicalSensor extends AbstractSimulatingTechnicalSensor
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public IOPropertyList retrieveOutputStructure() {
+		return base.retrieveOutputStructure();
+	}
+
 
 }

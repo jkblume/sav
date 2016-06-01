@@ -46,8 +46,8 @@ public class JAggregateProcessOperatorTest {
 		assertEquals("The size of the output list is wrong", 2, output.size());
 		
 		DataComponent partialOutput = output.getComponent(0);
-				
-		DataComponent x = partialOutput.getComponent("x");
+		
+		DataComponent x = partialOutput.getComponent("x");		
 		assertEquals("The x value is not processed correctly. ",1.0, ((Quantity) x).getValue(), 0);
 		DataComponent y = partialOutput.getComponent("y");
 		assertEquals("The y value is not processed correctly. ",2.0, ((Quantity) y).getValue(), 0);

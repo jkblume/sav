@@ -28,22 +28,22 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "ISpecificationReasoningStrategy", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
+@PortTypeA(name = "ISpecificationReasoningProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ISpecificationReasoningProcess extends IReasoningProcess {
 
-	public static Class remotePortClass = ISpecificationReasoningStrategyRemote.class;
-	public static Class proxyComponentClass = ISpecificationReasoningStrategyRemoteProxy.class;
+	public static Class remotePortClass = ISpecificationReasoningProcessRemote.class;
+	public static Class proxyComponentClass = ISpecificationReasoningProcessRemoteProxy.class;
 
 	public <T> T as(Class<T> c);
 
 	/*--------- REMOTE ---------*/
 
-	public class ISpecificationReasoningStrategyRemote extends AbstractRemotePort<ISpecificationReasoningStrategy>
+	public class ISpecificationReasoningProcessRemote extends AbstractRemotePort<ISpecificationReasoningProcess>
 			implements
-				ISpecificationReasoningStrategy {
+				ISpecificationReasoningProcess {
 
-		public ISpecificationReasoningStrategyRemote(String name) {
-			super(name, ISpecificationReasoningStrategy.class);
+		public ISpecificationReasoningProcessRemote(String name) {
+			super(name, ISpecificationReasoningProcess.class);
 		}
 
 		public Boolean getInjectorProvided() {
@@ -62,6 +62,14 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 			base.setExtractorProvided(extractorProvided);
 		}
 
+		public AbstractProcess getSmlConfiguration() {
+			return base.getSmlConfiguration();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			base.setSmlConfiguration(smlConfiguration);
+		}
+
 		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
 			base.buildClassifier(reasoner, sourceSensors);
 		}
@@ -73,6 +81,15 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 			return result;
 		}
 
+		public Boolean validateSmlConfiguration() {
+			Boolean result = base.validateSmlConfiguration();
+			return result;
+		}
+		public Object execute(Object value) {
+			Object result = base.execute(value);
+			return result;
+		}
+
 		@Override
 		public <T> T as(Class<T> c) {
 			return base.as(c);
@@ -80,12 +97,11 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "ISpecificationReasoningStrategy", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ISpecificationReasoningStrategyRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class ISpecificationReasoningStrategyRemoteProxy
-			extends
-				RemoteProxyComponent<ISpecificationReasoningStrategy>
-			implements ISpecificationReasoningStrategy {
-		public ISpecificationReasoningStrategyRemoteProxy(String name) {
+	@Component(name = "ISpecificationReasoningProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ISpecificationReasoningProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ISpecificationReasoningProcessRemoteProxy extends RemoteProxyComponent<ISpecificationReasoningProcess>
+			implements
+				ISpecificationReasoningProcess {
+		public ISpecificationReasoningProcessRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -126,6 +142,17 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
+		public AbstractProcess getSmlConfiguration() {
+			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
+			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
+			in.setSmlConfiguration(smlConfiguration);
+			client.send(in, SetSmlConfigurationRemoteMessage.class);
+		}
+
 		public void buildClassifier(ISensor reasoner, List<ISensor> sourceSensors) {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
 			in.setReasoner(reasoner);
@@ -146,6 +173,20 @@ public interface ISpecificationReasoningStrategy extends IReasoningStrategy {
 
 			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
 					.getResponseResult();
+		}
+
+		public Boolean validateSmlConfiguration() {
+			ValidateSmlConfigurationRemoteMessage in = new ValidateSmlConfigurationRemoteMessage();
+
+			return ((ValidateSmlConfigurationRemoteMessage) client.send(in,
+					ValidateSmlConfigurationRemoteMessage.class)).getResponseResult();
+		}
+
+		public Object execute(Object value) {
+			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
+			in.setValue(value);
+
+			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
 		}
 
 	}
