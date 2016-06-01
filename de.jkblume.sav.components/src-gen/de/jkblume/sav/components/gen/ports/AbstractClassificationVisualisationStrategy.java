@@ -27,7 +27,7 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractDiagramVisualisationStrategy
+public abstract class AbstractClassificationVisualisationStrategy
 		implements
 			IPort<IVisualisationStrategy>,
 			INotifyPropertyChanged,
@@ -37,7 +37,7 @@ public abstract class AbstractDiagramVisualisationStrategy
 	private boolean isActive = true;
 	protected IVisualisationStrategy base;
 
-	public AbstractDiagramVisualisationStrategy(String name) {
+	public AbstractClassificationVisualisationStrategy(String name) {
 		this.name = name;
 	}
 

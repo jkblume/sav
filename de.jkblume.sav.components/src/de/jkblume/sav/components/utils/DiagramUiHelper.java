@@ -22,7 +22,6 @@ public class DiagramUiHelper {
 
 	private static VBox chartBox;
 
-	
 	private static NumberAxis xAxis;
 
 	public static void addChart(String vsName, String sensorId) {

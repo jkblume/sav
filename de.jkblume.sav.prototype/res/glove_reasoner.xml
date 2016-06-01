@@ -40,7 +40,7 @@
 		<sml:ParameterList>
 			<sml:parameter name="samplingRate">
 				<swe:Count>
-					<swe:value>1000</swe:value>
+					<swe:value>100</swe:value>
 				</swe:Count>
 			</sml:parameter>
 		</sml:ParameterList>

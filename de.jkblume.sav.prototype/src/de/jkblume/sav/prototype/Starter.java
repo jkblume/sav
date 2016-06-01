@@ -27,6 +27,7 @@ import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
 import de.jkblume.sav.architecture.ports.JReasoner;
 import de.jkblume.sav.components.components.SimpleRuleReasoner;
+import de.jkblume.sav.components.ports.ClassificationVisualisationStrategy;
 import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
 import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
 import de.jkblume.sav.components.ports.RegexProcessor;
@@ -120,7 +121,10 @@ public class Starter {
 		ops.add(new SetupComponentOperation("srr"));
 		
 		ops.add(new CreateComponentInstanceOperation("v3", JVisualizer.class));
+		ops.add(new CreatePortInstanceOperation("vs3", ClassificationVisualisationStrategy.class));
+		ops.add(new BindPortOperation("v3", "vs3", "IVisualisationStrategy"));
 		ops.add(new SetupComponentOperation("v3"));
+		ops.add(new SetupPortOperation("vs3"));
 		ops.add(new ConnectOperation("ls", "v3", "ISensor"));
 		
 		return new ReconfigurationScript(ops);
@@ -220,7 +224,6 @@ public class Starter {
 		ops.add(new SetComponentParameterOperation("jtps1", "smlConfiguration", serialSensorGloveDescription));
 		ops.add(new SetupComponentOperation("jtps1"));
 		ops.add(new SetupPortOperation("ssp1"));
-		
 		
 		return new ReconfigurationScript(ops);
 	}

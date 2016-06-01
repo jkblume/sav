@@ -76,7 +76,11 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 		
 		// retrieve values from pull sensors
 		for (ISensor pullSensor : getISensors()) {
-			OgcPropertyList<DataComponent> partialResult = pullSensor.getLastEvent().getPropertyList();
+			Event lastEvent = pullSensor.getLastEvent();
+			if (lastEvent == null) {
+				continue;
+			}
+			OgcPropertyList<DataComponent> partialResult = lastEvent.getPropertyList();
 			values.addAll(partialResult);
 		}
 		

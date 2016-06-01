@@ -87,9 +87,12 @@ public class JVisualizer extends AbstractVisualizer {
 		String sensorId = source.getSmlConfiguration().getId();
 		System.out.println("### Sensor: " + sensorId);
 		for (DataComponent component : event.getPropertyList()) {
+			if (component == null) {
+				continue;
+			}
 			System.out.println("Value: " + component.toString());
 		}
-	}
+	}	
 
 	@Override
 	public void addSensorImpl(ISensor sensor) {

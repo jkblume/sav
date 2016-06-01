@@ -4,13 +4,9 @@ package de.jkblume.sav.components.ports;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import de.jkblume.sav.components.gen.ports.AbstractJavaFXVisualisationStrategy;
 import de.jkblume.sav.components.utils.DiagramUiHelper;
-import javafx.application.Application;
 import net.opengis.sensorml.v20.Event;
 
 public class DiagramVisualisationStrategy extends AbstractJavaFXVisualisationStrategy {
-
-
-	private Thread uiThread;
 	
 	public DiagramVisualisationStrategy(String name) {
 		super(name);
