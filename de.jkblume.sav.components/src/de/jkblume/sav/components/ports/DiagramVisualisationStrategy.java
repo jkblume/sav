@@ -3,7 +3,7 @@ package de.jkblume.sav.components.ports;
 
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import de.jkblume.sav.components.gen.ports.AbstractJavaFXVisualisationStrategy;
-import de.jkblume.sav.components.utils.UI;
+import de.jkblume.sav.components.utils.DiagramUiHelper;
 import javafx.application.Application;
 import net.opengis.sensorml.v20.Event;
 
@@ -17,14 +17,6 @@ public class DiagramVisualisationStrategy extends AbstractJavaFXVisualisationStr
 	}
 
 	public void setup() {
-		uiThread = new Thread(new Runnable() {
-	
-				@Override
-				public void run() {
-					UI.initialize();
-				}
-		});
-		uiThread.start();
 	}
 
 	public void destroy() {
@@ -40,13 +32,13 @@ public class DiagramVisualisationStrategy extends AbstractJavaFXVisualisationStr
 	@Override
 	public void visualizeEvent(ISensor source, Event event) {
 		String sensorId = source.getSmlConfiguration().getId();
-		UI.addPoint(sensorId, event);
+		DiagramUiHelper.addPoint(sensorId, event);
 	}
 
 	@Override
 	public void addSensor(ISensor sensor) {
 		String sensorId = sensor.getSmlConfiguration().getId();
-		UI.addChart(this.getName(), sensorId);
+		DiagramUiHelper.addChart(this.getName(), sensorId);
 	}
 
 	@Override

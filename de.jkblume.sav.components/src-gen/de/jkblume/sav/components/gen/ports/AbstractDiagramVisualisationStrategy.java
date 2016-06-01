@@ -37,6 +37,9 @@ public abstract class AbstractDiagramVisualisationStrategy
 	private boolean isActive = true;
 	protected IVisualisationStrategy base;
 
+	@ParameterA(name = "test")
+	private Integer test;
+
 	public AbstractDiagramVisualisationStrategy(String name) {
 		this.name = name;
 	}
@@ -73,6 +76,14 @@ public abstract class AbstractDiagramVisualisationStrategy
 
 	public <T> T as(Class<T> c) {
 		return base.as(c);
+	}
+
+	public void setTest(Integer test) {
+		this.test = test;
+	}
+
+	public Integer getTest() {
+		return this.test;
 	}
 
 }

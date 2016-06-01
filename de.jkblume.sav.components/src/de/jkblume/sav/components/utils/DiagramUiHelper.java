@@ -3,14 +3,11 @@ package de.jkblume.sav.components.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.opengis.gml.v32.TimeInstant;
@@ -18,29 +15,15 @@ import net.opengis.sensorml.v20.Event;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Quantity;
 
-public class UI extends Application {
+public class DiagramUiHelper {
 
 	private static Map<String, LineChart<?, ?>> charts = new HashMap<>();
 	private static Map<String, Stage> stages = new HashMap<>();
-	private static Stage primaryStage;
 
 	private static VBox chartBox;
 
-	private static double firstTimestamp = 0;
-	private static double currentTimestamp = 0;
 	
 	private static NumberAxis xAxis;
-	
-	public static void initialize() {
-		if  (primaryStage == null) {
-			Application.launch(UI.class, new String[] {});
-		}
-	}
-	
-	@Override
-	public void start(Stage stage) throws Exception {
-		this.primaryStage = stage;
-	}
 
 	public static void addChart(String vsName, String sensorId) {
 		Platform.runLater(new Runnable() {

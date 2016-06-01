@@ -31,6 +31,7 @@ import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
 import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
 import de.jkblume.sav.components.ports.RegexProcessor;
 import de.jkblume.sav.components.ports.SerialTechnicalSensor;
+import de.jkblume.sav.components.utils.DiagramUiHelper;
 import de.jkblume.sav.prototype.ui.UI;
 import javafx.application.Application;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -50,7 +51,14 @@ public class Starter {
 
 		utils = new SMLUtils(SMLUtils.V2_0);
 		
-//		Application.launch(UI.class, new String[] {});
+		Thread uiThread = new Thread(new Runnable() {
+	
+				@Override
+				public void run() {
+					Application.launch(UI.class, new String[] {});
+				}
+		});
+		uiThread.start();
 		
 		// create visualization strategy
 		ReconfigurationScript rs = createDiagramVisualizationScript();
