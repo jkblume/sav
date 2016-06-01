@@ -120,6 +120,12 @@ public class JAggregateProcessOperatorTest {
 			return null;
 		}
 
+		@Override
+		public Boolean initialize() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 		
 	}
 	

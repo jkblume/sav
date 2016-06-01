@@ -98,6 +98,10 @@ public interface ISensor extends IProcess {
 			return result;
 		}
 
+		public Boolean initialize() {
+			Boolean result = base.initialize();
+			return result;
+		}
 		public Boolean validateSmlConfiguration() {
 			Boolean result = base.validateSmlConfiguration();
 			return result;
@@ -200,6 +204,12 @@ public interface ISensor extends IProcess {
 
 			return ((RetrieveOutputStructureRemoteMessage) client.send(in, RetrieveOutputStructureRemoteMessage.class))
 					.getResponseResult();
+		}
+
+		public Boolean initialize() {
+			InitializeRemoteMessage in = new InitializeRemoteMessage();
+
+			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
 		}
 
 		public Boolean validateSmlConfiguration() {

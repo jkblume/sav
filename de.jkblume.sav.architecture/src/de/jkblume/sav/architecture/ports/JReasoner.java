@@ -107,4 +107,10 @@ public class JReasoner extends AbstractJReasoner {
 		
 	}
 
+	@Override
+	public Boolean initialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

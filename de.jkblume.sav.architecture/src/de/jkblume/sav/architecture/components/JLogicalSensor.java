@@ -25,7 +25,7 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 		if (!validateSmlConfiguration()) {
 			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
-		
+
 		pollingThread = new PollThread(this);
 	}
 
@@ -133,6 +133,11 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 			return getIProcess().getSmlConfiguration().getOutputList();
 		}
 		return getSmlConfiguration().getOutputList();
+	}
+
+	@Override
+	public Boolean initializeImpl() {
+		return true;
 	}
 
 }

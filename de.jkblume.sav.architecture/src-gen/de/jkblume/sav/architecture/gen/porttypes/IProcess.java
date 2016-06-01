@@ -34,6 +34,7 @@ public interface IProcess {
 	public static Class remotePortClass = IProcessRemote.class;
 	public static Class proxyComponentClass = IProcessRemoteProxy.class;
 
+	public Boolean initialize();
 	public Boolean validateSmlConfiguration();
 	public Object execute(Object value);
 
@@ -58,6 +59,10 @@ public interface IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
+		public Boolean initialize() {
+			Boolean result = base.initialize();
+			return result;
+		}
 		public Boolean validateSmlConfiguration() {
 			Boolean result = base.validateSmlConfiguration();
 			return result;
@@ -106,6 +111,12 @@ public interface IProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
+		public Boolean initialize() {
+			InitializeRemoteMessage in = new InitializeRemoteMessage();
+
+			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
+		}
+
 		public Boolean validateSmlConfiguration() {
 			ValidateSmlConfigurationRemoteMessage in = new ValidateSmlConfigurationRemoteMessage();
 
@@ -150,6 +161,20 @@ public interface IProcess {
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
 			result.add(getSmlConfiguration());
+			return result;
+		}
+	}
+
+	public class InitializeRemoteMessage extends RemoteMessageBase<Boolean> {
+
+		public InitializeRemoteMessage() {
+			super("initialize");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
 			return result;
 		}
 	}

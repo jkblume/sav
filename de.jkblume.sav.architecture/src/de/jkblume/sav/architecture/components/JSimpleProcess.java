@@ -58,4 +58,10 @@ public class JSimpleProcess extends AbstractSimpleProcess {
 		return null;
 	}
 
+	@Override
+	public Boolean initializeImpl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

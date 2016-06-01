@@ -140,5 +140,11 @@ public class SimulatingTechnicalSensor extends AbstractSimulatingTechnicalSensor
 		return base.retrieveOutputStructure();
 	}
 
+	@Override
+	public Boolean initialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

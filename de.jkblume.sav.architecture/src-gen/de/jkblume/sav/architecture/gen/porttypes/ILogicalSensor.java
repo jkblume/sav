@@ -87,6 +87,10 @@ public interface ILogicalSensor extends ISensor {
 			return result;
 		}
 
+		public Boolean initialize() {
+			Boolean result = base.initialize();
+			return result;
+		}
 		public Boolean validateSmlConfiguration() {
 			Boolean result = base.validateSmlConfiguration();
 			return result;
@@ -189,6 +193,12 @@ public interface ILogicalSensor extends ISensor {
 
 			return ((RetrieveOutputStructureRemoteMessage) client.send(in, RetrieveOutputStructureRemoteMessage.class))
 					.getResponseResult();
+		}
+
+		public Boolean initialize() {
+			InitializeRemoteMessage in = new InitializeRemoteMessage();
+
+			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
 		}
 
 		public Boolean validateSmlConfiguration() {

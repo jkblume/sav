@@ -90,4 +90,10 @@ public class SimpleLogicRuleReasoner extends AbstractSpecificationReasoningProce
 
 	}
 
+	@Override
+	public Boolean initializeImpl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

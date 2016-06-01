@@ -52,6 +52,10 @@ public interface IAggregateProcess extends IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
+		public Boolean initialize() {
+			Boolean result = base.initialize();
+			return result;
+		}
 		public Boolean validateSmlConfiguration() {
 			Boolean result = base.validateSmlConfiguration();
 			return result;
@@ -100,6 +104,12 @@ public interface IAggregateProcess extends IProcess {
 			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
 			in.setSmlConfiguration(smlConfiguration);
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
+		}
+
+		public Boolean initialize() {
+			InitializeRemoteMessage in = new InitializeRemoteMessage();
+
+			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
 		}
 
 		public Boolean validateSmlConfiguration() {

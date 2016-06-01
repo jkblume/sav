@@ -187,6 +187,17 @@ public abstract class AbstractTechnicalSensor extends AbstractComponent implemen
 
 	}
 
+	public Boolean initialize() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
+
+		if (countInCallStack > 1 || iSensorRoles.size() == 0)
+			return initializeImpl();
+		else
+			return iSensorRoles.get(0).initialize();
+
+	}
+
 	public Boolean validateSmlConfiguration() {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
@@ -216,6 +227,7 @@ public abstract class AbstractTechnicalSensor extends AbstractComponent implemen
 	public abstract String getIdImpl();
 	public abstract Integer getSamplingRateImpl();
 	public abstract IOPropertyList retrieveOutputStructureImpl();
+	public abstract Boolean initializeImpl();
 	public abstract Boolean validateSmlConfigurationImpl();
 	public abstract Object executeImpl(Object value);
 

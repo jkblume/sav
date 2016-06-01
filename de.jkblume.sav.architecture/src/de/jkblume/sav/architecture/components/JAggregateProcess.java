@@ -34,43 +34,7 @@ public class JAggregateProcess extends AbstractAggregateProcess {
 	public void setup() {
 		validateSmlConfiguration();
 		
-		for (Link link : aggregateProcess.getConnectionList()) {
-			String[] destinationPath = link.getDestination().split("/");
-			String[] sourcePath = link.getSource().split("/");
-						
-			if (sourcePath[0].equals("inputs")) {
-				ProcessTree tree = new ProcessTree();
-				ProcessTreeNode root = new ProcessTreeNode();
-				String processId = aggregateProcess.getComponent(destinationPath[1]).getId();
-				root.process = id2process.get(processId);
-				root.sourcePath = sourcePath;
-				root.destinationPath = destinationPath;				
-				tree.root = root;
-				trees.add(tree);
-				name2node.put(destinationPath[1], root);
-			}
-			
-			if (sourcePath[0].equals("components") && destinationPath[0].equals("components")) {
-				ProcessTreeNode node = new ProcessTreeNode();
-				node.sourcePath = sourcePath;
-				node.destinationPath = destinationPath;
-				String processId = aggregateProcess.getComponent(destinationPath[1]).getId();
-				node.process = id2process.get(processId);
-				ProcessTreeNode parent = name2node.get(sourcePath[1]);
-				parent.children.add(node);
-				name2node.put(destinationPath[1], node);
-			}
-			
-			if (destinationPath[0].equals("outputs")) {
-				ProcessTreeNode node = new ProcessTreeNode();
-				node.sourcePath = sourcePath;
-				node.destinationPath = destinationPath;
-				if (sourcePath[0].equals("components")) {
-					ProcessTreeNode parent = name2node.get(sourcePath[1]);
-					parent.children.add(node);
-				}
-			}
-		}
+		initialize();
 	}
 	
 
@@ -199,6 +163,48 @@ public class JAggregateProcess extends AbstractAggregateProcess {
 			}
 			return sb.toString();
 		}
+	}
+
+	@Override
+	public Boolean initializeImpl() {
+		for (Link link : aggregateProcess.getConnectionList()) {
+			String[] destinationPath = link.getDestination().split("/");
+			String[] sourcePath = link.getSource().split("/");
+						
+			if (sourcePath[0].equals("inputs")) {
+				ProcessTree tree = new ProcessTree();
+				ProcessTreeNode root = new ProcessTreeNode();
+				String processId = aggregateProcess.getComponent(destinationPath[1]).getId();
+				root.process = id2process.get(processId);
+				root.sourcePath = sourcePath;
+				root.destinationPath = destinationPath;				
+				tree.root = root;
+				trees.add(tree);
+				name2node.put(destinationPath[1], root);
+			}
+			
+			if (sourcePath[0].equals("components") && destinationPath[0].equals("components")) {
+				ProcessTreeNode node = new ProcessTreeNode();
+				node.sourcePath = sourcePath;
+				node.destinationPath = destinationPath;
+				String processId = aggregateProcess.getComponent(destinationPath[1]).getId();
+				node.process = id2process.get(processId);
+				ProcessTreeNode parent = name2node.get(sourcePath[1]);
+				parent.children.add(node);
+				name2node.put(destinationPath[1], node);
+			}
+			
+			if (destinationPath[0].equals("outputs")) {
+				ProcessTreeNode node = new ProcessTreeNode();
+				node.sourcePath = sourcePath;
+				node.destinationPath = destinationPath;
+				if (sourcePath[0].equals("components")) {
+					ProcessTreeNode parent = name2node.get(sourcePath[1]);
+					parent.children.add(node);
+				}
+			}
+		}
+		return true;
 	}
 
 }

@@ -33,15 +33,7 @@ public class RegexProcessor extends AbstractRegexProcessor {
 	}
 
 	public void setup() {
-		Text separatorParameter = (Text) getParameter(REGEX_PARAMETER_NAME);
-		regex = separatorParameter.getValue();
-		pattern = Pattern.compile(regex);
-		
-		Count columnParameter = (Count) getParameter(GROUP_PARAMETER_NAME);
-		group = columnParameter.getValue();
-		
-		ScalarComponent outputProperty = (ScalarComponent) getSmlConfiguration().getOutputList().getComponent("output1");
-		dataType = outputProperty.getDataType();
+		initialize();
 	}
 
 	public void destroy() {
@@ -109,6 +101,20 @@ public class RegexProcessor extends AbstractRegexProcessor {
 	public Boolean validateSmlConfiguration() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Boolean initialize() {
+		Text separatorParameter = (Text) getParameter(REGEX_PARAMETER_NAME);
+		regex = separatorParameter.getValue();
+		pattern = Pattern.compile(regex);
+		
+		Count columnParameter = (Count) getParameter(GROUP_PARAMETER_NAME);
+		group = columnParameter.getValue();
+		
+		ScalarComponent outputProperty = (ScalarComponent) getSmlConfiguration().getOutputList().getComponent("output1");
+		dataType = outputProperty.getDataType();
+		return true;
 	}
 
 }

@@ -132,4 +132,10 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 		return getSmlConfiguration().getOutputList();
 	}
 
+	@Override
+	public Boolean initializeImpl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

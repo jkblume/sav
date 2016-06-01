@@ -30,27 +30,7 @@ public class CsvProcessor extends AbstractCsvProcessor {
 	}
 
 	public void setup() {
-		if (!validateInputs()) {
-			System.err.println("There is a problem with the input description of sensor " + getSmlConfiguration().getId());
-			return;
-		}
-		if (!validateOutputs()) {
-			System.err.println("There is a problem with the output description of sensor " + getSmlConfiguration().getId());
-			return;
-		}
-		if (!validateParameters()) {
-			System.err.println("There is a problem with the parameter description of sensor " + getSmlConfiguration().getId());
-			return;
-		}
-		
-		Text separatorParameter = (Text) getParameter(SEPARATOR_PARAMETER_NAME);
-		separator = separatorParameter.getValue();
-		
-		Count columnParameter = (Count) getParameter(COLUMN_PARAMETER_NAME);
-		column = columnParameter.getValue();
-		
-		ScalarComponent outputProperty = (ScalarComponent) getSmlConfiguration().getOutputList().getComponent("output1");
-		dataType = outputProperty.getDataType();
+		initialize();
 	}
 
 	public void destroy() {
@@ -158,6 +138,32 @@ public class CsvProcessor extends AbstractCsvProcessor {
 	public Boolean validateSmlConfiguration() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Boolean initialize() {
+		if (!validateInputs()) {
+			System.err.println("There is a problem with the input description of sensor " + getSmlConfiguration().getId());
+			return false;
+		}
+		if (!validateOutputs()) {
+			System.err.println("There is a problem with the output description of sensor " + getSmlConfiguration().getId());
+			return false;
+		}
+		if (!validateParameters()) {
+			System.err.println("There is a problem with the parameter description of sensor " + getSmlConfiguration().getId());
+			return false;
+		}
+		
+		Text separatorParameter = (Text) getParameter(SEPARATOR_PARAMETER_NAME);
+		separator = separatorParameter.getValue();
+		
+		Count columnParameter = (Count) getParameter(COLUMN_PARAMETER_NAME);
+		column = columnParameter.getValue();
+		
+		ScalarComponent outputProperty = (ScalarComponent) getSmlConfiguration().getOutputList().getComponent("output1");
+		dataType = outputProperty.getDataType();
+		return true;
 	}
 
 

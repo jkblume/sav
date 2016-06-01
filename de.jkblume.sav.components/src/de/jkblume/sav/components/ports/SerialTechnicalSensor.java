@@ -43,83 +43,7 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 		if (!validateSmlConfiguration()) {
 			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
-		
-
-		Text serialPortParameter = (Text) getSmlConfiguration().getParameter(SERIAL_PORT_PARAMETER_NAME);
-		CommPortIdentifier portId = null;
-		try {
-			portId = CommPortIdentifier.getPortIdentifier(serialPortParameter.getValue());
-		} catch (NoSuchPortException e) {
-			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
-			e.printStackTrace();
-			return;
-		}
-		
-		Count timeoutParameter = (Count) getSmlConfiguration().getParameter(TIMEOUT_PARAMETER_NAME);
-		try {
-			serialPort = (SerialPort) portId.open(this.getClass().getName(), timeoutParameter.getValue());
-		} catch (PortInUseException e) {
-			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
-			System.err.println(e.getMessage());
-			return;
-		}
-		
-		Count baudrateParameter = (Count) getSmlConfiguration().getParameter(BAUDRATE_PARAMETER_NAME);
-		try {
-			serialPort.setSerialPortParams(baudrateParameter.getValue(), SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-				SerialPort.PARITY_NONE);
-		} catch (UnsupportedCommOperationException e) {
-			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
-			System.err.println(e.getMessage());
-			return;
-		}
-		
-		try {
-			inputReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-		} catch (IOException e) {
-			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
-			System.err.println(e.getMessage());
-			return;
-		}
-
-		// initially deactive/stop data notifications, so the sensor is not running
-		serialPort.notifyOnDataAvailable(true);
-			
-		// add event port
-		try {
-			serialPort.addEventListener(new SerialPortEventListener() {
-				@Override
-				public void serialEvent(SerialPortEvent serialPortEvent) {
-					if (serialPortEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-						String inputString = null;
-						try {
-							inputString = inputReader.readLine();
-						} catch (IOException e) {
-							System.err.println("There is a problem while retrieving sensor value from sensor " + getSmlConfiguration().getId());
-							System.err.println(e.getMessage());
-							return;
-						}
-						
-						DataComponent outputComponent = getSmlConfiguration().getOutputComponent("output");
-						Text input =  (Text) outputComponent.copy();
-						input.setValue(inputString);						
-						
-						IOPropertyList values = new IOPropertyList();
-						values.add(input);
-						
-						if (getIProcess() != null) {
-							values = (IOPropertyList) getIProcess().execute(values);
-						}
-						
-						lastValue = values;
-					}
-				}
-			});
-		} catch (TooManyListenersException e) {
-			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
-			System.err.println(e.getMessage());
-			return;
-		}		
+		initialize();
 	}
 
 	public void destroy() {
@@ -204,5 +128,87 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	public IOPropertyList retrieveOutputStructure() {
 		return base.retrieveOutputStructure();
 	}
+
+	@Override
+	public Boolean initialize() {
+
+		Text serialPortParameter = (Text) getSmlConfiguration().getParameter(SERIAL_PORT_PARAMETER_NAME);
+		CommPortIdentifier portId = null;
+		try {
+			portId = CommPortIdentifier.getPortIdentifier(serialPortParameter.getValue());
+		} catch (NoSuchPortException e) {
+			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
+			e.printStackTrace();
+			return false;
+		}
+		
+		Count timeoutParameter = (Count) getSmlConfiguration().getParameter(TIMEOUT_PARAMETER_NAME);
+		try {
+			serialPort = (SerialPort) portId.open(this.getClass().getName(), timeoutParameter.getValue());
+		} catch (PortInUseException e) {
+			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
+			System.err.println(e.getMessage());
+			return false;
+		}
+		
+		Count baudrateParameter = (Count) getSmlConfiguration().getParameter(BAUDRATE_PARAMETER_NAME);
+		try {
+			serialPort.setSerialPortParams(baudrateParameter.getValue(), SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+				SerialPort.PARITY_NONE);
+		} catch (UnsupportedCommOperationException e) {
+			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
+			System.err.println(e.getMessage());
+			return false;
+		}
+		
+		try {
+			inputReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+		} catch (IOException e) {
+			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
+			System.err.println(e.getMessage());
+			return false;
+		}
+
+		// initially deactive/stop data notifications, so the sensor is not running
+		serialPort.notifyOnDataAvailable(true);
+			
+		// add event port
+		try {
+			serialPort.addEventListener(new SerialPortEventListener() {
+				@Override
+				public void serialEvent(SerialPortEvent serialPortEvent) {
+					if (serialPortEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+						String inputString = null;
+						try {
+							inputString = inputReader.readLine();
+						} catch (IOException e) {
+							System.err.println("There is a problem while retrieving sensor value from sensor " + getSmlConfiguration().getId());
+							System.err.println(e.getMessage());
+							return;
+						}
+						
+						DataComponent outputComponent = getSmlConfiguration().getOutputComponent("output");
+						Text input =  (Text) outputComponent.copy();
+						input.setValue(inputString);						
+						
+						IOPropertyList values = new IOPropertyList();
+						values.add(input);
+						
+						if (getIProcess() != null) {
+							values = (IOPropertyList) getIProcess().execute(values);
+						}
+						
+						lastValue = values;
+					}
+				}
+			});
+		} catch (TooManyListenersException e) {
+			System.err.println("There is a problem connection to sensor " + getSmlConfiguration().getId());
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
 
 }

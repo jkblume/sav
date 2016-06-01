@@ -58,5 +58,11 @@ public class DifferenceProcessor extends AbstractDifferenceProcessor {
 		return null;
 	}
 
+	@Override
+	public Boolean initialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
