@@ -38,6 +38,25 @@ public abstract class AbstractLogicalSensor extends AbstractComponent
 			ILogicalSensor {
 
 	@RequirementA
+	private IProcess iProcess;
+
+	public IProcess getIProcess() {
+		return this.iProcess;
+
+	}
+
+	public void setIProcess(IProcess iProcess) {
+		this.iProcess = iProcess;
+		if (iProcess != null)
+			handleIProcessConnected(iProcess);
+		else
+			handleIProcessDisconnected(iProcess);
+	}
+
+	public abstract void handleIProcessConnected(IProcess item);
+	public abstract void handleIProcessDisconnected(IProcess item);
+
+	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
 
 	public List<ISensor> getISensors() {
@@ -56,25 +75,6 @@ public abstract class AbstractLogicalSensor extends AbstractComponent
 
 	public abstract void handleISensorAdded(ISensor item);
 	public abstract void handleISensorRemoved(ISensor item);
-
-	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
 
 	private final List<ILogicalSensor> iLogicalSensorRoles = new ArrayList<ILogicalSensor>();
 

@@ -32,7 +32,10 @@ import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
 @Component(name = "AggregateProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "AggregateProcess", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractAggregateProcess extends AbstractComponent implements INotifyPropertyChanged, IProcess {
+public abstract class AbstractAggregateProcess extends AbstractComponent
+		implements
+			INotifyPropertyChanged,
+			IAggregateProcess {
 
 	@RequirementA
 	private List<IProcess> iProcesss = new ArrayList<IProcess>();
@@ -54,7 +57,7 @@ public abstract class AbstractAggregateProcess extends AbstractComponent impleme
 	public abstract void handleIProcessAdded(IProcess item);
 	public abstract void handleIProcessRemoved(IProcess item);
 
-	private final List<IProcess> iProcessRoles = new ArrayList<IProcess>();
+	private final List<IAggregateProcess> iAggregateProcessRoles = new ArrayList<IAggregateProcess>();
 
 	public AbstractAggregateProcess(String name) {
 		super(name);
@@ -73,8 +76,8 @@ public abstract class AbstractAggregateProcess extends AbstractComponent impleme
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
-		if (type == IProcess.class)
-			return iProcessRoles.size() > 0 ? (T) iProcessRoles.get(0) : (T) this;
+		if (type == IAggregateProcess.class)
+			return iAggregateProcessRoles.size() > 0 ? (T) iAggregateProcessRoles.get(0) : (T) this;
 
 		return null;
 	}
@@ -82,8 +85,8 @@ public abstract class AbstractAggregateProcess extends AbstractComponent impleme
 	@Override
 	public boolean innerBindPort(IPort port) {
 
-		if (port instanceof IProcess) {
-			iProcessRoles.add(0, (IProcess) port);
+		if (port instanceof IAggregateProcess) {
+			iAggregateProcessRoles.add(0, (IAggregateProcess) port);
 			return true;
 		}
 
@@ -93,8 +96,8 @@ public abstract class AbstractAggregateProcess extends AbstractComponent impleme
 	@Override
 	public boolean innerUnbindPort(IPort port) {
 
-		if (port instanceof IProcess && iProcessRoles.contains(port)) {
-			iProcessRoles.remove(port);
+		if (port instanceof IAggregateProcess && iAggregateProcessRoles.contains(port)) {
+			iAggregateProcessRoles.remove(port);
 			return true;
 		}
 
@@ -105,10 +108,10 @@ public abstract class AbstractAggregateProcess extends AbstractComponent impleme
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
 
-		if (countInCallStack > 1 || iProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iAggregateProcessRoles.size() == 0)
 			return validateSmlConfigurationImpl();
 		else
-			return iProcessRoles.get(0).validateSmlConfiguration();
+			return iAggregateProcessRoles.get(0).validateSmlConfiguration();
 
 	}
 
@@ -116,10 +119,10 @@ public abstract class AbstractAggregateProcess extends AbstractComponent impleme
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
 
-		if (countInCallStack > 1 || iProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iAggregateProcessRoles.size() == 0)
 			return executeImpl(value);
 		else
-			return iProcessRoles.get(0).execute(value);
+			return iAggregateProcessRoles.get(0).execute(value);
 
 	}
 
