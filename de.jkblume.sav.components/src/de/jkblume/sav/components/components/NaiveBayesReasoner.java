@@ -27,13 +27,13 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class NaiveBesReasoner extends AbstractLearningReasonerProcess {
+public class NaiveBayesReasoner extends AbstractLearningReasonerProcess {
 	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
 
 	private Thread pullThread;
 	private boolean running;
 	
-	public NaiveBesReasoner(String name) {
+	public NaiveBayesReasoner(String name) {
 		super(name);
 	}
 

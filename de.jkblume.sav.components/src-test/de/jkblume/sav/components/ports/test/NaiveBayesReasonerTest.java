@@ -1,7 +1,7 @@
 package de.jkblume.sav.components.ports.test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,7 +16,7 @@ import org.vast.sensorML.SMLUtils;
 
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.utils.MySMLUtils;
-import de.jkblume.sav.components.components.NaiveBesReasoner;
+import de.jkblume.sav.components.components.NaiveBayesReasoner;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.Category;
@@ -28,7 +28,7 @@ public class NaiveBayesReasonerTest {
 	@Test
 	public void test() throws FileNotFoundException, IOException {
 		
-		NaiveBesReasoner reasoner = new NaiveBesReasoner("testReasoner");
+		NaiveBayesReasoner reasoner = new NaiveBayesReasoner("testReasoner");
 		reasoner.setSmlConfiguration(parseDescription("res-test/j_reasoner.xml"));
 		
 		JTechnicalSensor sensor = new JTechnicalSensor("testSensor");

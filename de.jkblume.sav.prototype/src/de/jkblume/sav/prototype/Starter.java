@@ -25,8 +25,7 @@ import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
 import de.jkblume.sav.architecture.gen.porttypes.IReasonerProcess;
-import de.jkblume.sav.components.components.NaiveBesReasoner;
-import de.jkblume.sav.components.components.SimpleRuleReasoner;
+import de.jkblume.sav.components.components.NaiveBayesReasoner;
 import de.jkblume.sav.components.ports.ClassificationVisualisationStrategy;
 import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
 import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
@@ -107,7 +106,7 @@ public class Starter {
 		
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		ops.add(new CreateComponentInstanceOperation("ls", NaiveBesReasoner.class));
+		ops.add(new CreateComponentInstanceOperation("ls", NaiveBayesReasoner.class));
 		ops.add(new SetComponentParameterOperation("ls", "smlConfiguration", gloveReasonerDesription));
 		ops.add(new ConnectOperation("jtps1", "ls", "ISensor"));
 		ops.add(new SetupComponentOperation("ls"));
