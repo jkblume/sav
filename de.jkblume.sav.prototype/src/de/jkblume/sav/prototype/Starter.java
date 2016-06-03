@@ -21,18 +21,18 @@ import org.vast.sensorML.SMLUtils;
 import org.vast.xml.XMLReaderException;
 
 import de.jkblume.sav.architecture.components.JAggregateProcess;
-import de.jkblume.sav.architecture.components.JLogicalSensor;
 import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
-import de.jkblume.sav.architecture.ports.JReasoner;
+import de.jkblume.sav.architecture.gen.porttypes.IReasonerProcess;
+import de.jkblume.sav.components.components.NaiveBesReasoner;
 import de.jkblume.sav.components.components.SimpleRuleReasoner;
 import de.jkblume.sav.components.ports.ClassificationVisualisationStrategy;
 import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
 import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
 import de.jkblume.sav.components.ports.RegexProcessor;
 import de.jkblume.sav.components.ports.SerialTechnicalSensor;
-import de.jkblume.sav.components.utils.DiagramUiHelper;
+import de.jkblume.sav.components.utils.ClassifyUiHelper;
 import de.jkblume.sav.prototype.ui.UI;
 import javafx.application.Application;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -97,9 +97,9 @@ public class Starter {
 		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
 		simulatingSensor.start();
 		
-		JLogicalSensor logicalSensor = (JLogicalSensor) re.getRuntimeModel().getComponentByName("ls");
-		logicalSensor.start();
-}
+		IReasonerProcess reasoner = (IReasonerProcess) re.getRuntimeModel().getComponentByName("ls");
+		ClassifyUiHelper.reasoner = reasoner;
+	}
 
 	private static ReconfigurationScript createReasoningEngineScript() throws FileNotFoundException, XMLReaderException {
 		InputStream is = new FileInputStream("res/glove_reasoner.xml");
@@ -107,18 +107,10 @@ public class Starter {
 		
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		ops.add(new CreateComponentInstanceOperation("ls", JLogicalSensor.class));
-		ops.add(new CreatePortInstanceOperation("rj", JReasoner.class));
-		ops.add(new BindPortOperation("ls", "rj", "ILogicalSensor"));
-		ops.add(new CreateComponentInstanceOperation("srr", SimpleRuleReasoner.class));
-		ops.add(new ConnectOperation("srr", "rj", "IProcess"));
-		ops.add(new ConnectOperation("srr", "ls", "IProcess"));
+		ops.add(new CreateComponentInstanceOperation("ls", NaiveBesReasoner.class));
 		ops.add(new SetComponentParameterOperation("ls", "smlConfiguration", gloveReasonerDesription));
-		ops.add(new ConnectOperation("jtps1", "rj", "ISensor"));
 		ops.add(new ConnectOperation("jtps1", "ls", "ISensor"));
 		ops.add(new SetupComponentOperation("ls"));
-		ops.add(new SetupPortOperation("rj"));
-		ops.add(new SetupComponentOperation("srr"));
 		
 		ops.add(new CreateComponentInstanceOperation("v3", JVisualizer.class));
 		ops.add(new CreatePortInstanceOperation("vs3", ClassificationVisualisationStrategy.class));

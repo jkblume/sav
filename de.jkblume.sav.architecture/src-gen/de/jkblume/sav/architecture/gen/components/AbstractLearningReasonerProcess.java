@@ -38,24 +38,43 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 			ILearningReasonerProcess {
 
 	@RequirementA
-	private List<IProcess> iProcesss = new ArrayList<IProcess>();
+	private IProcess iProcess;
 
-	public List<IProcess> getIProcesss() {
-		return this.iProcesss;
+	public IProcess getIProcess() {
+		return this.iProcess;
+
 	}
 
-	public void addIProcess(IProcess item) {
-		this.iProcesss.add(item);
-		handleIProcessAdded(item);
+	public void setIProcess(IProcess iProcess) {
+		this.iProcess = iProcess;
+		if (iProcess != null)
+			handleIProcessConnected(iProcess);
+		else
+			handleIProcessDisconnected(iProcess);
 	}
 
-	public void removeIProcess(IProcess item) {
-		this.iProcesss.remove(item);
-		handleIProcessRemoved(item);
+	public abstract void handleIProcessConnected(IProcess item);
+	public abstract void handleIProcessDisconnected(IProcess item);
+
+	@RequirementA
+	private List<ISensor> iSensors = new ArrayList<ISensor>();
+
+	public List<ISensor> getISensors() {
+		return this.iSensors;
 	}
 
-	public abstract void handleIProcessAdded(IProcess item);
-	public abstract void handleIProcessRemoved(IProcess item);
+	public void addISensor(ISensor item) {
+		this.iSensors.add(item);
+		handleISensorAdded(item);
+	}
+
+	public void removeISensor(ISensor item) {
+		this.iSensors.remove(item);
+		handleISensorRemoved(item);
+	}
+
+	public abstract void handleISensorAdded(ISensor item);
+	public abstract void handleISensorRemoved(ISensor item);
 
 	private final List<ILearningReasonerProcess> iLearningReasonerProcessRoles = new ArrayList<ILearningReasonerProcess>();
 
@@ -81,6 +100,16 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 		Boolean oldValue = getExtractorProvided();
 		getSharedMemory().setValue(AbstractLearningReasonerProcess.class, "extractorProvided", extractorProvided);
 		notifyPropertyChanged(this, "extractorProvided", oldValue, extractorProvided);
+	}
+
+	public Event getLastEvent() {
+		return (Event) getSharedMemory().getValue(AbstractLearningReasonerProcess.class, "lastEvent");
+	}
+
+	public void setLastEvent(Event lastEvent) {
+		Event oldValue = getLastEvent();
+		getSharedMemory().setValue(AbstractLearningReasonerProcess.class, "lastEvent", lastEvent);
+		notifyPropertyChanged(this, "lastEvent", oldValue, lastEvent);
 	}
 
 	public AbstractProcess getSmlConfiguration() {
@@ -168,14 +197,14 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 	}
 
-	public void buildClassifier(List<ISensor> sensors) {
+	public void buildClassifier() {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("buildClassifier", this);
 
 		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
-			buildClassifierImpl(sensors);
+			buildClassifierImpl();
 		else
-			iLearningReasonerProcessRoles.get(0).buildClassifier(sensors);
+			iLearningReasonerProcessRoles.get(0).buildClassifier();
 
 	}
 
@@ -198,6 +227,83 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 			return getQualityOfServiceImpl();
 		else
 			return iLearningReasonerProcessRoles.get(0).getQualityOfService();
+
+	}
+
+	public void start() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			startImpl();
+		else
+			iLearningReasonerProcessRoles.get(0).start();
+
+	}
+
+	public void stop() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			stopImpl();
+		else
+			iLearningReasonerProcessRoles.get(0).stop();
+
+	}
+
+	public Boolean isRunning() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			return isRunningImpl();
+		else
+			return iLearningReasonerProcessRoles.get(0).isRunning();
+
+	}
+
+	public IOPropertyList retrieveValues() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			return retrieveValuesImpl();
+		else
+			return iLearningReasonerProcessRoles.get(0).retrieveValues();
+
+	}
+
+	public String getId() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			return getIdImpl();
+		else
+			return iLearningReasonerProcessRoles.get(0).getId();
+
+	}
+
+	public Integer getSamplingRate() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("getSamplingRate", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			return getSamplingRateImpl();
+		else
+			return iLearningReasonerProcessRoles.get(0).getSamplingRate();
+
+	}
+
+	public IOPropertyList retrieveOutputStructure() {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveOutputStructure", this);
+
+		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+			return retrieveOutputStructureImpl();
+		else
+			return iLearningReasonerProcessRoles.get(0).retrieveOutputStructure();
 
 	}
 
@@ -238,9 +344,16 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 	public abstract void stopGestureImpl(Category category);
 	public abstract void teachCurrentStateImpl(Category category);
 	public abstract void updateClassifierImpl(Object trainingDate);
-	public abstract void buildClassifierImpl(List<ISensor> sensors);
+	public abstract void buildClassifierImpl();
 	public abstract Category classifyImpl(IOPropertyList input);
 	public abstract DataComponent getQualityOfServiceImpl();
+	public abstract void startImpl();
+	public abstract void stopImpl();
+	public abstract Boolean isRunningImpl();
+	public abstract IOPropertyList retrieveValuesImpl();
+	public abstract String getIdImpl();
+	public abstract Integer getSamplingRateImpl();
+	public abstract IOPropertyList retrieveOutputStructureImpl();
 	public abstract Boolean initializeImpl();
 	public abstract Boolean validateSmlConfigurationImpl();
 	public abstract Object executeImpl(Object value);

@@ -43,14 +43,13 @@ meta architecture SavMetaArchitecture{
 		requires ISensor[0 to *];
 	}
 			
-	port type IReasonerProcess extends IProcess {
-		void buildClassifier(List<ISensor> sensors);
+	port type IReasonerProcess extends ILogicalSensor {
+		void buildClassifier();
 		Category classify(IOPropertyList input);
 		DataComponent getQualityOfService();
 		
 		parameter injectorProvided : Boolean;
 		parameter extractorProvided : Boolean;
-		requires IProcess[0 to *];
 	}
 	
 	port type ISpecificationReasonerProcess extends IReasonerProcess {

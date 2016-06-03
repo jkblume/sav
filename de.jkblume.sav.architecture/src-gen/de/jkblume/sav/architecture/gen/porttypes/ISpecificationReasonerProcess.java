@@ -62,6 +62,14 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 			base.setExtractorProvided(extractorProvided);
 		}
 
+		public Event getLastEvent() {
+			return base.getLastEvent();
+		}
+
+		public void setLastEvent(Event lastEvent) {
+			base.setLastEvent(lastEvent);
+		}
+
 		public AbstractProcess getSmlConfiguration() {
 			return base.getSmlConfiguration();
 		}
@@ -70,8 +78,8 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public void buildClassifier(List<ISensor> sensors) {
-			base.buildClassifier(sensors);
+		public void buildClassifier() {
+			base.buildClassifier();
 		}
 		public Category classify(IOPropertyList input) {
 			Category result = base.classify(input);
@@ -79,6 +87,33 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
+			return result;
+		}
+
+		public void start() {
+			base.start();
+		}
+		public void stop() {
+			base.stop();
+		}
+		public Boolean isRunning() {
+			Boolean result = base.isRunning();
+			return result;
+		}
+		public IOPropertyList retrieveValues() {
+			IOPropertyList result = base.retrieveValues();
+			return result;
+		}
+		public String getId() {
+			String result = base.getId();
+			return result;
+		}
+		public Integer getSamplingRate() {
+			Integer result = base.getSamplingRate();
+			return result;
+		}
+		public IOPropertyList retrieveOutputStructure() {
+			IOPropertyList result = base.retrieveOutputStructure();
 			return result;
 		}
 
@@ -147,6 +182,17 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
+		public Event getLastEvent() {
+			GetLastEventRemoteMessage in = new GetLastEventRemoteMessage();
+			return client.send(in, GetLastEventRemoteMessage.class).getResponseResult();
+		}
+
+		public void setLastEvent(Event lastEvent) {
+			SetLastEventRemoteMessage in = new SetLastEventRemoteMessage();
+			in.setLastEvent(lastEvent);
+			client.send(in, SetLastEventRemoteMessage.class);
+		}
+
 		public AbstractProcess getSmlConfiguration() {
 			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
 			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
@@ -158,9 +204,8 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public void buildClassifier(List<ISensor> sensors) {
+		public void buildClassifier() {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
-			in.setSensors(sensors);
 
 			client.send(in, BuildClassifierRemoteMessage.class);
 		}
@@ -176,6 +221,51 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 			GetQualityOfServiceRemoteMessage in = new GetQualityOfServiceRemoteMessage();
 
 			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
+					.getResponseResult();
+		}
+
+		public void start() {
+			StartRemoteMessage in = new StartRemoteMessage();
+
+			client.send(in, StartRemoteMessage.class);
+		}
+
+		public void stop() {
+			StopRemoteMessage in = new StopRemoteMessage();
+
+			client.send(in, StopRemoteMessage.class);
+		}
+
+		public Boolean isRunning() {
+			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
+
+			return ((IsRunningRemoteMessage) client.send(in, IsRunningRemoteMessage.class)).getResponseResult();
+		}
+
+		public IOPropertyList retrieveValues() {
+			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
+
+			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
+					.getResponseResult();
+		}
+
+		public String getId() {
+			GetIdRemoteMessage in = new GetIdRemoteMessage();
+
+			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
+		}
+
+		public Integer getSamplingRate() {
+			GetSamplingRateRemoteMessage in = new GetSamplingRateRemoteMessage();
+
+			return ((GetSamplingRateRemoteMessage) client.send(in, GetSamplingRateRemoteMessage.class))
+					.getResponseResult();
+		}
+
+		public IOPropertyList retrieveOutputStructure() {
+			RetrieveOutputStructureRemoteMessage in = new RetrieveOutputStructureRemoteMessage();
+
+			return ((RetrieveOutputStructureRemoteMessage) client.send(in, RetrieveOutputStructureRemoteMessage.class))
 					.getResponseResult();
 		}
 

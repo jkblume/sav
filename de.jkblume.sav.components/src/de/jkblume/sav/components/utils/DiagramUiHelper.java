@@ -43,7 +43,7 @@ public class DiagramUiHelper {
 				
 				NumberAxis yAxis = new NumberAxis();
 				yAxis.setAutoRanging(false);
-				yAxis.setLowerBound(600);
+				yAxis.setLowerBound(560);
 				yAxis.setUpperBound(1000);
 				
 				// creating the chart

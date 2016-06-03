@@ -20,7 +20,7 @@ public class UI extends Application{
 	        this.stage = stage;
 	        this.stage.setTitle("SVA - ManagementConsole");
 	        this.stage.setScene(scene);
-	        this.stage.show();
+//	        this.stage.show();
 		}
 
 

@@ -1,3 +1,7 @@
+/aggregate_process.xml
+/csv_process.xml
 /de/
 /glove_aggregator_process.xml
 /j_reasoner.xml
+/regex_process.xml
+/serial_sensor.xml

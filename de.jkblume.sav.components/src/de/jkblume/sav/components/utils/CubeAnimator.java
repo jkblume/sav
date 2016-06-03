@@ -57,8 +57,8 @@ public class CubeAnimator implements GLEventListener {
 	public void setRotation(float x, float y, float z) {
 		if (!init) {
 			init = true;
-//			this.base_rot_x = x;
-//			this.base_rot_y = y;
+			this.base_rot_x = x;
+			this.base_rot_y = y;
 			this.base_rot_z = z;
 		}
 		

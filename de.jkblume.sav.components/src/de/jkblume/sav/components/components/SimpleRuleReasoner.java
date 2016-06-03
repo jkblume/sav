@@ -5,34 +5,58 @@ import java.util.List;
 
 import org.vast.data.CategoryImpl;
 
+import de.jkblume.sav.architecture.components.PullThread;
 import de.jkblume.sav.architecture.gen.components.AbstractSpecificationReasonerProcess;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
+import net.opengis.OgcPropertyList;
+import net.opengis.sensorml.v20.Event;
 import net.opengis.sensorml.v20.IOPropertyList;
+import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.Category;
+import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Quantity;
 
 public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
+	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
 
+	private Thread pullThread;
+	private Boolean running;
+	
 	public SimpleRuleReasoner(String name) {
 		super(name);
 	}
 
 	public void setup() {
-		//TODO:Implement
+		if (!validateSmlConfiguration()) {
+			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
+		}
+
+		pullThread = new PullThread(this);
 	}
 
 	public void destroy() {
-		//TODO:Implement
+		stop();
 	}
 
-	public void buildClassifierImpl(List<ISensor> sensors) {
-		if (sensors == null) {
-			return;
-		}
-		
-		for (ISensor iSensor : sensors) {
+	public void startImpl() {
+		pullThread.start();
+		running = true;
+	}
+
+	public void stopImpl() {
+		pullThread.interrupt();
+		running = false;
+	}
+
+	public Boolean isRunningImpl() {
+		return running;
+	}
+
+
+	public void buildClassifierImpl() {
+		for (ISensor iSensor : getISensors()) {
 			System.out.println(iSensor.getId());
 		}
 	}
@@ -58,36 +82,20 @@ public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
 		//TODO: IMPLEMENT
 		return null;
 	}
-
-	public Boolean initializeImpl() {
-		//TODO: IMPLEMENT
-		return null;
-	}
-
+	
+	@Override
 	public Boolean validateSmlConfigurationImpl() {
-		//TODO: IMPLEMENT
-		return null;
-	}
-
-	public Object executeImpl(Object value) {
-		Category classify = classify((IOPropertyList) value);
+		boolean result = true;
 		
-		IOPropertyList list = new IOPropertyList();
-		list.add(classify);
+		result &= getSmlConfiguration().getId() != null;
+	
 		
-		return list;
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
+		result &= parameter != null && parameter instanceof Count;
+		
+		return result;
 	}
-
-	@Override
-	public void handleIProcessAdded(IProcess connectedItem) {
-		//TODO Handle
-	}
-
-	@Override
-	public void handleIProcessRemoved(IProcess disconnectedItem) {
-		//TODO Handle
-	}
-
+	
 	@Override
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
 
@@ -103,6 +111,81 @@ public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
 			//TODO:Implement
 		}
 
+	}
+
+	@Override
+	public IOPropertyList retrieveValuesImpl() {
+		IOPropertyList values = new IOPropertyList();
+		
+		// retrieve values from pull sensors
+		for (ISensor pullSensor : getISensors()) {
+			Event lastEvent = pullSensor.getLastEvent();
+			if (lastEvent == null) {
+				continue;
+			}
+			OgcPropertyList<DataComponent> partialResult = lastEvent.getPropertyList();
+			values.addAll(partialResult);
+		}
+		
+		return values;
+	}
+
+	@Override
+	public String getIdImpl() {
+		return getSmlConfiguration().getId();
+	}
+	
+	@Override
+	public Integer getSamplingRateImpl() {
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
+		return ((Count) parameter).getValue();
+	}
+	@Override
+	public Object executeImpl(Object value) {
+		Category classify = classify((IOPropertyList) value);
+		
+		IOPropertyList list = new IOPropertyList();
+		list.add(classify);
+		
+		return list;
+	}
+	
+	@Override
+	public IOPropertyList retrieveOutputStructureImpl() {
+		if (getIProcess() != null) {
+			return getIProcess().getSmlConfiguration().getOutputList();
+		}
+		return getSmlConfiguration().getOutputList();
+	}
+
+	@Override
+	public Boolean initializeImpl() {
+		return true;
+	}
+
+
+	@Override
+	public void handleISensorAdded(ISensor item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleISensorRemoved(ISensor item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleIProcessConnected(IProcess item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleIProcessDisconnected(IProcess item) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

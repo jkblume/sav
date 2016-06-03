@@ -5,11 +5,11 @@ import de.jkblume.sav.architecture.utils.MySMLUtils;
 import net.opengis.sensorml.v20.Event;
 import net.opengis.sensorml.v20.IOPropertyList;
 
-public class PollThread extends Thread implements Runnable{
+public class PullThread extends Thread implements Runnable{
 
 	private ISensor sensor;
 	
-	public PollThread(ISensor sensor) {
+	public PullThread(ISensor sensor) {
 		this.sensor = sensor;
 	}
 	

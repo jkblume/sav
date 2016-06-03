@@ -32,9 +32,10 @@ app SavComponents {
 	components:
 	
 	component SimpleRuleReasoner implements SpecificationReasonerProcess{}
+	component NaiveBesReasoner implements LearningReasonerProcess{}
 	
 	sensors:
 
-	initialization{		
+	initialization{
 	}
 }

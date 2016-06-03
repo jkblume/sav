@@ -44,7 +44,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
 		
-		pollingThread = new PollThread(this);
+		pollingThread = new PullThread(this);
 	}
 
 	public void destroy() {
