@@ -40,7 +40,7 @@ public class ClassificationVisualisationStrategy extends AbstractClassificationV
 	}
 
 	public void destroy() {
-		//TODO: IMPLEMENT
+		ClassifyUiHelper.destroy();
 	}
 
 	public void visualizeEvent(ISensor source, Event event) {

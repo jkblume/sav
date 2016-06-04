@@ -12,6 +12,7 @@ import org.vast.data.TextImpl;
 import org.vast.sensorML.SMLUtils;
 
 import de.jkblume.sav.architecture.components.JAggregateProcess;
+import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.components.ports.CsvProcessor;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -67,7 +68,6 @@ public class JAggregateProcessOperatorTest {
 	
 	private JAggregateProcess createAggregateProcess(String fileName) throws FileNotFoundException, IOException {
         AbstractProcess process = parseDescription(fileName);
-        System.out.println(((AggregateProcess) process).getConnectionList().size());
         JAggregateProcess operator = new JAggregateProcess(fileName);
         operator.setSmlConfiguration(process);
         return operator;
@@ -75,7 +75,7 @@ public class JAggregateProcessOperatorTest {
 	
 	private CsvProcessor createCsvProcess(AbstractProcess description) throws FileNotFoundException, IOException {
 		CsvProcessor processor = new CsvProcessor("name");
-        IProcess base = new TestCsvProcessorBase();
+        IProcess base = new JSimpleProcess("base");
         processor.setBase(base);
         processor.setSmlConfiguration(description);
         return processor;
@@ -87,46 +87,5 @@ public class JAggregateProcessOperatorTest {
         AbstractProcess process = utils.readProcess(is);
         return process;
 	}
-	
-	private class TestCsvProcessorBase implements IProcess {
 		
-		private AbstractProcess process;
-		
-		@Override
-		public Object execute(Object value) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public AbstractProcess getSmlConfiguration() {
-			return process;
-		}
-
-		@Override
-		public void setSmlConfiguration(AbstractProcess processDescription) {
-			this.process = processDescription;
-		}
-
-		@Override
-		public <T> T as(Class<T> c) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Boolean validateSmlConfiguration() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Boolean initialize() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		
-	}
-	
 }

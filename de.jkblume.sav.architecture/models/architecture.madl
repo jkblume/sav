@@ -43,24 +43,19 @@ meta architecture SavMetaArchitecture{
 		requires ISensor[0 to *];
 	}
 			
-	port type IReasonerProcess extends ILogicalSensor {
+	port type IReasoner extends ILogicalSensor {
 		void buildClassifier();
-		Category classify(IOPropertyList input);
 		DataComponent getQualityOfService();
-		
-		parameter injectorProvided : Boolean;
-		parameter extractorProvided : Boolean;
 	}
 	
-	port type ISpecificationReasonerProcess extends IReasonerProcess {
+	port type ISpecificationReasoner extends IReasoner {
 	
 	}
 	
-	port type ILearningReasonerProcess extends IReasonerProcess {
+	port type ILearningReasoner extends IReasoner {
 		void startGesture(Category category);
 		void stopGesture(Category category);
 		void teachCurrentState(Category category);
-		void updateClassifier(Object trainingDate);
 	}
 	
 	port type IVisualisationStrategy {
@@ -79,12 +74,12 @@ meta architecture SavMetaArchitecture{
 		provides IAggregateProcess;
 	}
 	
-	component type LearningReasonerProcess {
-		provides ILearningReasonerProcess;
+	component type LearningReasoner {
+		provides ILearningReasoner;
 	}
 	
-	component type SpecificationReasonerProcess {
-		provides ISpecificationReasonerProcess;
+	component type SpecificationReasoner {
+		provides ISpecificationReasoner;
 	}
 	
 	component type TechnicalSensor {

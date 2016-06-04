@@ -1,12 +1,7 @@
 
-package de.jkblume.sav.components.components;
+package de.jkblume.sav.architecture.components;
 
-import java.util.List;
-
-import org.vast.data.CategoryImpl;
-
-import de.jkblume.sav.architecture.components.PullThread;
-import de.jkblume.sav.architecture.gen.components.AbstractSpecificationReasonerProcess;
+import de.jkblume.sav.architecture.gen.components.AbstractLearningReasoner;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import net.opengis.OgcPropertyList;
@@ -16,15 +11,13 @@ import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.Quantity;
 
-public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
+public class JLearningReasoner extends AbstractLearningReasoner {
 	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
-
 	private Thread pullThread;
-	private Boolean running;
+	private boolean running;
 	
-	public SimpleRuleReasoner(String name) {
+	public JLearningReasoner(String name) {
 		super(name);
 	}
 
@@ -54,60 +47,24 @@ public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
 		return running;
 	}
 
-
-	public void buildClassifierImpl() {
-		for (ISensor iSensor : getISensors()) {
-			System.out.println(iSensor.getId());
-		}
-	}
-
-	public Category classifyImpl(IOPropertyList input) {
-		Quantity component = (Quantity) input.get("flex");
-		
-		Category category = new CategoryImpl();
-		if (component == null) {
-			return null;
-		}
-		
-		if (component.getValue() < 780) {
-			category.setValue("not buckled");
-		} else {
-			category.setValue("buckled");
-		}
-		
-		return category;
-	}
-
-	public DataComponent getQualityOfServiceImpl() {
-		//TODO: IMPLEMENT
-		return null;
-	}
-	
 	@Override
-	public Boolean validateSmlConfigurationImpl() {
-		boolean result = true;
-		
-		result &= getSmlConfiguration().getId() != null;
-	
-		
-		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
-		result &= parameter != null && parameter instanceof Count;
-		
-		return result;
+	public void handleIProcessConnected(IProcess connectedItem) {
+		//TODO Handle
+	}
+
+	@Override
+	public void handleIProcessDisconnected(IProcess disconnectedItem) {
+		//TODO Handle
 	}
 	
 	@Override
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
 
-		if (propertyName.equals("injectorProvided")) {
-			//TODO:Implement
-		}
-
-		if (propertyName.equals("extractorProvided")) {
-			//TODO:Implement
-		}
-
 		if (propertyName.equals("smlConfiguration")) {
+			//TODO:Implement
+		}
+
+		if (propertyName.equals("lastEvent")) {
 			//TODO:Implement
 		}
 
@@ -140,14 +97,38 @@ public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
 		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
 		return ((Count) parameter).getValue();
 	}
+
+	@Override
+	public void handleISensorAdded(ISensor item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleISensorRemoved(ISensor item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Boolean validateSmlConfigurationImpl() {
+		boolean result = true;
+		
+		result &= getSmlConfiguration().getId() != null;
+	
+		
+		AbstractSWEIdentifiable parameter = getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
+		result &= parameter != null && parameter instanceof Count;
+		
+		return result;
+	}
+
 	@Override
 	public Object executeImpl(Object value) {
-		Category classify = classify((IOPropertyList) value);
+		if (getIProcess() != null) {
+			value = (IOPropertyList) getIProcess().execute(value);
+		}
 		
-		IOPropertyList list = new IOPropertyList();
-		list.add(classify);
-		
-		return list;
+		return value;
 	}
 	
 	@Override
@@ -163,27 +144,32 @@ public class SimpleRuleReasoner extends AbstractSpecificationReasonerProcess {
 		return true;
 	}
 
-
 	@Override
-	public void handleISensorAdded(ISensor item) {
+	public void buildClassifierImpl() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void handleISensorRemoved(ISensor item) {
+	public DataComponent getQualityOfServiceImpl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void startGestureImpl(Category category) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void handleIProcessConnected(IProcess item) {
+	public void stopGestureImpl(Category category) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void handleIProcessDisconnected(IProcess item) {
+	public void teachCurrentStateImpl(Category category) {
 		// TODO Auto-generated method stub
 		
 	}

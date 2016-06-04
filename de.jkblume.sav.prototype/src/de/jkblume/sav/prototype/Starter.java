@@ -24,14 +24,10 @@ import de.jkblume.sav.architecture.components.JAggregateProcess;
 import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.components.JVisualizer;
-import de.jkblume.sav.architecture.gen.porttypes.IReasonerProcess;
-import de.jkblume.sav.components.components.NaiveBayesReasoner;
-import de.jkblume.sav.components.ports.ClassificationVisualisationStrategy;
 import de.jkblume.sav.components.ports.Cube3DVisualisationStrategy;
 import de.jkblume.sav.components.ports.DiagramVisualisationStrategy;
 import de.jkblume.sav.components.ports.RegexProcessor;
 import de.jkblume.sav.components.ports.SerialTechnicalSensor;
-import de.jkblume.sav.components.utils.ClassifyUiHelper;
 import de.jkblume.sav.prototype.ui.UI;
 import javafx.application.Application;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -90,36 +86,37 @@ public class Starter {
 		rs = connectSensorScript();
 		re.getReconfigurationEngine().executeScript(rs);
 		
-		rs = createReasoningEngineScript();
-		re.getReconfigurationEngine().executeScript(rs);
+//		rs = createReasoningEngineScript();
+//		re.getReconfigurationEngine().executeScript(rs);
 		
 		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
 		simulatingSensor.start();
 		
-		IReasonerProcess reasoner = (IReasonerProcess) re.getRuntimeModel().getComponentByName("ls");
-		ClassifyUiHelper.reasoner = reasoner;
 	}
 
-	private static ReconfigurationScript createReasoningEngineScript() throws FileNotFoundException, XMLReaderException {
-		InputStream is = new FileInputStream("res/glove_reasoner.xml");
-		AbstractProcess gloveReasonerDesription = utils.readProcess(is);
-		
-		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
-
-		ops.add(new CreateComponentInstanceOperation("ls", NaiveBayesReasoner.class));
-		ops.add(new SetComponentParameterOperation("ls", "smlConfiguration", gloveReasonerDesription));
-		ops.add(new ConnectOperation("jtps1", "ls", "ISensor"));
-		ops.add(new SetupComponentOperation("ls"));
-		
-		ops.add(new CreateComponentInstanceOperation("v3", JVisualizer.class));
-		ops.add(new CreatePortInstanceOperation("vs3", ClassificationVisualisationStrategy.class));
-		ops.add(new BindPortOperation("v3", "vs3", "IVisualisationStrategy"));
-		ops.add(new SetupComponentOperation("v3"));
-		ops.add(new SetupPortOperation("vs3"));
-		ops.add(new ConnectOperation("ls", "v3", "ISensor"));
-		
-		return new ReconfigurationScript(ops);
-	}
+//	private static ReconfigurationScript createReasoningEngineScript() throws FileNotFoundException, XMLReaderException {
+//		InputStream is = new FileInputStream("res/glove_reasoner.xml");
+//		AbstractProcess gloveReasonerDesription = utils.readProcess(is);
+//		
+//		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+//
+//		ops.add(new CreateComponentInstanceOperation("r", JLearningReasoner.class));
+//		ops.add(new CreatePortInstanceOperation("rs", NaiveBayesReasoner.class));
+//		ops.add(new BindPortOperation("r", "rs", "ILearningReasoner"));
+//		ops.add(new SetPortParameterOperation("rs", "smlConfiguration", gloveReasonerDesription));
+//		ops.add(new ConnectOperation("jtps1", "r", "ISensor"));
+//		ops.add(new ConnectOperation("jtps1", "rs", "ISensor"));
+//		ops.add(new SetupComponentOperation("r"));
+//		
+//		ops.add(new CreateComponentInstanceOperation("v3", JVisualizer.class));
+//		ops.add(new CreatePortInstanceOperation("vs3", ClassificationVisualisationStrategy.class));
+//		ops.add(new BindPortOperation("v3", "vs3", "IVisualisationStrategy"));
+//		ops.add(new SetupComponentOperation("v3"));
+//		ops.add(new SetupPortOperation("vs3"));
+//		ops.add(new ConnectOperation("r", "v3", "ISensor"));
+//		
+//		return new ReconfigurationScript(ops);
+//	}
 
 	private static ReconfigurationScript createCubeVisualizationScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();

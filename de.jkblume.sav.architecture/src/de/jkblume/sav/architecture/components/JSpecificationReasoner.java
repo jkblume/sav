@@ -1,10 +1,9 @@
 
 package de.jkblume.sav.architecture.components;
 
-import de.jkblume.sav.architecture.gen.components.AbstractLogicalSensor;
+import de.jkblume.sav.architecture.gen.components.AbstractSpecificationReasoner;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
-import de.jkblume.sav.architecture.utils.MySMLUtils;
 import net.opengis.OgcPropertyList;
 import net.opengis.sensorml.v20.Event;
 import net.opengis.sensorml.v20.IOPropertyList;
@@ -12,12 +11,12 @@ import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
 
-public class JLogicalSensor extends AbstractLogicalSensor {
+public class JSpecificationReasoner extends AbstractSpecificationReasoner {
 	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
 	private Thread pullThread;
 	private boolean running;
 	
-	public JLogicalSensor(String name) {
+	public JSpecificationReasoner(String name) {
 		super(name);
 	}
 
@@ -142,6 +141,18 @@ public class JLogicalSensor extends AbstractLogicalSensor {
 	@Override
 	public Boolean initializeImpl() {
 		return true;
+	}
+
+	@Override
+	public void buildClassifierImpl() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public DataComponent getQualityOfServiceImpl() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

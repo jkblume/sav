@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.vast.data.TextImpl;
 import org.vast.sensorML.SMLUtils;
 
+import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.components.ports.CsvProcessor;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -52,7 +53,7 @@ public class CsvProcessorTest {
         AbstractProcess process = parseDescription("res-test/csv_process.xml");
         
         CsvProcessor operator = new CsvProcessor("name");
-        IProcess base = new TestSimplePortBase();
+        IProcess base = new JSimpleProcess("base");
         operator.setBase(base);
         operator.setSmlConfiguration(process);
         return operator;
@@ -63,47 +64,6 @@ public class CsvProcessorTest {
         SMLUtils utils = new SMLUtils("");
         AbstractProcess process = utils.readProcess(is);
         return process;
-	}
-	
-	private class TestSimplePortBase implements IProcess {
-		
-		private AbstractProcess process;
-		
-		@Override
-		public Object execute(Object value) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public AbstractProcess getSmlConfiguration() {
-			return process;
-		}
-
-		@Override
-		public void setSmlConfiguration(AbstractProcess processDescription) {
-			this.process = processDescription;
-		}
-
-		@Override
-		public <T> T as(Class<T> c) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Boolean validateSmlConfiguration() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Boolean initialize() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		
 	}
 	
 }

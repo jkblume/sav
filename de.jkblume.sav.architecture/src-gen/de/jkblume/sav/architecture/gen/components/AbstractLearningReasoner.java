@@ -31,11 +31,11 @@ import org.smags.reflection.ReflectionHelper;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
-@Component(name = "LearningReasonerProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "LearningReasonerProcess", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractLearningReasonerProcess extends AbstractComponent
+@Component(name = "LearningReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "LearningReasoner", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+public abstract class AbstractLearningReasoner extends AbstractComponent
 		implements
 			INotifyPropertyChanged,
-			ILearningReasonerProcess {
+			ILearningReasoner {
 
 	@RequirementA
 	private IProcess iProcess;
@@ -76,57 +76,37 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 	public abstract void handleISensorAdded(ISensor item);
 	public abstract void handleISensorRemoved(ISensor item);
 
-	private final List<ILearningReasonerProcess> iLearningReasonerProcessRoles = new ArrayList<ILearningReasonerProcess>();
+	private final List<ILearningReasoner> iLearningReasonerRoles = new ArrayList<ILearningReasoner>();
 
-	public AbstractLearningReasonerProcess(String name) {
+	public AbstractLearningReasoner(String name) {
 		super(name);
 	}
 
-	public Boolean getInjectorProvided() {
-		return (Boolean) getSharedMemory().getValue(AbstractLearningReasonerProcess.class, "injectorProvided");
-	}
-
-	public void setInjectorProvided(Boolean injectorProvided) {
-		Boolean oldValue = getInjectorProvided();
-		getSharedMemory().setValue(AbstractLearningReasonerProcess.class, "injectorProvided", injectorProvided);
-		notifyPropertyChanged(this, "injectorProvided", oldValue, injectorProvided);
-	}
-
-	public Boolean getExtractorProvided() {
-		return (Boolean) getSharedMemory().getValue(AbstractLearningReasonerProcess.class, "extractorProvided");
-	}
-
-	public void setExtractorProvided(Boolean extractorProvided) {
-		Boolean oldValue = getExtractorProvided();
-		getSharedMemory().setValue(AbstractLearningReasonerProcess.class, "extractorProvided", extractorProvided);
-		notifyPropertyChanged(this, "extractorProvided", oldValue, extractorProvided);
-	}
-
 	public Event getLastEvent() {
-		return (Event) getSharedMemory().getValue(AbstractLearningReasonerProcess.class, "lastEvent");
+		return (Event) getSharedMemory().getValue(AbstractLearningReasoner.class, "lastEvent");
 	}
 
 	public void setLastEvent(Event lastEvent) {
 		Event oldValue = getLastEvent();
-		getSharedMemory().setValue(AbstractLearningReasonerProcess.class, "lastEvent", lastEvent);
+		getSharedMemory().setValue(AbstractLearningReasoner.class, "lastEvent", lastEvent);
 		notifyPropertyChanged(this, "lastEvent", oldValue, lastEvent);
 	}
 
 	public AbstractProcess getSmlConfiguration() {
-		return (AbstractProcess) getSharedMemory().getValue(AbstractLearningReasonerProcess.class, "smlConfiguration");
+		return (AbstractProcess) getSharedMemory().getValue(AbstractLearningReasoner.class, "smlConfiguration");
 	}
 
 	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
 		AbstractProcess oldValue = getSmlConfiguration();
-		getSharedMemory().setValue(AbstractLearningReasonerProcess.class, "smlConfiguration", smlConfiguration);
+		getSharedMemory().setValue(AbstractLearningReasoner.class, "smlConfiguration", smlConfiguration);
 		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
 	}
 
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
-		if (type == ILearningReasonerProcess.class)
-			return iLearningReasonerProcessRoles.size() > 0 ? (T) iLearningReasonerProcessRoles.get(0) : (T) this;
+		if (type == ILearningReasoner.class)
+			return iLearningReasonerRoles.size() > 0 ? (T) iLearningReasonerRoles.get(0) : (T) this;
 
 		return null;
 	}
@@ -134,8 +114,8 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 	@Override
 	public boolean innerBindPort(IPort port) {
 
-		if (port instanceof ILearningReasonerProcess) {
-			iLearningReasonerProcessRoles.add(0, (ILearningReasonerProcess) port);
+		if (port instanceof ILearningReasoner) {
+			iLearningReasonerRoles.add(0, (ILearningReasoner) port);
 			return true;
 		}
 
@@ -145,8 +125,8 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 	@Override
 	public boolean innerUnbindPort(IPort port) {
 
-		if (port instanceof ILearningReasonerProcess && iLearningReasonerProcessRoles.contains(port)) {
-			iLearningReasonerProcessRoles.remove(port);
+		if (port instanceof ILearningReasoner && iLearningReasonerRoles.contains(port)) {
+			iLearningReasonerRoles.remove(port);
 			return true;
 		}
 
@@ -157,10 +137,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("startGesture", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			startGestureImpl(category);
 		else
-			iLearningReasonerProcessRoles.get(0).startGesture(category);
+			iLearningReasonerRoles.get(0).startGesture(category);
 
 	}
 
@@ -168,10 +148,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("stopGesture", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			stopGestureImpl(category);
 		else
-			iLearningReasonerProcessRoles.get(0).stopGesture(category);
+			iLearningReasonerRoles.get(0).stopGesture(category);
 
 	}
 
@@ -179,21 +159,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("teachCurrentState", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			teachCurrentStateImpl(category);
 		else
-			iLearningReasonerProcessRoles.get(0).teachCurrentState(category);
-
-	}
-
-	public void updateClassifier(Object trainingDate) {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("updateClassifier", this);
-
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
-			updateClassifierImpl(trainingDate);
-		else
-			iLearningReasonerProcessRoles.get(0).updateClassifier(trainingDate);
+			iLearningReasonerRoles.get(0).teachCurrentState(category);
 
 	}
 
@@ -201,21 +170,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("buildClassifier", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			buildClassifierImpl();
 		else
-			iLearningReasonerProcessRoles.get(0).buildClassifier();
-
-	}
-
-	public Category classify(IOPropertyList input) {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("classify", this);
-
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
-			return classifyImpl(input);
-		else
-			return iLearningReasonerProcessRoles.get(0).classify(input);
+			iLearningReasonerRoles.get(0).buildClassifier();
 
 	}
 
@@ -223,10 +181,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getQualityOfService", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return getQualityOfServiceImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).getQualityOfService();
+			return iLearningReasonerRoles.get(0).getQualityOfService();
 
 	}
 
@@ -234,10 +192,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			startImpl();
 		else
-			iLearningReasonerProcessRoles.get(0).start();
+			iLearningReasonerRoles.get(0).start();
 
 	}
 
@@ -245,10 +203,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			stopImpl();
 		else
-			iLearningReasonerProcessRoles.get(0).stop();
+			iLearningReasonerRoles.get(0).stop();
 
 	}
 
@@ -256,10 +214,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return isRunningImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).isRunning();
+			return iLearningReasonerRoles.get(0).isRunning();
 
 	}
 
@@ -267,10 +225,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return retrieveValuesImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).retrieveValues();
+			return iLearningReasonerRoles.get(0).retrieveValues();
 
 	}
 
@@ -278,10 +236,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return getIdImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).getId();
+			return iLearningReasonerRoles.get(0).getId();
 
 	}
 
@@ -289,10 +247,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getSamplingRate", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return getSamplingRateImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).getSamplingRate();
+			return iLearningReasonerRoles.get(0).getSamplingRate();
 
 	}
 
@@ -300,10 +258,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveOutputStructure", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return retrieveOutputStructureImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).retrieveOutputStructure();
+			return iLearningReasonerRoles.get(0).retrieveOutputStructure();
 
 	}
 
@@ -311,10 +269,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return initializeImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).initialize();
+			return iLearningReasonerRoles.get(0).initialize();
 
 	}
 
@@ -322,10 +280,10 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return validateSmlConfigurationImpl();
 		else
-			return iLearningReasonerProcessRoles.get(0).validateSmlConfiguration();
+			return iLearningReasonerRoles.get(0).validateSmlConfiguration();
 
 	}
 
@@ -333,19 +291,17 @@ public abstract class AbstractLearningReasonerProcess extends AbstractComponent
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
 
-		if (countInCallStack > 1 || iLearningReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iLearningReasonerRoles.size() == 0)
 			return executeImpl(value);
 		else
-			return iLearningReasonerProcessRoles.get(0).execute(value);
+			return iLearningReasonerRoles.get(0).execute(value);
 
 	}
 
 	public abstract void startGestureImpl(Category category);
 	public abstract void stopGestureImpl(Category category);
 	public abstract void teachCurrentStateImpl(Category category);
-	public abstract void updateClassifierImpl(Object trainingDate);
 	public abstract void buildClassifierImpl();
-	public abstract Category classifyImpl(IOPropertyList input);
 	public abstract DataComponent getQualityOfServiceImpl();
 	public abstract void startImpl();
 	public abstract void stopImpl();

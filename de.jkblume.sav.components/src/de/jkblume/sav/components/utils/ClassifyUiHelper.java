@@ -2,8 +2,8 @@ package de.jkblume.sav.components.utils;
 
 import org.vast.data.CategoryImpl;
 
-import de.jkblume.sav.architecture.gen.porttypes.ILearningReasonerProcess;
-import de.jkblume.sav.architecture.gen.porttypes.IReasonerProcess;
+import de.jkblume.sav.architecture.gen.porttypes.ILearningReasoner;
+import de.jkblume.sav.architecture.gen.porttypes.IReasoner;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,8 +20,19 @@ public class ClassifyUiHelper {
 	private static VBox box;
 	private static Label state;
 	
-	public static IReasonerProcess reasoner;
+	public static IReasoner reasoner;
 	
+	private static Stage stage;
+	
+	public static void destroy() {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				stage.close();
+			}
+		});
+	}
 	
 	public static void initialize() {
 		
@@ -29,11 +40,11 @@ public class ClassifyUiHelper {
 
 			@Override
 			public void run() {
-				Stage targetStage = new Stage();
+				stage = new Stage();
 				box = new VBox(8);
 				Scene scene = new Scene(box, 400, 200);
-				targetStage.setScene(scene);
-				targetStage.show();
+				stage.setScene(scene);
+				stage.show();
 
 				
 				state = new Label();
@@ -54,7 +65,7 @@ public class ClassifyUiHelper {
 				
 				box.getChildren().add(startClassification);
 				
-				if (reasoner instanceof ILearningReasonerProcess) {
+				if (reasoner instanceof ILearningReasoner) {
 					
 					Button yes = new Button();
 					yes.setText("This is A gesture!");
@@ -64,7 +75,7 @@ public class ClassifyUiHelper {
 						public void handle(ActionEvent arg0) {
 							Category category = new CategoryImpl();
 							category.setValue("yes");
-							((ILearningReasonerProcess) reasoner).teachCurrentState(category);
+							((ILearningReasoner) reasoner).teachCurrentState(category);
 						}
 					});
 					
@@ -76,7 +87,7 @@ public class ClassifyUiHelper {
 						public void handle(ActionEvent arg0) {
 							Category category = new CategoryImpl();
 							category.setValue("no");
-							((ILearningReasonerProcess) reasoner).teachCurrentState(category);
+							((ILearningReasoner) reasoner).teachCurrentState(category);
 						}
 					});
 					

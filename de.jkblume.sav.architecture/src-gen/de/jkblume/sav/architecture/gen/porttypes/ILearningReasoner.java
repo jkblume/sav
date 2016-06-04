@@ -28,46 +28,24 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "IReasonerProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface IReasonerProcess extends ILogicalSensor {
+@PortTypeA(name = "ILearningReasoner", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ILearningReasoner extends IReasoner {
 
-	public static Class remotePortClass = IReasonerProcessRemote.class;
-	public static Class proxyComponentClass = IReasonerProcessRemoteProxy.class;
+	public static Class remotePortClass = ILearningReasonerRemote.class;
+	public static Class proxyComponentClass = ILearningReasonerRemoteProxy.class;
 
-	public void buildClassifier();
-	public Category classify(IOPropertyList input);
-	public DataComponent getQualityOfService();
-
-	public Boolean getInjectorProvided();
-	public void setInjectorProvided(Boolean injectorProvided);
-
-	public Boolean getExtractorProvided();
-	public void setExtractorProvided(Boolean extractorProvided);
+	public void startGesture(Category category);
+	public void stopGesture(Category category);
+	public void teachCurrentState(Category category);
 
 	public <T> T as(Class<T> c);
 
 	/*--------- REMOTE ---------*/
 
-	public class IReasonerProcessRemote extends AbstractRemotePort<IReasonerProcess>implements IReasonerProcess {
+	public class ILearningReasonerRemote extends AbstractRemotePort<ILearningReasoner>implements ILearningReasoner {
 
-		public IReasonerProcessRemote(String name) {
-			super(name, IReasonerProcess.class);
-		}
-
-		public Boolean getInjectorProvided() {
-			return base.getInjectorProvided();
-		}
-
-		public void setInjectorProvided(Boolean injectorProvided) {
-			base.setInjectorProvided(injectorProvided);
-		}
-
-		public Boolean getExtractorProvided() {
-			return base.getExtractorProvided();
-		}
-
-		public void setExtractorProvided(Boolean extractorProvided) {
-			base.setExtractorProvided(extractorProvided);
+		public ILearningReasonerRemote(String name) {
+			super(name, ILearningReasoner.class);
 		}
 
 		public Event getLastEvent() {
@@ -86,12 +64,18 @@ public interface IReasonerProcess extends ILogicalSensor {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
+		public void startGesture(Category category) {
+			base.startGesture(category);
+		}
+		public void stopGesture(Category category) {
+			base.stopGesture(category);
+		}
+		public void teachCurrentState(Category category) {
+			base.teachCurrentState(category);
+		}
+
 		public void buildClassifier() {
 			base.buildClassifier();
-		}
-		public Category classify(IOPropertyList input) {
-			Category result = base.classify(input);
-			return result;
 		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
@@ -145,9 +129,11 @@ public interface IReasonerProcess extends ILogicalSensor {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "IReasonerProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "IReasonerProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class IReasonerProcessRemoteProxy extends RemoteProxyComponent<IReasonerProcess>implements IReasonerProcess {
-		public IReasonerProcessRemoteProxy(String name) {
+	@Component(name = "ILearningReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ILearningReasonerRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ILearningReasonerRemoteProxy extends RemoteProxyComponent<ILearningReasoner>
+			implements
+				ILearningReasoner {
+		public ILearningReasonerRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -164,28 +150,6 @@ public interface IReasonerProcess extends ILogicalSensor {
 		@Override
 		protected <T> T innerGetPort(Class<T> type) {
 			return null;
-		}
-
-		public Boolean getInjectorProvided() {
-			GetInjectorProvidedRemoteMessage in = new GetInjectorProvidedRemoteMessage();
-			return client.send(in, GetInjectorProvidedRemoteMessage.class).getResponseResult();
-		}
-
-		public void setInjectorProvided(Boolean injectorProvided) {
-			SetInjectorProvidedRemoteMessage in = new SetInjectorProvidedRemoteMessage();
-			in.setInjectorProvided(injectorProvided);
-			client.send(in, SetInjectorProvidedRemoteMessage.class);
-		}
-
-		public Boolean getExtractorProvided() {
-			GetExtractorProvidedRemoteMessage in = new GetExtractorProvidedRemoteMessage();
-			return client.send(in, GetExtractorProvidedRemoteMessage.class).getResponseResult();
-		}
-
-		public void setExtractorProvided(Boolean extractorProvided) {
-			SetExtractorProvidedRemoteMessage in = new SetExtractorProvidedRemoteMessage();
-			in.setExtractorProvided(extractorProvided);
-			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
 		public Event getLastEvent() {
@@ -210,17 +174,31 @@ public interface IReasonerProcess extends ILogicalSensor {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
+		public void startGesture(Category category) {
+			StartGestureRemoteMessage in = new StartGestureRemoteMessage();
+			in.setCategory(category);
+
+			client.send(in, StartGestureRemoteMessage.class);
+		}
+
+		public void stopGesture(Category category) {
+			StopGestureRemoteMessage in = new StopGestureRemoteMessage();
+			in.setCategory(category);
+
+			client.send(in, StopGestureRemoteMessage.class);
+		}
+
+		public void teachCurrentState(Category category) {
+			TeachCurrentStateRemoteMessage in = new TeachCurrentStateRemoteMessage();
+			in.setCategory(category);
+
+			client.send(in, TeachCurrentStateRemoteMessage.class);
+		}
+
 		public void buildClassifier() {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
 
 			client.send(in, BuildClassifierRemoteMessage.class);
-		}
-
-		public Category classify(IOPropertyList input) {
-			ClassifyRemoteMessage in = new ClassifyRemoteMessage();
-			in.setInput(input);
-
-			return ((ClassifyRemoteMessage) client.send(in, ClassifyRemoteMessage.class)).getResponseResult();
 		}
 
 		public DataComponent getQualityOfService() {
@@ -297,119 +275,79 @@ public interface IReasonerProcess extends ILogicalSensor {
 
 	}
 
-	public class GetInjectorProvidedRemoteMessage extends RemoteMessageBase<Boolean> {
+	public class StartGestureRemoteMessage extends RemoteMessageBase<Object> {
 
-		public GetInjectorProvidedRemoteMessage() {
-			super("getInjectorProvided");
+		private Category category;
+
+		public StartGestureRemoteMessage() {
+			super("startGesture", Category.class.getName());
 		}
 
-	}
-
-	public class SetInjectorProvidedRemoteMessage extends RemoteMessageBase<Object> {
-
-		private Boolean injectorProvided;
-
-		public SetInjectorProvidedRemoteMessage() {
-			super("setInjectorProvided", Boolean.class.getName());
+		public void setCategory(Category category) {
+			this.category = category;
 		}
 
-		public void setInjectorProvided(Boolean injectorProvided) {
-			this.injectorProvided = injectorProvided;
-		}
-
-		public Boolean getInjectorProvided() {
-			return injectorProvided;
+		public Category getCategory() {
+			return category;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
-			result.add(getInjectorProvided());
-			return result;
-		}
-	}
 
-	public class GetExtractorProvidedRemoteMessage extends RemoteMessageBase<Boolean> {
-
-		public GetExtractorProvidedRemoteMessage() {
-			super("getExtractorProvided");
-		}
-
-	}
-
-	public class SetExtractorProvidedRemoteMessage extends RemoteMessageBase<Object> {
-
-		private Boolean extractorProvided;
-
-		public SetExtractorProvidedRemoteMessage() {
-			super("setExtractorProvided", Boolean.class.getName());
-		}
-
-		public void setExtractorProvided(Boolean extractorProvided) {
-			this.extractorProvided = extractorProvided;
-		}
-
-		public Boolean getExtractorProvided() {
-			return extractorProvided;
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-			result.add(getExtractorProvided());
-			return result;
-		}
-	}
-
-	public class BuildClassifierRemoteMessage extends RemoteMessageBase<Object> {
-
-		public BuildClassifierRemoteMessage() {
-			super("buildClassifier");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
+			result.add(getCategory());
 
 			return result;
 		}
 	}
 
-	public class ClassifyRemoteMessage extends RemoteMessageBase<Category> {
+	public class StopGestureRemoteMessage extends RemoteMessageBase<Object> {
 
-		private IOPropertyList input;
+		private Category category;
 
-		public ClassifyRemoteMessage() {
-			super("classify", IOPropertyList.class.getName());
+		public StopGestureRemoteMessage() {
+			super("stopGesture", Category.class.getName());
 		}
 
-		public void setInput(IOPropertyList input) {
-			this.input = input;
+		public void setCategory(Category category) {
+			this.category = category;
 		}
 
-		public IOPropertyList getInput() {
-			return input;
+		public Category getCategory() {
+			return category;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
 
-			result.add(getInput());
+			result.add(getCategory());
 
 			return result;
 		}
 	}
 
-	public class GetQualityOfServiceRemoteMessage extends RemoteMessageBase<DataComponent> {
+	public class TeachCurrentStateRemoteMessage extends RemoteMessageBase<Object> {
 
-		public GetQualityOfServiceRemoteMessage() {
-			super("getQualityOfService");
+		private Category category;
+
+		public TeachCurrentStateRemoteMessage() {
+			super("teachCurrentState", Category.class.getName());
+		}
+
+		public void setCategory(Category category) {
+			this.category = category;
+		}
+
+		public Category getCategory() {
+			return category;
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
+
+			result.add(getCategory());
 
 			return result;
 		}

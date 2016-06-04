@@ -28,38 +28,22 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "ISpecificationReasonerProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ISpecificationReasonerProcess extends IReasonerProcess {
+@PortTypeA(name = "ISpecificationReasoner", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ISpecificationReasoner extends IReasoner {
 
-	public static Class remotePortClass = ISpecificationReasonerProcessRemote.class;
-	public static Class proxyComponentClass = ISpecificationReasonerProcessRemoteProxy.class;
+	public static Class remotePortClass = ISpecificationReasonerRemote.class;
+	public static Class proxyComponentClass = ISpecificationReasonerRemoteProxy.class;
 
 	public <T> T as(Class<T> c);
 
 	/*--------- REMOTE ---------*/
 
-	public class ISpecificationReasonerProcessRemote extends AbstractRemotePort<ISpecificationReasonerProcess>
+	public class ISpecificationReasonerRemote extends AbstractRemotePort<ISpecificationReasoner>
 			implements
-				ISpecificationReasonerProcess {
+				ISpecificationReasoner {
 
-		public ISpecificationReasonerProcessRemote(String name) {
-			super(name, ISpecificationReasonerProcess.class);
-		}
-
-		public Boolean getInjectorProvided() {
-			return base.getInjectorProvided();
-		}
-
-		public void setInjectorProvided(Boolean injectorProvided) {
-			base.setInjectorProvided(injectorProvided);
-		}
-
-		public Boolean getExtractorProvided() {
-			return base.getExtractorProvided();
-		}
-
-		public void setExtractorProvided(Boolean extractorProvided) {
-			base.setExtractorProvided(extractorProvided);
+		public ISpecificationReasonerRemote(String name) {
+			super(name, ISpecificationReasoner.class);
 		}
 
 		public Event getLastEvent() {
@@ -80,10 +64,6 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 
 		public void buildClassifier() {
 			base.buildClassifier();
-		}
-		public Category classify(IOPropertyList input) {
-			Category result = base.classify(input);
-			return result;
 		}
 		public DataComponent getQualityOfService() {
 			DataComponent result = base.getQualityOfService();
@@ -137,11 +117,11 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "ISpecificationReasonerProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ISpecificationReasonerProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class ISpecificationReasonerProcessRemoteProxy extends RemoteProxyComponent<ISpecificationReasonerProcess>
+	@Component(name = "ISpecificationReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ISpecificationReasonerRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ISpecificationReasonerRemoteProxy extends RemoteProxyComponent<ISpecificationReasoner>
 			implements
-				ISpecificationReasonerProcess {
-		public ISpecificationReasonerProcessRemoteProxy(String name) {
+				ISpecificationReasoner {
+		public ISpecificationReasonerRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -158,28 +138,6 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 		@Override
 		protected <T> T innerGetPort(Class<T> type) {
 			return null;
-		}
-
-		public Boolean getInjectorProvided() {
-			GetInjectorProvidedRemoteMessage in = new GetInjectorProvidedRemoteMessage();
-			return client.send(in, GetInjectorProvidedRemoteMessage.class).getResponseResult();
-		}
-
-		public void setInjectorProvided(Boolean injectorProvided) {
-			SetInjectorProvidedRemoteMessage in = new SetInjectorProvidedRemoteMessage();
-			in.setInjectorProvided(injectorProvided);
-			client.send(in, SetInjectorProvidedRemoteMessage.class);
-		}
-
-		public Boolean getExtractorProvided() {
-			GetExtractorProvidedRemoteMessage in = new GetExtractorProvidedRemoteMessage();
-			return client.send(in, GetExtractorProvidedRemoteMessage.class).getResponseResult();
-		}
-
-		public void setExtractorProvided(Boolean extractorProvided) {
-			SetExtractorProvidedRemoteMessage in = new SetExtractorProvidedRemoteMessage();
-			in.setExtractorProvided(extractorProvided);
-			client.send(in, SetExtractorProvidedRemoteMessage.class);
 		}
 
 		public Event getLastEvent() {
@@ -208,13 +166,6 @@ public interface ISpecificationReasonerProcess extends IReasonerProcess {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
 
 			client.send(in, BuildClassifierRemoteMessage.class);
-		}
-
-		public Category classify(IOPropertyList input) {
-			ClassifyRemoteMessage in = new ClassifyRemoteMessage();
-			in.setInput(input);
-
-			return ((ClassifyRemoteMessage) client.send(in, ClassifyRemoteMessage.class)).getResponseResult();
 		}
 
 		public DataComponent getQualityOfService() {

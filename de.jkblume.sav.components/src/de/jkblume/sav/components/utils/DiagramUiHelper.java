@@ -23,7 +23,18 @@ public class DiagramUiHelper {
 	private static VBox chartBox;
 
 	private static NumberAxis xAxis;
+	
 
+	public static void destroy(String vsName) {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				stages.get(vsName).close();
+			}
+		});
+	}
+	
 	public static void addChart(String vsName, String sensorId) {
 		Platform.runLater(new Runnable() {
 

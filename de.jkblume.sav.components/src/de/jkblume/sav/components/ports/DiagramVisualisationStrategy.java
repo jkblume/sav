@@ -2,11 +2,11 @@
 package de.jkblume.sav.components.ports;
 
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
-import de.jkblume.sav.components.gen.ports.AbstractJavaFXVisualisationStrategy;
+import de.jkblume.sav.components.gen.ports.AbstractDiagramVisualisationStrategy;
 import de.jkblume.sav.components.utils.DiagramUiHelper;
 import net.opengis.sensorml.v20.Event;
 
-public class DiagramVisualisationStrategy extends AbstractJavaFXVisualisationStrategy {
+public class DiagramVisualisationStrategy extends AbstractDiagramVisualisationStrategy {
 	
 	public DiagramVisualisationStrategy(String name) {
 		super(name);
@@ -16,7 +16,7 @@ public class DiagramVisualisationStrategy extends AbstractJavaFXVisualisationStr
 	}
 
 	public void destroy() {
-		//TODO: IMPLEMENT
+		DiagramUiHelper.destroy(getName());
 	}
 
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {

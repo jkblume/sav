@@ -29,7 +29,7 @@ import org.smags.componentmodel.annotations.ParameterA;
 public class JTechnicalSensor extends AbstractTechnicalSensor {
 
 	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
-	private Thread pollingThread;
+	private Thread pullThread;
 	private boolean running;
 	
 	private String id;
@@ -44,11 +44,11 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
 		
-		pollingThread = new PullThread(this);
+		pullThread = new PullThread(this);
 	}
 
 	public void destroy() {
-		//TODO:Implement
+		stop();
 	}
 
 	@Override
@@ -80,12 +80,12 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 
 	public void startImpl() {
 		running = true;
-		pollingThread.start();
+		pullThread.start();
 	}
 
 	public void stopImpl() {
 		running = false;
-		pollingThread.interrupt();
+		pullThread.interrupt();
 	}
 
 	public Boolean isRunningImpl() {

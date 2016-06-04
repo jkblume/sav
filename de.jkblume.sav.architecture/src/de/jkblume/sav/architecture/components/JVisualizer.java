@@ -14,7 +14,7 @@ import net.opengis.swe.v20.DataComponent;
 
 public class JVisualizer extends AbstractVisualizer {
 
-	private Thread pollThread;
+	private Thread pullThread;
 
 	private Map<String, Double> lastVisualizedEvent = new HashMap<>();
 	
@@ -23,7 +23,7 @@ public class JVisualizer extends AbstractVisualizer {
 	}
 
 	public void setup() {
-		pollThread = new Thread(new Runnable() {
+		pullThread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -59,11 +59,11 @@ public class JVisualizer extends AbstractVisualizer {
 				return lastTimestamp.equals(currentTimestamp);
 			}
 		});
-		pollThread.start();
+		pullThread.start();
 	}
 
 	public void destroy() {
-		//TODO:Implement
+		pullThread.interrupt();
 	}
 
 

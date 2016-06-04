@@ -1,11 +1,11 @@
 
-package de.jkblume.sav.architecture.gen.ports;
+package de.jkblume.sav.components.gen.ports;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.components.*;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.porttypes.*;
 
@@ -27,11 +27,15 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractJReasoner implements IPort<ILogicalSensor>, INotifyPropertyChanged, ILogicalSensor {
+public abstract class AbstractNaiveBayesReasoner
+		implements
+			IPort<ILearningReasoner>,
+			INotifyPropertyChanged,
+			ILearningReasoner {
 
 	private String name;
 	private boolean isActive = true;
-	protected ILogicalSensor base;
+	protected ILearningReasoner base;
 
 	@RequirementA
 	private List<ISensor> iSensors = new ArrayList<ISensor>();
@@ -72,7 +76,7 @@ public abstract class AbstractJReasoner implements IPort<ILogicalSensor>, INotif
 	public abstract void handleIProcessConnected(IProcess item);
 	public abstract void handleIProcessDisconnected(IProcess item);
 
-	public AbstractJReasoner(String name) {
+	public AbstractNaiveBayesReasoner(String name) {
 		this.name = name;
 	}
 
@@ -97,12 +101,12 @@ public abstract class AbstractJReasoner implements IPort<ILogicalSensor>, INotif
 	}
 
 	@Override
-	public ILogicalSensor getBase() {
+	public ILearningReasoner getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(ILogicalSensor base) {
+	public void setBase(ILearningReasoner base) {
 		this.base = base;
 	}
 

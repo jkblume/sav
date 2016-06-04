@@ -31,11 +31,11 @@ import org.smags.reflection.ReflectionHelper;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
-@Component(name = "SpecificationReasonerProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "SpecificationReasonerProcess", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractSpecificationReasonerProcess extends AbstractComponent
+@Component(name = "SpecificationReasoner", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "SpecificationReasoner", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+public abstract class AbstractSpecificationReasoner extends AbstractComponent
 		implements
 			INotifyPropertyChanged,
-			ISpecificationReasonerProcess {
+			ISpecificationReasoner {
 
 	@RequirementA
 	private IProcess iProcess;
@@ -76,60 +76,37 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 	public abstract void handleISensorAdded(ISensor item);
 	public abstract void handleISensorRemoved(ISensor item);
 
-	private final List<ISpecificationReasonerProcess> iSpecificationReasonerProcessRoles = new ArrayList<ISpecificationReasonerProcess>();
+	private final List<ISpecificationReasoner> iSpecificationReasonerRoles = new ArrayList<ISpecificationReasoner>();
 
-	public AbstractSpecificationReasonerProcess(String name) {
+	public AbstractSpecificationReasoner(String name) {
 		super(name);
 	}
 
-	public Boolean getInjectorProvided() {
-		return (Boolean) getSharedMemory().getValue(AbstractSpecificationReasonerProcess.class, "injectorProvided");
-	}
-
-	public void setInjectorProvided(Boolean injectorProvided) {
-		Boolean oldValue = getInjectorProvided();
-		getSharedMemory().setValue(AbstractSpecificationReasonerProcess.class, "injectorProvided", injectorProvided);
-		notifyPropertyChanged(this, "injectorProvided", oldValue, injectorProvided);
-	}
-
-	public Boolean getExtractorProvided() {
-		return (Boolean) getSharedMemory().getValue(AbstractSpecificationReasonerProcess.class, "extractorProvided");
-	}
-
-	public void setExtractorProvided(Boolean extractorProvided) {
-		Boolean oldValue = getExtractorProvided();
-		getSharedMemory().setValue(AbstractSpecificationReasonerProcess.class, "extractorProvided", extractorProvided);
-		notifyPropertyChanged(this, "extractorProvided", oldValue, extractorProvided);
-	}
-
 	public Event getLastEvent() {
-		return (Event) getSharedMemory().getValue(AbstractSpecificationReasonerProcess.class, "lastEvent");
+		return (Event) getSharedMemory().getValue(AbstractSpecificationReasoner.class, "lastEvent");
 	}
 
 	public void setLastEvent(Event lastEvent) {
 		Event oldValue = getLastEvent();
-		getSharedMemory().setValue(AbstractSpecificationReasonerProcess.class, "lastEvent", lastEvent);
+		getSharedMemory().setValue(AbstractSpecificationReasoner.class, "lastEvent", lastEvent);
 		notifyPropertyChanged(this, "lastEvent", oldValue, lastEvent);
 	}
 
 	public AbstractProcess getSmlConfiguration() {
-		return (AbstractProcess) getSharedMemory().getValue(AbstractSpecificationReasonerProcess.class,
-				"smlConfiguration");
+		return (AbstractProcess) getSharedMemory().getValue(AbstractSpecificationReasoner.class, "smlConfiguration");
 	}
 
 	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
 		AbstractProcess oldValue = getSmlConfiguration();
-		getSharedMemory().setValue(AbstractSpecificationReasonerProcess.class, "smlConfiguration", smlConfiguration);
+		getSharedMemory().setValue(AbstractSpecificationReasoner.class, "smlConfiguration", smlConfiguration);
 		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
 	}
 
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
-		if (type == ISpecificationReasonerProcess.class)
-			return iSpecificationReasonerProcessRoles.size() > 0
-					? (T) iSpecificationReasonerProcessRoles.get(0)
-					: (T) this;
+		if (type == ISpecificationReasoner.class)
+			return iSpecificationReasonerRoles.size() > 0 ? (T) iSpecificationReasonerRoles.get(0) : (T) this;
 
 		return null;
 	}
@@ -137,8 +114,8 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 	@Override
 	public boolean innerBindPort(IPort port) {
 
-		if (port instanceof ISpecificationReasonerProcess) {
-			iSpecificationReasonerProcessRoles.add(0, (ISpecificationReasonerProcess) port);
+		if (port instanceof ISpecificationReasoner) {
+			iSpecificationReasonerRoles.add(0, (ISpecificationReasoner) port);
 			return true;
 		}
 
@@ -148,8 +125,8 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 	@Override
 	public boolean innerUnbindPort(IPort port) {
 
-		if (port instanceof ISpecificationReasonerProcess && iSpecificationReasonerProcessRoles.contains(port)) {
-			iSpecificationReasonerProcessRoles.remove(port);
+		if (port instanceof ISpecificationReasoner && iSpecificationReasonerRoles.contains(port)) {
+			iSpecificationReasonerRoles.remove(port);
 			return true;
 		}
 
@@ -160,21 +137,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("buildClassifier", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			buildClassifierImpl();
 		else
-			iSpecificationReasonerProcessRoles.get(0).buildClassifier();
-
-	}
-
-	public Category classify(IOPropertyList input) {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("classify", this);
-
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
-			return classifyImpl(input);
-		else
-			return iSpecificationReasonerProcessRoles.get(0).classify(input);
+			iSpecificationReasonerRoles.get(0).buildClassifier();
 
 	}
 
@@ -182,10 +148,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getQualityOfService", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return getQualityOfServiceImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).getQualityOfService();
+			return iSpecificationReasonerRoles.get(0).getQualityOfService();
 
 	}
 
@@ -193,10 +159,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			startImpl();
 		else
-			iSpecificationReasonerProcessRoles.get(0).start();
+			iSpecificationReasonerRoles.get(0).start();
 
 	}
 
@@ -204,10 +170,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			stopImpl();
 		else
-			iSpecificationReasonerProcessRoles.get(0).stop();
+			iSpecificationReasonerRoles.get(0).stop();
 
 	}
 
@@ -215,10 +181,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return isRunningImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).isRunning();
+			return iSpecificationReasonerRoles.get(0).isRunning();
 
 	}
 
@@ -226,10 +192,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return retrieveValuesImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).retrieveValues();
+			return iSpecificationReasonerRoles.get(0).retrieveValues();
 
 	}
 
@@ -237,10 +203,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getId", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return getIdImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).getId();
+			return iSpecificationReasonerRoles.get(0).getId();
 
 	}
 
@@ -248,10 +214,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("getSamplingRate", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return getSamplingRateImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).getSamplingRate();
+			return iSpecificationReasonerRoles.get(0).getSamplingRate();
 
 	}
 
@@ -259,10 +225,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveOutputStructure", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return retrieveOutputStructureImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).retrieveOutputStructure();
+			return iSpecificationReasonerRoles.get(0).retrieveOutputStructure();
 
 	}
 
@@ -270,10 +236,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return initializeImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).initialize();
+			return iSpecificationReasonerRoles.get(0).initialize();
 
 	}
 
@@ -281,10 +247,10 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return validateSmlConfigurationImpl();
 		else
-			return iSpecificationReasonerProcessRoles.get(0).validateSmlConfiguration();
+			return iSpecificationReasonerRoles.get(0).validateSmlConfiguration();
 
 	}
 
@@ -292,15 +258,14 @@ public abstract class AbstractSpecificationReasonerProcess extends AbstractCompo
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
 
-		if (countInCallStack > 1 || iSpecificationReasonerProcessRoles.size() == 0)
+		if (countInCallStack > 1 || iSpecificationReasonerRoles.size() == 0)
 			return executeImpl(value);
 		else
-			return iSpecificationReasonerProcessRoles.get(0).execute(value);
+			return iSpecificationReasonerRoles.get(0).execute(value);
 
 	}
 
 	public abstract void buildClassifierImpl();
-	public abstract Category classifyImpl(IOPropertyList input);
 	public abstract DataComponent getQualityOfServiceImpl();
 	public abstract void startImpl();
 	public abstract void stopImpl();

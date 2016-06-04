@@ -14,9 +14,10 @@ import org.vast.data.DataRecordImpl;
 import org.vast.data.QuantityImpl;
 import org.vast.sensorML.SMLUtils;
 
+import de.jkblume.sav.architecture.components.JLearningReasoner;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.utils.MySMLUtils;
-import de.jkblume.sav.components.components.NaiveBayesReasoner;
+import de.jkblume.sav.components.ports.NaiveBayesReasoner;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.Category;
@@ -29,7 +30,12 @@ public class NaiveBayesReasonerTest {
 	public void test() throws FileNotFoundException, IOException {
 		
 		NaiveBayesReasoner reasoner = new NaiveBayesReasoner("testReasoner");
+
+		JLearningReasoner base = new JLearningReasoner("testBase");
+		reasoner.setBase(base);
+		
 		reasoner.setSmlConfiguration(parseDescription("res-test/j_reasoner.xml"));
+		
 		
 		JTechnicalSensor sensor = new JTechnicalSensor("testSensor");
 		sensor.setSmlConfiguration(parseDescription("res-test/glove_aggregator_process.xml"));
@@ -52,9 +58,11 @@ public class NaiveBayesReasonerTest {
 		}
 		
 		IOPropertyList input = createSensorValue(0);
-		assertEquals("no", reasoner.classify(input).getValue());
+		IOPropertyList execute1 = (IOPropertyList) reasoner.execute(input);
+		assertEquals("no", ((Category) execute1.get(0)).getValue());
 		input = createSensorValue(10);
-		assertEquals("yes", reasoner.classify(input).getValue());
+		IOPropertyList execute2 = (IOPropertyList) reasoner.execute(input);
+		assertEquals("yes", ((Category) execute2.get(0)).getValue());
 	}
 	
 	private IOPropertyList createSensorValue(double add) {

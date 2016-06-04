@@ -28,11 +28,11 @@ app SavComponents {
 	implementation port Cube3DVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port SerialTechnicalSensor implements ISensor{}
 	implementation port SimulatingTechnicalSensor implements ISensor{}
+	implementation port SimpleRuleReasoner implements ISpecificationReasoner{}
+	implementation port NaiveBayesReasoner implements ILearningReasoner{}
 	
 	components:
 	
-	component SimpleRuleReasoner implements SpecificationReasonerProcess{}
-	component NaiveBayesReasoner implements LearningReasonerProcess{}
 	
 	sensors:
 
