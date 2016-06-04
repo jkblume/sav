@@ -8,15 +8,18 @@ import net.opengis.sensorml.v20.Event;
 
 public class DiagramVisualisationStrategy extends AbstractDiagramVisualisationStrategy {
 	
+	private DiagramUiHelper uiHelper;
+	
 	public DiagramVisualisationStrategy(String name) {
 		super(name);
 	}
 
 	public void setup() {
+		uiHelper = new DiagramUiHelper();
 	}
 
 	public void destroy() {
-		DiagramUiHelper.destroy(getName());
+		uiHelper.destroy(getName());
 	}
 
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
@@ -28,13 +31,13 @@ public class DiagramVisualisationStrategy extends AbstractDiagramVisualisationSt
 	@Override
 	public void visualizeEvent(ISensor source, Event event) {
 		String sensorId = source.getSmlConfiguration().getId();
-		DiagramUiHelper.addPoint(sensorId, event);
+		uiHelper.addPoint(sensorId, event);
 	}
 
 	@Override
 	public void addSensor(ISensor sensor) {
 		String sensorId = sensor.getSmlConfiguration().getId();
-		DiagramUiHelper.addChart(this.getName(), sensorId);
+		uiHelper.addChart(sensorId);
 	}
 
 	@Override

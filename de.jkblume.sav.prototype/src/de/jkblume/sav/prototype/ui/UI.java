@@ -93,7 +93,8 @@ public class UI extends Application{
 					re.getReconfigurationEngine().executeScript(rs);
 					
 					IReasoner reasoner = (IReasoner) re.getRuntimeModel().getComponentByName("r1");
-					ClassifyUiHelper.reasoner = reasoner;
+					ClassificationVisualisationStrategy vs = (ClassificationVisualisationStrategy) re.getRuntimeModel().getPortByName("vs4");
+					vs.getUiHelper().setReasoner(reasoner);
 				}
 			});
 	        
@@ -147,9 +148,10 @@ public class UI extends Application{
 					ReconfigurationScript rs = new ReconfigurationScript(ops);
 					
 					re.getReconfigurationEngine().executeScript(rs);
-					
+
 					IReasoner reasoner = (IReasoner) re.getRuntimeModel().getComponentByName("r2");
-					ClassifyUiHelper.reasoner = reasoner;
+					ClassificationVisualisationStrategy vs = (ClassificationVisualisationStrategy) re.getRuntimeModel().getPortByName("vs5");
+					vs.getUiHelper().setReasoner(reasoner);
 					
 				}
 			});

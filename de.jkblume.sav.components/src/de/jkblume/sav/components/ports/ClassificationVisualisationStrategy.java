@@ -30,23 +30,26 @@ import org.smags.componentmodel.IPort;
 import java.util.*;
 
 public class ClassificationVisualisationStrategy extends AbstractClassificationVisualisationStrategy {
-
+	
+	private ClassifyUiHelper uiHelper;
+	
 	public ClassificationVisualisationStrategy(String name) {
 		super(name);
 	}
 
 	public void setup() {
-		ClassifyUiHelper.initialize();
+		setUiHelper(new ClassifyUiHelper());
+		getUiHelper().initialize();
 	}
 
 	public void destroy() {
-		ClassifyUiHelper.destroy();
+		getUiHelper().destroy();
 	}
 
 	public void visualizeEvent(ISensor source, Event event) {
 		Category value = (Category) event.getPropertyList().get(0);
 		if (value != null) {
-			ClassifyUiHelper.updateLabel(value.getValue());		
+			getUiHelper().updateLabel(value.getValue());		
 		}
 	}
 	
@@ -62,6 +65,14 @@ public class ClassificationVisualisationStrategy extends AbstractClassificationV
 		if (sender == this) {
 
 		}
+	}
+
+	public ClassifyUiHelper getUiHelper() {
+		return uiHelper;
+	}
+
+	public void setUiHelper(ClassifyUiHelper uiHelper) {
+		this.uiHelper = uiHelper;
 	}
 
 }

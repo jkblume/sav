@@ -17,36 +17,35 @@ import net.opengis.swe.v20.Quantity;
 
 public class DiagramUiHelper {
 
-	private static Map<String, LineChart<?, ?>> charts = new HashMap<>();
-	private static Map<String, Stage> stages = new HashMap<>();
+	private Map<String, LineChart<?, ?>> charts = new HashMap<>();
+	private Stage stage;
 
-	private static VBox chartBox;
+	private VBox chartBox;
 
-	private static NumberAxis xAxis;
+	private NumberAxis xAxis;
 	
 
-	public static void destroy(String vsName) {
+	public void destroy(String vsName) {
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
-				stages.get(vsName).close();
+				stage.close();
 			}
 		});
 	}
 	
-	public static void addChart(String vsName, String sensorId) {
+	public void addChart(String sensorId) {
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
-				Stage targetStage = stages.get(vsName);
-				if (targetStage == null) {
-					targetStage = new Stage();
+				if (stage == null) {
+					stage = new Stage();
 					chartBox = new VBox(8);
 					Scene scene = new Scene(chartBox, 800, 600);
-					targetStage.setScene(scene);
-					targetStage.show();
+					stage.setScene(scene);
+					stage.show();
 				}
 				
 				xAxis = new NumberAxis();
@@ -69,7 +68,7 @@ public class DiagramUiHelper {
 		});
 	}
 
-	public static void addPoint(String sensorId, Event event) {
+	public void addPoint(String sensorId, Event event) {
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -94,12 +93,12 @@ public class DiagramUiHelper {
 		});
 	}
 
-	private static double getValue(Event event) {
+	private double getValue(Event event) {
 		DataComponent dataComponent = event.getPropertyList().get("flex");
 		return ((Quantity) dataComponent).getValue();
 	}
 
-	private static double getTimestamp(Event event) {
+	private double getTimestamp(Event event) {
 		TimeInstant timeInstant = (TimeInstant) event.getTime();
 		return timeInstant.getTimePosition().getDecimalValue();
 	}

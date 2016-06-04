@@ -17,14 +17,14 @@ import net.opengis.swe.v20.Category;
 
 public class ClassifyUiHelper {
 
-	private static VBox box;
-	private static Label state;
+	private VBox box;
+	private Label state;
 	
-	public static IReasoner reasoner;
+	private IReasoner reasoner;
 	
-	private static Stage stage;
+	private Stage stage;
 	
-	public static void destroy() {
+	public void destroy() {
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -34,7 +34,7 @@ public class ClassifyUiHelper {
 		});
 	}
 	
-	public static void initialize() {
+	public void initialize() {
 		
 		Platform.runLater(new Runnable() {
 
@@ -59,13 +59,13 @@ public class ClassifyUiHelper {
 					
 					@Override
 					public void handle(ActionEvent arg0) {
-						reasoner.start();
+						getReasoner().start();
 					}
 				});
 				
 				box.getChildren().add(startClassification);
 				
-				if (reasoner instanceof ILearningReasoner) {
+				if (getReasoner() instanceof ILearningReasoner) {
 					
 					Button yes = new Button();
 					yes.setText("This is A gesture!");
@@ -75,7 +75,7 @@ public class ClassifyUiHelper {
 						public void handle(ActionEvent arg0) {
 							Category category = new CategoryImpl();
 							category.setValue("yes");
-							((ILearningReasoner) reasoner).teachCurrentState(category);
+							((ILearningReasoner) getReasoner()).teachCurrentState(category);
 						}
 					});
 					
@@ -87,7 +87,7 @@ public class ClassifyUiHelper {
 						public void handle(ActionEvent arg0) {
 							Category category = new CategoryImpl();
 							category.setValue("no");
-							((ILearningReasoner) reasoner).teachCurrentState(category);
+							((ILearningReasoner) getReasoner()).teachCurrentState(category);
 						}
 					});
 					
@@ -99,7 +99,7 @@ public class ClassifyUiHelper {
 		});
 	}
 	
-	public static void updateLabel(String value) {
+	public void updateLabel(String value) {
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -109,5 +109,13 @@ public class ClassifyUiHelper {
 				}
 			}
 		});
+	}
+
+	public IReasoner getReasoner() {
+		return reasoner;
+	}
+
+	public void setReasoner(IReasoner reasoner) {
+		this.reasoner = reasoner;
 	}
 }
