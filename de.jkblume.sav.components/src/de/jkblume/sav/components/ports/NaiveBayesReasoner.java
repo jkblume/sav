@@ -17,7 +17,8 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
-import weka.classifiers.bayes.NaiveBayesUpdateable;
+import weka.classifiers.Classifier;
+import weka.classifiers.functions.SMO;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -59,31 +60,22 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 		
 		Instance labledInstance = inject(list);
 		
-		try {
-			classifier.updateClassifier(labledInstance);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		structure.add(labledInstance);
+		
+//		try {
+//			classifier.updateClassifier(labledInstance);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private Instances structure;
 	private ArrayList<Attribute> features;
-	private NaiveBayesUpdateable classifier;
+	private Classifier classifier;
 	
 	@Override
-	public void buildClassifier() {
-		features = new ArrayList<>();
-		for (ISensor iSensor : getISensors()) {
-			IOPropertyList sensorOutput = iSensor.retrieveOutputStructure();
-			for (AbstractSWEIdentifiable identifiable : sensorOutput) {
-				addFeature((DataComponent) identifiable);
-			}
-		}
-		addFeature((Category) getSmlConfiguration().getOutputList().get(0));
-		structure = new Instances(getSmlConfiguration().getId(), features, 0);
-		structure.setClassIndex(structure.numAttributes()-1);
-		
-		classifier = new NaiveBayesUpdateable();
+	public void buildClassifier() {		
+		classifier = new SMO();
 		try {
 			classifier.buildClassifier(structure);
 		} catch (Exception e) {
@@ -177,6 +169,16 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 
 	@Override
 	public Boolean initialize() {
+		features = new ArrayList<>();
+		for (ISensor iSensor : getISensors()) {
+			IOPropertyList sensorOutput = iSensor.retrieveOutputStructure();
+			for (AbstractSWEIdentifiable identifiable : sensorOutput) {
+				addFeature((DataComponent) identifiable);
+			}
+		}
+		addFeature((Category) getSmlConfiguration().getOutputList().get(0));
+		structure = new Instances(getSmlConfiguration().getId(), features, 0);
+		structure.setClassIndex(structure.numAttributes()-1);
 		return true;
 	}
 	
@@ -215,12 +217,12 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 
 	@Override
 	public void handleISensorAdded(ISensor item) {
-		buildClassifier();
+		initialize();
 	}
 
 	@Override
 	public void handleISensorRemoved(ISensor item) {
-		buildClassifier();
+		initialize();
 	}
 
 	@Override

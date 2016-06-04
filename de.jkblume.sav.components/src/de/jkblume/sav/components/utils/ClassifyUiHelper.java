@@ -59,6 +59,7 @@ public class ClassifyUiHelper {
 					
 					@Override
 					public void handle(ActionEvent arg0) {
+						getReasoner().buildClassifier();
 						getReasoner().start();
 					}
 				});

@@ -93,6 +93,7 @@ public class UI extends Application{
 					re.getReconfigurationEngine().executeScript(rs);
 					
 					IReasoner reasoner = (IReasoner) re.getRuntimeModel().getComponentByName("r1");
+					reasoner.initialize();
 					ClassificationVisualisationStrategy vs = (ClassificationVisualisationStrategy) re.getRuntimeModel().getPortByName("vs4");
 					vs.getUiHelper().setReasoner(reasoner);
 				}

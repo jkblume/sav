@@ -81,51 +81,23 @@ public class Starter {
 		rs = connectAggregateProcessScript();
 		re.getReconfigurationEngine().executeScript(rs);
 
-//		Thread.sleep(1000);
 
 		rs = connectSensorScript();
 		re.getReconfigurationEngine().executeScript(rs);
 		
-//		rs = createReasoningEngineScript();
-//		re.getReconfigurationEngine().executeScript(rs);
-		
-		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("jtps1");
+		JTechnicalSensor simulatingSensor = (JTechnicalSensor) re.getRuntimeModel().getComponentByName("gloveTechSensorComp");
 		simulatingSensor.start();
 		
 	}
 
-//	private static ReconfigurationScript createReasoningEngineScript() throws FileNotFoundException, XMLReaderException {
-//		InputStream is = new FileInputStream("res/glove_reasoner.xml");
-//		AbstractProcess gloveReasonerDesription = utils.readProcess(is);
-//		
-//		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
-//
-//		ops.add(new CreateComponentInstanceOperation("r", JLearningReasoner.class));
-//		ops.add(new CreatePortInstanceOperation("rs", NaiveBayesReasoner.class));
-//		ops.add(new BindPortOperation("r", "rs", "ILearningReasoner"));
-//		ops.add(new SetPortParameterOperation("rs", "smlConfiguration", gloveReasonerDesription));
-//		ops.add(new ConnectOperation("jtps1", "r", "ISensor"));
-//		ops.add(new ConnectOperation("jtps1", "rs", "ISensor"));
-//		ops.add(new SetupComponentOperation("r"));
-//		
-//		ops.add(new CreateComponentInstanceOperation("v3", JVisualizer.class));
-//		ops.add(new CreatePortInstanceOperation("vs3", ClassificationVisualisationStrategy.class));
-//		ops.add(new BindPortOperation("v3", "vs3", "IVisualisationStrategy"));
-//		ops.add(new SetupComponentOperation("v3"));
-//		ops.add(new SetupPortOperation("vs3"));
-//		ops.add(new ConnectOperation("r", "v3", "ISensor"));
-//		
-//		return new ReconfigurationScript(ops);
-//	}
-
 	private static ReconfigurationScript createCubeVisualizationScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		ops.add(new CreateComponentInstanceOperation("v2", JVisualizer.class));
-		ops.add(new CreatePortInstanceOperation("vs2", Cube3DVisualisationStrategy.class));
-		ops.add(new BindPortOperation("v2", "vs2", "IVisualisationStrategy"));
-		ops.add(new SetupComponentOperation("v2"));
-		ops.add(new SetupPortOperation("vs2"));
+		ops.add(new CreateComponentInstanceOperation("cubeVizComp", JVisualizer.class));
+		ops.add(new CreatePortInstanceOperation("cubeVizPort", Cube3DVisualisationStrategy.class));
+		ops.add(new BindPortOperation("cubeVizComp", "cubeVizPort", "IVisualisationStrategy"));
+		ops.add(new SetupComponentOperation("cubeVizComp"));
+		ops.add(new SetupPortOperation("cubeVizPort"));
 		
 		return new ReconfigurationScript(ops);
 	}
@@ -133,8 +105,8 @@ public class Starter {
 	private static ReconfigurationScript connectSensorScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		ops.add(new ConnectOperation("jtps1", "v", "ISensor"));
-		ops.add(new ConnectOperation("jtps1", "v2", "ISensor"));
+		ops.add(new ConnectOperation("gloveTechSensorComp", "diagramVizComp", "ISensor"));
+		ops.add(new ConnectOperation("gloveTechSensorComp", "cubeVizComp", "ISensor"));
 		
 		return new ReconfigurationScript(ops);
 	}
@@ -142,7 +114,7 @@ public class Starter {
 	private static ReconfigurationScript connectAggregateProcessScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 		
-		ops.add(new ConnectOperation("ap", "jtps1", "IProcess"));
+		ops.add(new ConnectOperation("ap", "gloveTechSensorComp", "IProcess"));
 		
 		return new ReconfigurationScript(ops);
 	}
@@ -206,12 +178,12 @@ public class Starter {
 		AbstractProcess serialSensorGloveDescription = utils.readProcess(is);
 		
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
-		ops.add(new CreateComponentInstanceOperation("jtps1", JTechnicalSensor.class));
-		ops.add(new CreatePortInstanceOperation("ssp1", SerialTechnicalSensor.class));
-		ops.add(new BindPortOperation("jtps1", "ssp1", "ISensor"));
-		ops.add(new SetComponentParameterOperation("jtps1", "smlConfiguration", serialSensorGloveDescription));
-		ops.add(new SetupComponentOperation("jtps1"));
-		ops.add(new SetupPortOperation("ssp1"));
+		ops.add(new CreateComponentInstanceOperation("gloveTechSensorComp", JTechnicalSensor.class));
+		ops.add(new CreatePortInstanceOperation("gloveTechSensorPort", SerialTechnicalSensor.class));
+		ops.add(new BindPortOperation("gloveTechSensorComp", "gloveTechSensorPort", "ISensor"));
+		ops.add(new SetComponentParameterOperation("gloveTechSensorComp", "smlConfiguration", serialSensorGloveDescription));
+		ops.add(new SetupComponentOperation("gloveTechSensorComp"));
+		ops.add(new SetupPortOperation("gloveTechSensorPort"));
 		
 		return new ReconfigurationScript(ops);
 	}
@@ -219,11 +191,11 @@ public class Starter {
 	private static ReconfigurationScript createDiagramVisualizationScript() {
 		List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
 
-		ops.add(new CreateComponentInstanceOperation("v", JVisualizer.class));
-		ops.add(new CreatePortInstanceOperation("vs", DiagramVisualisationStrategy.class));
-		ops.add(new BindPortOperation("v", "vs", "IVisualisationStrategy"));
-		ops.add(new SetupComponentOperation("v"));
-		ops.add(new SetupPortOperation("vs"));
+		ops.add(new CreateComponentInstanceOperation("diagramVizComp", JVisualizer.class));
+		ops.add(new CreatePortInstanceOperation("diagramVizPort", DiagramVisualisationStrategy.class));
+		ops.add(new BindPortOperation("diagramVizComp", "diagramVizPort", "IVisualisationStrategy"));
+		ops.add(new SetupComponentOperation("diagramVizComp"));
+		ops.add(new SetupPortOperation("diagramVizPort"));
 		
 		return new ReconfigurationScript(ops);
 	}
