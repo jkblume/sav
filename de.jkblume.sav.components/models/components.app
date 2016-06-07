@@ -35,11 +35,12 @@ app SavComponents {
 	component JAggregateProcess implements AggregateProcess{}
 	component JRegexProcess implements SimpleProcess{}
 	component JSerialPortRetrieveStrategy implements TechnicalRetrieveStrategy{}
+	component JLogicalRetrieveStrategy implements LogicalRetrieveStrategy{}
 	component JSimpleRuleReasoner implements SimpleProcess{}
 	component JWekaLearningReasoner implements LearningProcess{
 		parameter instances : Instances;
 		parameter classifier : Classifier;
-	}	
+	}
 	component JVisualizer implements Visualizer{}
 	
 	sensors:
