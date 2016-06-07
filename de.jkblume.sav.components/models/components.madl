@@ -1,0 +1,26 @@
+import "platform:/plugin/org.qualitune.smags.architecture.dsl/resources/StandardTypes.madl";
+import "../../SmagRE/models/AdaptationArchitecture.madl";
+import "../../SmagRE/models/CommonLib.madl";
+
+namespace "de.jkblume.sav.components";
+
+meta architecture SavComponents{
+	sensor units:
+
+	type libraries:
+	type library WekaTypes {
+		Instances;
+		Classifier;
+		
+		// only for smags code generation reasons (bug)
+		complex DummyType {
+			
+		}
+	}
+	
+	port types:
+			
+	component types:
+	sensor types:
+
+}

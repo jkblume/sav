@@ -10,25 +10,16 @@ meta architecture SavMetaArchitecture{
 
 	type libraries:
 	port types:
-		
-	port type IProcess {
-		parameter smlConfiguration : AbstractProcess;
-		
-		Boolean initialize();
-		Boolean validateSmlConfiguration();
-		Object execute(Object value);
-	}
 	
-	port type IAggregateProcess extends IProcess{
-		requires IProcess[0 to *];
-	}
-	
-	port type ISensor extends IProcess{
+	port type ISensor {
+		parameter running : Boolean;
 		parameter lastEvent : Event;
 		
-		Object retrieveValues();
+		void start();
+		void stop();
 		
-		requires IProcess[0 to 1];
+		requires IRetrieveStrategy[1 to 1];
+		requires IProcess[1 to 1];
 		
 		// helper functions
 		String getId();
@@ -36,25 +27,31 @@ meta architecture SavMetaArchitecture{
 		IOPropertyList retrieveOutputStructure();
 	}
 	
-	port type ILogicalSensor extends ISensor{
+	port type IProcess {
+		parameter smlConfiguration : AbstractProcess;
+		Object execute(Object input);
+	}
+	
+	port type IAggregateProcess extends IProcess {
+		requires IProcess[0 to *];
+	}
+	
+	port type ILearningProcess extends IProcess {
+		Boolean buildClassifier();
+		void teachCurrentState(Category category);
+		void startGesture(Category category);
+		void stopGesture(Category category);
+		
 		requires ISensor[0 to *];
 	}
 	
-	port type IPullThread {
-		void start();
-		void stop();
-		Boolean isRunning();
-		
-		requires ISensor[0 to 1];
+	port type IRetrieveStrategy {
+		parameter smlConfiguration : AbstractProcess;
+		Object retrieveValue();
 	}
 	
-	port type ILearningReasoner extends IProcess {
-		void startGesture(Category category);
-		void stopGesture(Category category);
-		void teachCurrentState(Category category);
-		void buildClassifier();
-		
-		requires ISensor[1 to 1];
+	port type ILogicalRetrieveStrategy extends IRetrieveStrategy {
+		requires ISensor[0 to *];
 	}
 	
 	port type IVisualisationStrategy {
@@ -65,10 +62,6 @@ meta architecture SavMetaArchitecture{
 		
 	component types:
 	
-	component type PullThread {
-		provides IPullThread;
-	}
-	
 	component type SimpleProcess {
 		provides IProcess;
 	}
@@ -77,21 +70,22 @@ meta architecture SavMetaArchitecture{
 		provides IAggregateProcess;
 	}
 	
-	component type TechnicalSensor {
-		requires IPullThread;
+	component type LearningProcess {
+		provides ILearningProcess;
+	}
+	
+	component type TechnicalRetrieveStrategy {
+		provides IRetrieveStrategy;
+	}
+	
+	component type LogicalRetrieveStrategy {
+		provides ILogicalRetrieveStrategy;
+	}
+	
+	component type Sensor {
 		provides ISensor;
 	}
-	
-	component type LogicalSensor {
-		requires IPullThread;
-		provides ILogicalSensor;
-	}
-	
-	component type Visualizer {
-		requires ISensor[0 to *];
-		provides IVisualisationStrategy;
-	}
-		
+			
 	sensor types:
 
 }

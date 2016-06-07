@@ -31,30 +31,34 @@ import org.smags.reflection.ReflectionHelper;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.Component;
 
-@Component(name = "SimpleProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "SimpleProcess", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-public abstract class AbstractSimpleProcess extends AbstractComponent implements INotifyPropertyChanged, IProcess {
+@Component(name = "TechnicalRetrieveStrategy", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "TechnicalRetrieveStrategy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+public abstract class AbstractTechnicalRetrieveStrategy extends AbstractComponent
+		implements
+			INotifyPropertyChanged,
+			IRetrieveStrategy {
 
-	private final List<IProcess> iProcessRoles = new ArrayList<IProcess>();
+	private final List<IRetrieveStrategy> iRetrieveStrategyRoles = new ArrayList<IRetrieveStrategy>();
 
-	public AbstractSimpleProcess(String name) {
+	public AbstractTechnicalRetrieveStrategy(String name) {
 		super(name);
 	}
 
 	public AbstractProcess getSmlConfiguration() {
-		return (AbstractProcess) getSharedMemory().getValue(AbstractSimpleProcess.class, "smlConfiguration");
+		return (AbstractProcess) getSharedMemory().getValue(AbstractTechnicalRetrieveStrategy.class,
+				"smlConfiguration");
 	}
 
 	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
 		AbstractProcess oldValue = getSmlConfiguration();
-		getSharedMemory().setValue(AbstractSimpleProcess.class, "smlConfiguration", smlConfiguration);
+		getSharedMemory().setValue(AbstractTechnicalRetrieveStrategy.class, "smlConfiguration", smlConfiguration);
 		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
 	}
 
 	@Override
 	protected <T> T innerGetPort(Class<T> type) {
 
-		if (type == IProcess.class)
-			return iProcessRoles.size() > 0 ? (T) iProcessRoles.get(0) : (T) this;
+		if (type == IRetrieveStrategy.class)
+			return iRetrieveStrategyRoles.size() > 0 ? (T) iRetrieveStrategyRoles.get(0) : (T) this;
 
 		return null;
 	}
@@ -62,8 +66,8 @@ public abstract class AbstractSimpleProcess extends AbstractComponent implements
 	@Override
 	public boolean innerBindPort(IPort port) {
 
-		if (port instanceof IProcess) {
-			iProcessRoles.add(0, (IProcess) port);
+		if (port instanceof IRetrieveStrategy) {
+			iRetrieveStrategyRoles.add(0, (IRetrieveStrategy) port);
 			return true;
 		}
 
@@ -73,25 +77,25 @@ public abstract class AbstractSimpleProcess extends AbstractComponent implements
 	@Override
 	public boolean innerUnbindPort(IPort port) {
 
-		if (port instanceof IProcess && iProcessRoles.contains(port)) {
-			iProcessRoles.remove(port);
+		if (port instanceof IRetrieveStrategy && iRetrieveStrategyRoles.contains(port)) {
+			iRetrieveStrategyRoles.remove(port);
 			return true;
 		}
 
 		return false;
 	}
 
-	public Object execute(Object input) {
+	public Object retrieveValue() {
 
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValue", this);
 
-		if (countInCallStack > 1 || iProcessRoles.size() == 0)
-			return executeImpl(input);
+		if (countInCallStack > 1 || iRetrieveStrategyRoles.size() == 0)
+			return retrieveValueImpl();
 		else
-			return iProcessRoles.get(0).execute(input);
+			return iRetrieveStrategyRoles.get(0).retrieveValue();
 
 	}
 
-	public abstract Object executeImpl(Object input);
+	public abstract Object retrieveValueImpl();
 
 }

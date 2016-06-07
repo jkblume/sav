@@ -28,20 +28,22 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "IAggregateProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface IAggregateProcess extends IProcess {
+@PortTypeA(name = "ILogicalRetrieveStrategy", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface ILogicalRetrieveStrategy extends IRetrieveStrategy {
 
-	public static Class remotePortClass = IAggregateProcessRemote.class;
-	public static Class proxyComponentClass = IAggregateProcessRemoteProxy.class;
+	public static Class remotePortClass = ILogicalRetrieveStrategyRemote.class;
+	public static Class proxyComponentClass = ILogicalRetrieveStrategyRemoteProxy.class;
 
 	public <T> T as(Class<T> c);
 
 	/*--------- REMOTE ---------*/
 
-	public class IAggregateProcessRemote extends AbstractRemotePort<IAggregateProcess>implements IAggregateProcess {
+	public class ILogicalRetrieveStrategyRemote extends AbstractRemotePort<ILogicalRetrieveStrategy>
+			implements
+				ILogicalRetrieveStrategy {
 
-		public IAggregateProcessRemote(String name) {
-			super(name, IAggregateProcess.class);
+		public ILogicalRetrieveStrategyRemote(String name) {
+			super(name, ILogicalRetrieveStrategy.class);
 		}
 
 		public AbstractProcess getSmlConfiguration() {
@@ -52,8 +54,8 @@ public interface IAggregateProcess extends IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public Object execute(Object input) {
-			Object result = base.execute(input);
+		public Object retrieveValue() {
+			Object result = base.retrieveValue();
 			return result;
 		}
 
@@ -64,11 +66,11 @@ public interface IAggregateProcess extends IProcess {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "IAggregateProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "IAggregateProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class IAggregateProcessRemoteProxy extends RemoteProxyComponent<IAggregateProcess>
+	@Component(name = "ILogicalRetrieveStrategy", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "ILogicalRetrieveStrategyRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class ILogicalRetrieveStrategyRemoteProxy extends RemoteProxyComponent<ILogicalRetrieveStrategy>
 			implements
-				IAggregateProcess {
-		public IAggregateProcessRemoteProxy(String name) {
+				ILogicalRetrieveStrategy {
+		public ILogicalRetrieveStrategyRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -98,11 +100,10 @@ public interface IAggregateProcess extends IProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public Object execute(Object input) {
-			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
-			in.setInput(input);
+		public Object retrieveValue() {
+			RetrieveValueRemoteMessage in = new RetrieveValueRemoteMessage();
 
-			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
+			return ((RetrieveValueRemoteMessage) client.send(in, RetrieveValueRemoteMessage.class)).getResponseResult();
 		}
 
 	}

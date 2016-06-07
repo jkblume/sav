@@ -28,13 +28,13 @@ import org.smags.remoting.AbstractRemotePort;
 import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
-@PortTypeA(name = "IProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface IProcess {
+@PortTypeA(name = "IRetrieveStrategy", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
+public interface IRetrieveStrategy {
 
-	public static Class remotePortClass = IProcessRemote.class;
-	public static Class proxyComponentClass = IProcessRemoteProxy.class;
+	public static Class remotePortClass = IRetrieveStrategyRemote.class;
+	public static Class proxyComponentClass = IRetrieveStrategyRemoteProxy.class;
 
-	public Object execute(Object input);
+	public Object retrieveValue();
 
 	public AbstractProcess getSmlConfiguration();
 	public void setSmlConfiguration(AbstractProcess smlConfiguration);
@@ -43,10 +43,10 @@ public interface IProcess {
 
 	/*--------- REMOTE ---------*/
 
-	public class IProcessRemote extends AbstractRemotePort<IProcess>implements IProcess {
+	public class IRetrieveStrategyRemote extends AbstractRemotePort<IRetrieveStrategy>implements IRetrieveStrategy {
 
-		public IProcessRemote(String name) {
-			super(name, IProcess.class);
+		public IRetrieveStrategyRemote(String name) {
+			super(name, IRetrieveStrategy.class);
 		}
 
 		public AbstractProcess getSmlConfiguration() {
@@ -57,8 +57,8 @@ public interface IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public Object execute(Object input) {
-			Object result = base.execute(input);
+		public Object retrieveValue() {
+			Object result = base.retrieveValue();
 			return result;
 		}
 
@@ -69,9 +69,11 @@ public interface IProcess {
 	}
 
 	/*--------- REMOTE PROXY ---------*/
-	@Component(name = "IProcess", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "IProcessRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
-	public class IProcessRemoteProxy extends RemoteProxyComponent<IProcess>implements IProcess {
-		public IProcessRemoteProxy(String name) {
+	@Component(name = "IRetrieveStrategy", appName = "SavMetaArchitecture", appPackageName = "de.jkblume.sav.architecture", componentTypeName = "IRetrieveStrategyRemoteProxy", typeArchitectureName = "SavMetaArchitecture", typeArchitectureNamespace = "de.jkblume.sav.architecture")
+	public class IRetrieveStrategyRemoteProxy extends RemoteProxyComponent<IRetrieveStrategy>
+			implements
+				IRetrieveStrategy {
+		public IRetrieveStrategyRemoteProxy(String name) {
 			super(name);
 		}
 
@@ -101,11 +103,10 @@ public interface IProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public Object execute(Object input) {
-			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
-			in.setInput(input);
+		public Object retrieveValue() {
+			RetrieveValueRemoteMessage in = new RetrieveValueRemoteMessage();
 
-			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
+			return ((RetrieveValueRemoteMessage) client.send(in, RetrieveValueRemoteMessage.class)).getResponseResult();
 		}
 
 	}
@@ -142,27 +143,15 @@ public interface IProcess {
 		}
 	}
 
-	public class ExecuteRemoteMessage extends RemoteMessageBase<Object> {
+	public class RetrieveValueRemoteMessage extends RemoteMessageBase<Object> {
 
-		private Object input;
-
-		public ExecuteRemoteMessage() {
-			super("execute", Object.class.getName());
-		}
-
-		public void setInput(Object input) {
-			this.input = input;
-		}
-
-		public Object getInput() {
-			return input;
+		public RetrieveValueRemoteMessage() {
+			super("retrieveValue");
 		}
 
 		@Override
 		public List<Object> getArguments() {
 			List<Object> result = new ArrayList<Object>();
-
-			result.add(getInput());
 
 			return result;
 		}

@@ -3,7 +3,6 @@ import "platform:/plugin/org.qualitune.smags.platform.dsl/resources/Java7Platfor
 import "architecture.madl";
 import "../../de.jkblume.sav.sensorml/models/sensorml.madl";
 
-
 namespace "de.jkblume.sav.architecture";
 
 app SavArchitecture {
@@ -18,16 +17,8 @@ app SavArchitecture {
 	}
 
 	ports:
-	implementation port JPullThread implements IPullThread{}
-	implementation port JLogicalSensorPort implements ILogicalSensor{}
 	
 	components:
-	component JSimpleProcess implements SimpleProcess{}
-	component JAggregateProcess implements AggregateProcess{}
-	component JLogicalSensor implements LogicalSensor{}
-	component JTechnicalSensor implements TechnicalSensor{}
-	
-	component JVisualizer implements Visualizer{}
 	
 	sensors:
 

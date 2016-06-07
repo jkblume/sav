@@ -104,41 +104,17 @@ public abstract class AbstractAggregateProcess extends AbstractComponent
 		return false;
 	}
 
-	public Boolean initialize() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("initialize", this);
-
-		if (countInCallStack > 1 || iAggregateProcessRoles.size() == 0)
-			return initializeImpl();
-		else
-			return iAggregateProcessRoles.get(0).initialize();
-
-	}
-
-	public Boolean validateSmlConfiguration() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("validateSmlConfiguration", this);
-
-		if (countInCallStack > 1 || iAggregateProcessRoles.size() == 0)
-			return validateSmlConfigurationImpl();
-		else
-			return iAggregateProcessRoles.get(0).validateSmlConfiguration();
-
-	}
-
-	public Object execute(Object value) {
+	public Object execute(Object input) {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
 
 		if (countInCallStack > 1 || iAggregateProcessRoles.size() == 0)
-			return executeImpl(value);
+			return executeImpl(input);
 		else
-			return iAggregateProcessRoles.get(0).execute(value);
+			return iAggregateProcessRoles.get(0).execute(input);
 
 	}
 
-	public abstract Boolean initializeImpl();
-	public abstract Boolean validateSmlConfigurationImpl();
-	public abstract Object executeImpl(Object value);
+	public abstract Object executeImpl(Object input);
 
 }

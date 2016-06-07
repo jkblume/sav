@@ -7,10 +7,6 @@ import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.sensorml.types.*;
 
-import de.jkblume.sav.architecture.components.*;
-
-import de.jkblume.sav.architecture.ports.*;
-
 import de.jkblume.sav.architecture.gen.porttypes.*;
 
 import java.net.URI;

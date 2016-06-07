@@ -29,15 +29,19 @@ import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
 @PortTypeA(name = "ISensor", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ISensor extends IProcess {
+public interface ISensor {
 
 	public static Class remotePortClass = ISensorRemote.class;
 	public static Class proxyComponentClass = ISensorRemoteProxy.class;
 
-	public Object retrieveValues();
+	public void start();
+	public void stop();
 	public String getId();
 	public Integer getSamplingRate();
 	public IOPropertyList retrieveOutputStructure();
+
+	public Boolean getRunning();
+	public void setRunning(Boolean running);
 
 	public Event getLastEvent();
 	public void setLastEvent(Event lastEvent);
@@ -52,6 +56,14 @@ public interface ISensor extends IProcess {
 			super(name, ISensor.class);
 		}
 
+		public Boolean getRunning() {
+			return base.getRunning();
+		}
+
+		public void setRunning(Boolean running) {
+			base.setRunning(running);
+		}
+
 		public Event getLastEvent() {
 			return base.getLastEvent();
 		}
@@ -60,17 +72,11 @@ public interface ISensor extends IProcess {
 			base.setLastEvent(lastEvent);
 		}
 
-		public AbstractProcess getSmlConfiguration() {
-			return base.getSmlConfiguration();
+		public void start() {
+			base.start();
 		}
-
-		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-			base.setSmlConfiguration(smlConfiguration);
-		}
-
-		public Object retrieveValues() {
-			Object result = base.retrieveValues();
-			return result;
+		public void stop() {
+			base.stop();
 		}
 		public String getId() {
 			String result = base.getId();
@@ -82,19 +88,6 @@ public interface ISensor extends IProcess {
 		}
 		public IOPropertyList retrieveOutputStructure() {
 			IOPropertyList result = base.retrieveOutputStructure();
-			return result;
-		}
-
-		public Boolean initialize() {
-			Boolean result = base.initialize();
-			return result;
-		}
-		public Boolean validateSmlConfiguration() {
-			Boolean result = base.validateSmlConfiguration();
-			return result;
-		}
-		public Object execute(Object value) {
-			Object result = base.execute(value);
 			return result;
 		}
 
@@ -126,6 +119,17 @@ public interface ISensor extends IProcess {
 			return null;
 		}
 
+		public Boolean getRunning() {
+			GetRunningRemoteMessage in = new GetRunningRemoteMessage();
+			return client.send(in, GetRunningRemoteMessage.class).getResponseResult();
+		}
+
+		public void setRunning(Boolean running) {
+			SetRunningRemoteMessage in = new SetRunningRemoteMessage();
+			in.setRunning(running);
+			client.send(in, SetRunningRemoteMessage.class);
+		}
+
 		public Event getLastEvent() {
 			GetLastEventRemoteMessage in = new GetLastEventRemoteMessage();
 			return client.send(in, GetLastEventRemoteMessage.class).getResponseResult();
@@ -137,22 +141,16 @@ public interface ISensor extends IProcess {
 			client.send(in, SetLastEventRemoteMessage.class);
 		}
 
-		public AbstractProcess getSmlConfiguration() {
-			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
-			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
+		public void start() {
+			StartRemoteMessage in = new StartRemoteMessage();
+
+			client.send(in, StartRemoteMessage.class);
 		}
 
-		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
-			in.setSmlConfiguration(smlConfiguration);
-			client.send(in, SetSmlConfigurationRemoteMessage.class);
-		}
+		public void stop() {
+			StopRemoteMessage in = new StopRemoteMessage();
 
-		public Object retrieveValues() {
-			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
-
-			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
-					.getResponseResult();
+			client.send(in, StopRemoteMessage.class);
 		}
 
 		public String getId() {
@@ -175,26 +173,38 @@ public interface ISensor extends IProcess {
 					.getResponseResult();
 		}
 
-		public Boolean initialize() {
-			InitializeRemoteMessage in = new InitializeRemoteMessage();
+	}
 
-			return ((InitializeRemoteMessage) client.send(in, InitializeRemoteMessage.class)).getResponseResult();
+	public class GetRunningRemoteMessage extends RemoteMessageBase<Boolean> {
+
+		public GetRunningRemoteMessage() {
+			super("getRunning");
 		}
 
-		public Boolean validateSmlConfiguration() {
-			ValidateSmlConfigurationRemoteMessage in = new ValidateSmlConfigurationRemoteMessage();
+	}
 
-			return ((ValidateSmlConfigurationRemoteMessage) client.send(in,
-					ValidateSmlConfigurationRemoteMessage.class)).getResponseResult();
+	public class SetRunningRemoteMessage extends RemoteMessageBase<Object> {
+
+		private Boolean running;
+
+		public SetRunningRemoteMessage() {
+			super("setRunning", Boolean.class.getName());
 		}
 
-		public Object execute(Object value) {
-			ExecuteRemoteMessage in = new ExecuteRemoteMessage();
-			in.setValue(value);
-
-			return ((ExecuteRemoteMessage) client.send(in, ExecuteRemoteMessage.class)).getResponseResult();
+		public void setRunning(Boolean running) {
+			this.running = running;
 		}
 
+		public Boolean getRunning() {
+			return running;
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+			result.add(getRunning());
+			return result;
+		}
 	}
 
 	public class GetLastEventRemoteMessage extends RemoteMessageBase<Event> {
@@ -229,10 +239,24 @@ public interface ISensor extends IProcess {
 		}
 	}
 
-	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<Object> {
+	public class StartRemoteMessage extends RemoteMessageBase<Object> {
 
-		public RetrieveValuesRemoteMessage() {
-			super("retrieveValues");
+		public StartRemoteMessage() {
+			super("start");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+
+			return result;
+		}
+	}
+
+	public class StopRemoteMessage extends RemoteMessageBase<Object> {
+
+		public StopRemoteMessage() {
+			super("stop");
 		}
 
 		@Override
