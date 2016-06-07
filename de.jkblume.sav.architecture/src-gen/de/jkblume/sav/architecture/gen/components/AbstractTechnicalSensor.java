@@ -53,6 +53,25 @@ public abstract class AbstractTechnicalSensor extends AbstractComponent implemen
 	public abstract void handleIProcessConnected(IProcess item);
 	public abstract void handleIProcessDisconnected(IProcess item);
 
+	@RequirementA
+	private IPullThread iPullThread;
+
+	public IPullThread getIPullThread() {
+		return this.iPullThread;
+
+	}
+
+	public void setIPullThread(IPullThread iPullThread) {
+		this.iPullThread = iPullThread;
+		if (iPullThread != null)
+			handleIPullThreadConnected(iPullThread);
+		else
+			handleIPullThreadDisconnected(iPullThread);
+	}
+
+	public abstract void handleIPullThreadConnected(IPullThread item);
+	public abstract void handleIPullThreadDisconnected(IPullThread item);
+
 	private final List<ISensor> iSensorRoles = new ArrayList<ISensor>();
 
 	public AbstractTechnicalSensor(String name) {
@@ -110,40 +129,7 @@ public abstract class AbstractTechnicalSensor extends AbstractComponent implemen
 		return false;
 	}
 
-	public void start() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			startImpl();
-		else
-			iSensorRoles.get(0).start();
-
-	}
-
-	public void stop() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			stopImpl();
-		else
-			iSensorRoles.get(0).stop();
-
-	}
-
-	public Boolean isRunning() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
-
-		if (countInCallStack > 1 || iSensorRoles.size() == 0)
-			return isRunningImpl();
-		else
-			return iSensorRoles.get(0).isRunning();
-
-	}
-
-	public IOPropertyList retrieveValues() {
+	public Object retrieveValues() {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
 
@@ -220,10 +206,7 @@ public abstract class AbstractTechnicalSensor extends AbstractComponent implemen
 
 	}
 
-	public abstract void startImpl();
-	public abstract void stopImpl();
-	public abstract Boolean isRunningImpl();
-	public abstract IOPropertyList retrieveValuesImpl();
+	public abstract Object retrieveValuesImpl();
 	public abstract String getIdImpl();
 	public abstract Integer getSamplingRateImpl();
 	public abstract IOPropertyList retrieveOutputStructureImpl();

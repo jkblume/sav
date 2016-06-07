@@ -25,41 +25,6 @@ public class SimpleRuleReasoner extends AbstractSimpleRuleReasoner {
 		//TODO: IMPLEMENT
 	}
 
-	public void buildClassifier() {
-		base.buildClassifier();
-	}
-	public DataComponent getQualityOfService() {
-		DataComponent result = base.getQualityOfService();
-		return result;
-	}
-
-	public void start() {
-		base.start();
-	}
-	public void stop() {
-		base.stop();
-	}
-	public Boolean isRunning() {
-		Boolean result = base.isRunning();
-		return result;
-	}
-	public IOPropertyList retrieveValues() {
-		IOPropertyList result = base.retrieveValues();
-		return result;
-	}
-	public String getId() {
-		String result = base.getId();
-		return result;
-	}
-	public Integer getSamplingRate() {
-		Integer result = base.getSamplingRate();
-		return result;
-	}
-	public IOPropertyList retrieveOutputStructure() {
-		IOPropertyList result = base.retrieveOutputStructure();
-		return result;
-	}
-
 	public Boolean initialize() {
 		Boolean result = base.initialize();
 		return result;
@@ -98,28 +63,5 @@ public class SimpleRuleReasoner extends AbstractSimpleRuleReasoner {
 		}
 	}
 
-	@Override
-	public void handleISensorAdded(ISensor item) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void handleISensorRemoved(ISensor item) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void handleIProcessConnected(IProcess item) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void handleIProcessDisconnected(IProcess item) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

@@ -18,15 +18,16 @@ app SavArchitecture {
 	}
 
 	ports:
-
+	implementation port JPullThread implements IPullThread{}
+	implementation port JLogicalSensorPort implements ILogicalSensor{}
+	
 	components:
 	component JSimpleProcess implements SimpleProcess{}
 	component JAggregateProcess implements AggregateProcess{}
 	component JLogicalSensor implements LogicalSensor{}
 	component JTechnicalSensor implements TechnicalSensor{}
+	
 	component JVisualizer implements Visualizer{}
-	component JSpecificationReasoner implements SpecificationReasoner{}
-	component JLearningReasoner implements LearningReasoner{}
 	
 	sensors:
 

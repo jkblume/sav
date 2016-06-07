@@ -1,39 +1,16 @@
 
 package de.jkblume.sav.architecture.components;
 
-import de.jkblume.sav.architecture.gen.components.*;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.architecture.gen.porttypes.*;
-import de.jkblume.sav.architecture.utils.MySMLUtils;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.lang.Class;
-import net.opengis.sensorml.v20.Event;
-import net.opengis.swe.v20.Category;
-import net.opengis.swe.v20.Count;
-import net.opengis.swe.v20.DataComponent;
-import net.opengis.sensorml.v20.AbstractProcess;
-import net.opengis.sensorml.v20.AbstractPhysicalProcess;
-import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import de.jkblume.sav.architecture.gen.components.AbstractTechnicalSensor;
+import de.jkblume.sav.architecture.gen.porttypes.IProcess;
+import de.jkblume.sav.architecture.gen.porttypes.IPullThread;
 import net.opengis.sensorml.v20.IOPropertyList;
-
-import java.util.*;
-import org.smags.componentmodel.annotations.ParameterA;
+import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import net.opengis.swe.v20.Count;
 
 public class JTechnicalSensor extends AbstractTechnicalSensor {
 
 	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
-	private Thread pullThread;
-	private boolean running;
-	
-	private String id;
-	private int samplingRate;
 	
 	public JTechnicalSensor(String name) {
 		super(name);
@@ -43,12 +20,11 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 		if (!validateSmlConfiguration()) {
 			throw new IllegalStateException("Invalid SML Configuration of sensoe " + getId());
 		}
-		
-		pullThread = new PullThread(this);
+		getIPullThread().start();
 	}
 
 	public void destroy() {
-		stop();
+		
 	}
 
 	@Override
@@ -76,20 +52,6 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 
 	public IOPropertyList retrieveValuesImpl() {
 		throw new UnsupportedOperationException("This method need to be implemented by an implementation port!");
-	}
-
-	public void startImpl() {
-		running = true;
-		pullThread.start();
-	}
-
-	public void stopImpl() {
-		running = false;
-		pullThread.interrupt();
-	}
-
-	public Boolean isRunningImpl() {
-		return running;
 	}
 
 	@Override
@@ -137,5 +99,18 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void handleIPullThreadConnected(IPullThread item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleIPullThreadDisconnected(IPullThread item) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

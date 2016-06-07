@@ -26,10 +26,7 @@ meta architecture SavMetaArchitecture{
 	port type ISensor extends IProcess{
 		parameter lastEvent : Event;
 		
-		void start();
-		void stop();
-		Boolean isRunning();
-		IOPropertyList retrieveValues();
+		Object retrieveValues();
 		
 		requires IProcess[0 to 1];
 		
@@ -42,20 +39,22 @@ meta architecture SavMetaArchitecture{
 	port type ILogicalSensor extends ISensor{
 		requires ISensor[0 to *];
 	}
-			
-	port type IReasoner extends ILogicalSensor {
-		void buildClassifier();
-		DataComponent getQualityOfService();
+	
+	port type IPullThread {
+		void start();
+		void stop();
+		Boolean isRunning();
+		
+		requires ISensor[0 to 1];
 	}
 	
-	port type ISpecificationReasoner extends IReasoner {
-	
-	}
-	
-	port type ILearningReasoner extends IReasoner {
+	port type ILearningReasoner extends IProcess {
 		void startGesture(Category category);
 		void stopGesture(Category category);
 		void teachCurrentState(Category category);
+		void buildClassifier();
+		
+		requires ISensor[1 to 1];
 	}
 	
 	port type IVisualisationStrategy {
@@ -65,7 +64,11 @@ meta architecture SavMetaArchitecture{
 	}
 		
 	component types:
-		
+	
+	component type PullThread {
+		provides IPullThread;
+	}
+	
 	component type SimpleProcess {
 		provides IProcess;
 	}
@@ -74,19 +77,13 @@ meta architecture SavMetaArchitecture{
 		provides IAggregateProcess;
 	}
 	
-	component type LearningReasoner {
-		provides ILearningReasoner;
-	}
-	
-	component type SpecificationReasoner {
-		provides ISpecificationReasoner;
-	}
-	
 	component type TechnicalSensor {
+		requires IPullThread;
 		provides ISensor;
 	}
 	
 	component type LogicalSensor {
+		requires IPullThread;
 		provides ILogicalSensor;
 	}
 	

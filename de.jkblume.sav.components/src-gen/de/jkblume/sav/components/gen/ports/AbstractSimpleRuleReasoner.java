@@ -27,54 +27,11 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractSimpleRuleReasoner
-		implements
-			IPort<ISpecificationReasoner>,
-			INotifyPropertyChanged,
-			ISpecificationReasoner {
+public abstract class AbstractSimpleRuleReasoner implements IPort<IProcess>, INotifyPropertyChanged, IProcess {
 
 	private String name;
 	private boolean isActive = true;
-	protected ISpecificationReasoner base;
-
-	@RequirementA
-	private List<ISensor> iSensors = new ArrayList<ISensor>();
-
-	public List<ISensor> getISensors() {
-		return this.iSensors;
-	}
-
-	public void addISensor(ISensor item) {
-		this.iSensors.add(item);
-		handleISensorAdded(item);
-	}
-
-	public void removeISensor(ISensor item) {
-		this.iSensors.remove(item);
-		handleISensorRemoved(item);
-	}
-
-	public abstract void handleISensorAdded(ISensor item);
-	public abstract void handleISensorRemoved(ISensor item);
-
-	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
+	protected IProcess base;
 
 	public AbstractSimpleRuleReasoner(String name) {
 		this.name = name;
@@ -101,25 +58,17 @@ public abstract class AbstractSimpleRuleReasoner
 	}
 
 	@Override
-	public ISpecificationReasoner getBase() {
+	public IProcess getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(ISpecificationReasoner base) {
+	public void setBase(IProcess base) {
 		this.base = base;
 	}
 
 	public <T> T as(Class<T> c) {
 		return base.as(c);
-	}
-
-	public Event getLastEvent() {
-		return base.getLastEvent();
-	}
-
-	public void setLastEvent(Event lastEvent) {
-		base.setLastEvent(lastEvent);
 	}
 
 	public AbstractProcess getSmlConfiguration() {

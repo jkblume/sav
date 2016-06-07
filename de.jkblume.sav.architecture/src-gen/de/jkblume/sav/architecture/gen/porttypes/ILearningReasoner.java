@@ -29,7 +29,7 @@ import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
 @PortTypeA(name = "ILearningReasoner", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ILearningReasoner extends IReasoner {
+public interface ILearningReasoner extends IProcess {
 
 	public static Class remotePortClass = ILearningReasonerRemote.class;
 	public static Class proxyComponentClass = ILearningReasonerRemoteProxy.class;
@@ -37,6 +37,7 @@ public interface ILearningReasoner extends IReasoner {
 	public void startGesture(Category category);
 	public void stopGesture(Category category);
 	public void teachCurrentState(Category category);
+	public void buildClassifier();
 
 	public <T> T as(Class<T> c);
 
@@ -46,14 +47,6 @@ public interface ILearningReasoner extends IReasoner {
 
 		public ILearningReasonerRemote(String name) {
 			super(name, ILearningReasoner.class);
-		}
-
-		public Event getLastEvent() {
-			return base.getLastEvent();
-		}
-
-		public void setLastEvent(Event lastEvent) {
-			base.setLastEvent(lastEvent);
 		}
 
 		public AbstractProcess getSmlConfiguration() {
@@ -73,40 +66,8 @@ public interface ILearningReasoner extends IReasoner {
 		public void teachCurrentState(Category category) {
 			base.teachCurrentState(category);
 		}
-
 		public void buildClassifier() {
 			base.buildClassifier();
-		}
-		public DataComponent getQualityOfService() {
-			DataComponent result = base.getQualityOfService();
-			return result;
-		}
-
-		public void start() {
-			base.start();
-		}
-		public void stop() {
-			base.stop();
-		}
-		public Boolean isRunning() {
-			Boolean result = base.isRunning();
-			return result;
-		}
-		public IOPropertyList retrieveValues() {
-			IOPropertyList result = base.retrieveValues();
-			return result;
-		}
-		public String getId() {
-			String result = base.getId();
-			return result;
-		}
-		public Integer getSamplingRate() {
-			Integer result = base.getSamplingRate();
-			return result;
-		}
-		public IOPropertyList retrieveOutputStructure() {
-			IOPropertyList result = base.retrieveOutputStructure();
-			return result;
 		}
 
 		public Boolean initialize() {
@@ -152,17 +113,6 @@ public interface ILearningReasoner extends IReasoner {
 			return null;
 		}
 
-		public Event getLastEvent() {
-			GetLastEventRemoteMessage in = new GetLastEventRemoteMessage();
-			return client.send(in, GetLastEventRemoteMessage.class).getResponseResult();
-		}
-
-		public void setLastEvent(Event lastEvent) {
-			SetLastEventRemoteMessage in = new SetLastEventRemoteMessage();
-			in.setLastEvent(lastEvent);
-			client.send(in, SetLastEventRemoteMessage.class);
-		}
-
 		public AbstractProcess getSmlConfiguration() {
 			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
 			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
@@ -199,58 +149,6 @@ public interface ILearningReasoner extends IReasoner {
 			BuildClassifierRemoteMessage in = new BuildClassifierRemoteMessage();
 
 			client.send(in, BuildClassifierRemoteMessage.class);
-		}
-
-		public DataComponent getQualityOfService() {
-			GetQualityOfServiceRemoteMessage in = new GetQualityOfServiceRemoteMessage();
-
-			return ((GetQualityOfServiceRemoteMessage) client.send(in, GetQualityOfServiceRemoteMessage.class))
-					.getResponseResult();
-		}
-
-		public void start() {
-			StartRemoteMessage in = new StartRemoteMessage();
-
-			client.send(in, StartRemoteMessage.class);
-		}
-
-		public void stop() {
-			StopRemoteMessage in = new StopRemoteMessage();
-
-			client.send(in, StopRemoteMessage.class);
-		}
-
-		public Boolean isRunning() {
-			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
-
-			return ((IsRunningRemoteMessage) client.send(in, IsRunningRemoteMessage.class)).getResponseResult();
-		}
-
-		public IOPropertyList retrieveValues() {
-			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
-
-			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
-					.getResponseResult();
-		}
-
-		public String getId() {
-			GetIdRemoteMessage in = new GetIdRemoteMessage();
-
-			return ((GetIdRemoteMessage) client.send(in, GetIdRemoteMessage.class)).getResponseResult();
-		}
-
-		public Integer getSamplingRate() {
-			GetSamplingRateRemoteMessage in = new GetSamplingRateRemoteMessage();
-
-			return ((GetSamplingRateRemoteMessage) client.send(in, GetSamplingRateRemoteMessage.class))
-					.getResponseResult();
-		}
-
-		public IOPropertyList retrieveOutputStructure() {
-			RetrieveOutputStructureRemoteMessage in = new RetrieveOutputStructureRemoteMessage();
-
-			return ((RetrieveOutputStructureRemoteMessage) client.send(in, RetrieveOutputStructureRemoteMessage.class))
-					.getResponseResult();
 		}
 
 		public Boolean initialize() {
@@ -348,6 +246,20 @@ public interface ILearningReasoner extends IReasoner {
 			List<Object> result = new ArrayList<Object>();
 
 			result.add(getCategory());
+
+			return result;
+		}
+	}
+
+	public class BuildClassifierRemoteMessage extends RemoteMessageBase<Object> {
+
+		public BuildClassifierRemoteMessage() {
+			super("buildClassifier");
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
 
 			return result;
 		}

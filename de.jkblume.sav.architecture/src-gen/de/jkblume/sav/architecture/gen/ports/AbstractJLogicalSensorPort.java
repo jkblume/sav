@@ -1,11 +1,11 @@
 
-package de.jkblume.sav.components.gen.ports;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
+package de.jkblume.sav.architecture.gen.ports;
 
 import de.jkblume.sav.architecture.gen.components.*;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.porttypes.*;
 
@@ -27,11 +27,35 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor>, INotifyPropertyChanged, ISensor {
+public abstract class AbstractJLogicalSensorPort
+		implements
+			IPort<ILogicalSensor>,
+			INotifyPropertyChanged,
+			ILogicalSensor {
 
 	private String name;
 	private boolean isActive = true;
-	protected ISensor base;
+	protected ILogicalSensor base;
+
+	@RequirementA
+	private List<ISensor> iSensors = new ArrayList<ISensor>();
+
+	public List<ISensor> getISensors() {
+		return this.iSensors;
+	}
+
+	public void addISensor(ISensor item) {
+		this.iSensors.add(item);
+		handleISensorAdded(item);
+	}
+
+	public void removeISensor(ISensor item) {
+		this.iSensors.remove(item);
+		handleISensorRemoved(item);
+	}
+
+	public abstract void handleISensorAdded(ISensor item);
+	public abstract void handleISensorRemoved(ISensor item);
 
 	@RequirementA
 	private IProcess iProcess;
@@ -52,7 +76,7 @@ public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor
 	public abstract void handleIProcessConnected(IProcess item);
 	public abstract void handleIProcessDisconnected(IProcess item);
 
-	public AbstractSimulatingTechnicalSensor(String name) {
+	public AbstractJLogicalSensorPort(String name) {
 		this.name = name;
 	}
 
@@ -77,12 +101,12 @@ public abstract class AbstractSimulatingTechnicalSensor implements IPort<ISensor
 	}
 
 	@Override
-	public ISensor getBase() {
+	public ILogicalSensor getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(ISensor base) {
+	public void setBase(ILogicalSensor base) {
 		this.base = base;
 	}
 

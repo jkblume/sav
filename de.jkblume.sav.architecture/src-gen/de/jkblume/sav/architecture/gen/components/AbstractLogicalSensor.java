@@ -38,6 +38,26 @@ public abstract class AbstractLogicalSensor extends AbstractComponent
 			ILogicalSensor {
 
 	@RequirementA
+	private List<ISensor> iSensors = new ArrayList<ISensor>();
+
+	public List<ISensor> getISensors() {
+		return this.iSensors;
+	}
+
+	public void addISensor(ISensor item) {
+		this.iSensors.add(item);
+		handleISensorAdded(item);
+	}
+
+	public void removeISensor(ISensor item) {
+		this.iSensors.remove(item);
+		handleISensorRemoved(item);
+	}
+
+	public abstract void handleISensorAdded(ISensor item);
+	public abstract void handleISensorRemoved(ISensor item);
+
+	@RequirementA
 	private IProcess iProcess;
 
 	public IProcess getIProcess() {
@@ -57,24 +77,23 @@ public abstract class AbstractLogicalSensor extends AbstractComponent
 	public abstract void handleIProcessDisconnected(IProcess item);
 
 	@RequirementA
-	private List<ISensor> iSensors = new ArrayList<ISensor>();
+	private IPullThread iPullThread;
 
-	public List<ISensor> getISensors() {
-		return this.iSensors;
+	public IPullThread getIPullThread() {
+		return this.iPullThread;
+
 	}
 
-	public void addISensor(ISensor item) {
-		this.iSensors.add(item);
-		handleISensorAdded(item);
+	public void setIPullThread(IPullThread iPullThread) {
+		this.iPullThread = iPullThread;
+		if (iPullThread != null)
+			handleIPullThreadConnected(iPullThread);
+		else
+			handleIPullThreadDisconnected(iPullThread);
 	}
 
-	public void removeISensor(ISensor item) {
-		this.iSensors.remove(item);
-		handleISensorRemoved(item);
-	}
-
-	public abstract void handleISensorAdded(ISensor item);
-	public abstract void handleISensorRemoved(ISensor item);
+	public abstract void handleIPullThreadConnected(IPullThread item);
+	public abstract void handleIPullThreadDisconnected(IPullThread item);
 
 	private final List<ILogicalSensor> iLogicalSensorRoles = new ArrayList<ILogicalSensor>();
 
@@ -133,40 +152,7 @@ public abstract class AbstractLogicalSensor extends AbstractComponent
 		return false;
 	}
 
-	public void start() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("start", this);
-
-		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
-			startImpl();
-		else
-			iLogicalSensorRoles.get(0).start();
-
-	}
-
-	public void stop() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("stop", this);
-
-		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
-			stopImpl();
-		else
-			iLogicalSensorRoles.get(0).stop();
-
-	}
-
-	public Boolean isRunning() {
-
-		int countInCallStack = ReflectionHelper.countContainedInCallStack("isRunning", this);
-
-		if (countInCallStack > 1 || iLogicalSensorRoles.size() == 0)
-			return isRunningImpl();
-		else
-			return iLogicalSensorRoles.get(0).isRunning();
-
-	}
-
-	public IOPropertyList retrieveValues() {
+	public Object retrieveValues() {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("retrieveValues", this);
 
@@ -243,10 +229,7 @@ public abstract class AbstractLogicalSensor extends AbstractComponent
 
 	}
 
-	public abstract void startImpl();
-	public abstract void stopImpl();
-	public abstract Boolean isRunningImpl();
-	public abstract IOPropertyList retrieveValuesImpl();
+	public abstract Object retrieveValuesImpl();
 	public abstract String getIdImpl();
 	public abstract Integer getSamplingRateImpl();
 	public abstract IOPropertyList retrieveOutputStructureImpl();

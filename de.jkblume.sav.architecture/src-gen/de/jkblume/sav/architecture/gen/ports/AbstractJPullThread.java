@@ -1,11 +1,11 @@
 
-package de.jkblume.sav.components.gen.ports;
-
-import de.jkblume.sav.sensorml.types.*;
-
-import de.jkblume.sav.sensorml.types.*;
+package de.jkblume.sav.architecture.gen.ports;
 
 import de.jkblume.sav.architecture.gen.components.*;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.sensorml.types.*;
 
 import de.jkblume.sav.architecture.gen.porttypes.*;
 
@@ -27,15 +27,11 @@ import org.smags.componentmodel.annotations.ParameterA;
 import org.smags.componentmodel.parameter.INotifyPropertyChanged;
 import org.smags.componentmodel.annotations.RequirementA;
 
-public abstract class AbstractNaiveBayesReasoner
-		implements
-			IPort<ILearningReasoner>,
-			INotifyPropertyChanged,
-			ILearningReasoner {
+public abstract class AbstractJPullThread implements IPort<IPullThread>, INotifyPropertyChanged, IPullThread {
 
 	private String name;
 	private boolean isActive = true;
-	protected ILearningReasoner base;
+	protected IPullThread base;
 
 	@RequirementA
 	private ISensor iSensor;
@@ -56,7 +52,7 @@ public abstract class AbstractNaiveBayesReasoner
 	public abstract void handleISensorConnected(ISensor item);
 	public abstract void handleISensorDisconnected(ISensor item);
 
-	public AbstractNaiveBayesReasoner(String name) {
+	public AbstractJPullThread(String name) {
 		this.name = name;
 	}
 
@@ -81,25 +77,17 @@ public abstract class AbstractNaiveBayesReasoner
 	}
 
 	@Override
-	public ILearningReasoner getBase() {
+	public IPullThread getBase() {
 		return base;
 	}
 
 	@Override
-	public void setBase(ILearningReasoner base) {
+	public void setBase(IPullThread base) {
 		this.base = base;
 	}
 
 	public <T> T as(Class<T> c) {
 		return base.as(c);
-	}
-
-	public AbstractProcess getSmlConfiguration() {
-		return base.getSmlConfiguration();
-	}
-
-	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
-		base.setSmlConfiguration(smlConfiguration);
 	}
 
 }

@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.vast.data.CategoryImpl;
 
+import de.jkblume.sav.architecture.gen.porttypes.ILogicalSensor;
 import de.jkblume.sav.architecture.gen.porttypes.IProcess;
 import de.jkblume.sav.architecture.gen.porttypes.ISensor;
+import de.jkblume.sav.architecture.ports.JLogicalSensorPort;
 import de.jkblume.sav.components.gen.ports.AbstractNaiveBayesReasoner;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
@@ -40,18 +42,19 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 
 	@Override
 	public void startGesture(Category category) {
-		throw new UnsupportedOperationException("The reasoner does not support gesture reasoning");
+		throw new UnsupportedOperationException("The reasoner does not support dynamic gesture reasoning");
 	}
 
 	@Override
 	public void stopGesture(Category category) {
-		throw new UnsupportedOperationException("The reasoner does not support gesture reasoning");
+		throw new UnsupportedOperationException("The reasoner does not support dynamic gesture reasoning");
 	}
 
 	@Override
 	public void teachCurrentState(Category category) {
 		IOPropertyList list = new IOPropertyList();
-		for (ISensor sensor : getISensors()) {
+		JLogicalSensorPort logicalSensor = (JLogicalSensorPort) getILogicalSensor();
+		for (ISensor sensor : logicalSensor.getISensors()) {
 			list.addAll(sensor.getLastEvent().getPropertyList());
 		}
 		list.add(category);
@@ -61,12 +64,6 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 		Instance labledInstance = inject(list);
 		
 		structure.add(labledInstance);
-		
-//		try {
-//			classifier.updateClassifier(labledInstance);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 	}
 	
 	private Instances structure;
@@ -74,7 +71,7 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 	private Classifier classifier;
 	
 	@Override
-	public void buildClassifier() {		
+	public void buildClassifier() {
 		classifier = new SMO();
 		try {
 			classifier.buildClassifier(structure);
@@ -140,38 +137,12 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 		}
 	}
 
-	public void start() {
-		base.start();
-	}
-	public void stop() {
-		base.stop();
-	}
-	public Boolean isRunning() {
-		Boolean result = base.isRunning();
-		return result;
-	}
-	public IOPropertyList retrieveValues() {
-		IOPropertyList result = base.retrieveValues();
-		return result;
-	}
-	public String getId() {
-		String result = base.getId();
-		return result;
-	}
-	public Integer getSamplingRate() {
-		Integer result = base.getSamplingRate();
-		return result;
-	}
-	public IOPropertyList retrieveOutputStructure() {
-		IOPropertyList result = base.retrieveOutputStructure();
-		return result;
-	}
-
 	@Override
 	public Boolean initialize() {
 		features = new ArrayList<>();
-		for (ISensor iSensor : getISensors()) {
-			IOPropertyList sensorOutput = iSensor.retrieveOutputStructure();
+		JLogicalSensorPort logicalSensor = (JLogicalSensorPort) getILogicalSensor();
+		for (ISensor sensor : logicalSensor.getISensors()) {
+			IOPropertyList sensorOutput = sensor.retrieveOutputStructure();
 			for (AbstractSWEIdentifiable identifiable : sensorOutput) {
 				addFeature((DataComponent) identifiable);
 			}
@@ -216,29 +187,14 @@ public class NaiveBayesReasoner extends AbstractNaiveBayesReasoner {
 	}
 
 	@Override
-	public void handleISensorAdded(ISensor item) {
-		initialize();
-	}
-
-	@Override
-	public void handleISensorRemoved(ISensor item) {
-		initialize();
-	}
-
-	@Override
-	public void handleIProcessConnected(IProcess item) {
+	public void handleILogicalSensorConnected(ILogicalSensor item) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void handleIProcessDisconnected(IProcess item) {
+	public void handleILogicalSensorDisconnected(ILogicalSensor item) {
 		// TODO Auto-generated method stub
+		
 	}
-
-	@Override
-	public DataComponent getQualityOfService() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

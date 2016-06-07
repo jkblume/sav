@@ -34,10 +34,7 @@ public interface ISensor extends IProcess {
 	public static Class remotePortClass = ISensorRemote.class;
 	public static Class proxyComponentClass = ISensorRemoteProxy.class;
 
-	public void start();
-	public void stop();
-	public Boolean isRunning();
-	public IOPropertyList retrieveValues();
+	public Object retrieveValues();
 	public String getId();
 	public Integer getSamplingRate();
 	public IOPropertyList retrieveOutputStructure();
@@ -71,18 +68,8 @@ public interface ISensor extends IProcess {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public void start() {
-			base.start();
-		}
-		public void stop() {
-			base.stop();
-		}
-		public Boolean isRunning() {
-			Boolean result = base.isRunning();
-			return result;
-		}
-		public IOPropertyList retrieveValues() {
-			IOPropertyList result = base.retrieveValues();
+		public Object retrieveValues() {
+			Object result = base.retrieveValues();
 			return result;
 		}
 		public String getId() {
@@ -161,25 +148,7 @@ public interface ISensor extends IProcess {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public void start() {
-			StartRemoteMessage in = new StartRemoteMessage();
-
-			client.send(in, StartRemoteMessage.class);
-		}
-
-		public void stop() {
-			StopRemoteMessage in = new StopRemoteMessage();
-
-			client.send(in, StopRemoteMessage.class);
-		}
-
-		public Boolean isRunning() {
-			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
-
-			return ((IsRunningRemoteMessage) client.send(in, IsRunningRemoteMessage.class)).getResponseResult();
-		}
-
-		public IOPropertyList retrieveValues() {
+		public Object retrieveValues() {
 			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
 
 			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))
@@ -260,49 +229,7 @@ public interface ISensor extends IProcess {
 		}
 	}
 
-	public class StartRemoteMessage extends RemoteMessageBase<Object> {
-
-		public StartRemoteMessage() {
-			super("start");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class StopRemoteMessage extends RemoteMessageBase<Object> {
-
-		public StopRemoteMessage() {
-			super("stop");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class IsRunningRemoteMessage extends RemoteMessageBase<Boolean> {
-
-		public IsRunningRemoteMessage() {
-			super("isRunning");
-		}
-
-		@Override
-		public List<Object> getArguments() {
-			List<Object> result = new ArrayList<Object>();
-
-			return result;
-		}
-	}
-
-	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<IOPropertyList> {
+	public class RetrieveValuesRemoteMessage extends RemoteMessageBase<Object> {
 
 		public RetrieveValuesRemoteMessage() {
 			super("retrieveValues");

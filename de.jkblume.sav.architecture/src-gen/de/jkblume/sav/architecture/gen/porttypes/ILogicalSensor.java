@@ -60,18 +60,8 @@ public interface ILogicalSensor extends ISensor {
 			base.setSmlConfiguration(smlConfiguration);
 		}
 
-		public void start() {
-			base.start();
-		}
-		public void stop() {
-			base.stop();
-		}
-		public Boolean isRunning() {
-			Boolean result = base.isRunning();
-			return result;
-		}
-		public IOPropertyList retrieveValues() {
-			IOPropertyList result = base.retrieveValues();
+		public Object retrieveValues() {
+			Object result = base.retrieveValues();
 			return result;
 		}
 		public String getId() {
@@ -150,25 +140,7 @@ public interface ILogicalSensor extends ISensor {
 			client.send(in, SetSmlConfigurationRemoteMessage.class);
 		}
 
-		public void start() {
-			StartRemoteMessage in = new StartRemoteMessage();
-
-			client.send(in, StartRemoteMessage.class);
-		}
-
-		public void stop() {
-			StopRemoteMessage in = new StopRemoteMessage();
-
-			client.send(in, StopRemoteMessage.class);
-		}
-
-		public Boolean isRunning() {
-			IsRunningRemoteMessage in = new IsRunningRemoteMessage();
-
-			return ((IsRunningRemoteMessage) client.send(in, IsRunningRemoteMessage.class)).getResponseResult();
-		}
-
-		public IOPropertyList retrieveValues() {
+		public Object retrieveValues() {
 			RetrieveValuesRemoteMessage in = new RetrieveValuesRemoteMessage();
 
 			return ((RetrieveValuesRemoteMessage) client.send(in, RetrieveValuesRemoteMessage.class))

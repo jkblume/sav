@@ -3,7 +3,8 @@ package de.jkblume.sav.components.utils;
 import org.vast.data.CategoryImpl;
 
 import de.jkblume.sav.architecture.gen.porttypes.ILearningReasoner;
-import de.jkblume.sav.architecture.gen.porttypes.IReasoner;
+import de.jkblume.sav.architecture.gen.porttypes.IPullThread;
+import de.jkblume.sav.architecture.gen.porttypes.ISensor;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,7 +21,8 @@ public class ClassifyUiHelper {
 	private VBox box;
 	private Label state;
 	
-	private IReasoner reasoner;
+	private IPullThread pullThread;
+	private ILearningReasoner reasoner;
 	
 	private Stage stage;
 	
@@ -59,14 +61,14 @@ public class ClassifyUiHelper {
 					
 					@Override
 					public void handle(ActionEvent arg0) {
-						getReasoner().buildClassifier();
-						getReasoner().start();
+						reasoner.buildClassifier();
+						pullThread.start();
 					}
 				});
 				
 				box.getChildren().add(startClassification);
 				
-				if (getReasoner() instanceof ILearningReasoner) {
+				if (reasoner != null) {
 					
 					Button yes = new Button();
 					yes.setText("This is A gesture!");
@@ -76,7 +78,7 @@ public class ClassifyUiHelper {
 						public void handle(ActionEvent arg0) {
 							Category category = new CategoryImpl();
 							category.setValue("yes");
-							((ILearningReasoner) getReasoner()).teachCurrentState(category);
+							reasoner.teachCurrentState(category);
 						}
 					});
 					
@@ -88,7 +90,7 @@ public class ClassifyUiHelper {
 						public void handle(ActionEvent arg0) {
 							Category category = new CategoryImpl();
 							category.setValue("no");
-							((ILearningReasoner) getReasoner()).teachCurrentState(category);
+							reasoner.teachCurrentState(category);
 						}
 					});
 					
@@ -112,11 +114,4 @@ public class ClassifyUiHelper {
 		});
 	}
 
-	public IReasoner getReasoner() {
-		return reasoner;
-	}
-
-	public void setReasoner(IReasoner reasoner) {
-		this.reasoner = reasoner;
-	}
 }

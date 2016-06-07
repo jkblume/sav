@@ -74,21 +74,6 @@ public class SerialTechnicalSensor extends AbstractSerialTechnicalSensor {
 	}
 
 	@Override
-	public void start() {
-		base.start();
-	}
-
-	@Override
-	public void stop() {
-		base.stop();
-	}
-
-	@Override
-	public Boolean isRunning() {
-		return base.isRunning();
-	}
-
-	@Override
 	public Event getLastEvent() {
 		return base.getLastEvent();
 	}

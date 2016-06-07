@@ -15,6 +15,8 @@ import org.vast.data.QuantityImpl;
 import org.vast.sensorML.SMLUtils;
 
 import de.jkblume.sav.architecture.components.JLearningReasoner;
+import de.jkblume.sav.architecture.components.JLogicalSensor;
+import de.jkblume.sav.architecture.components.JSimpleProcess;
 import de.jkblume.sav.architecture.components.JTechnicalSensor;
 import de.jkblume.sav.architecture.utils.MySMLUtils;
 import de.jkblume.sav.components.ports.NaiveBayesReasoner;
@@ -29,13 +31,12 @@ public class NaiveBayesReasonerTest {
 	@Test
 	public void test() throws FileNotFoundException, IOException {
 		
-		NaiveBayesReasoner reasoner = new NaiveBayesReasoner("testReasoner");
-
-		JLearningReasoner base = new JLearningReasoner("testBase");
-		reasoner.setBase(base);
+		NaiveBayesReasoner reasoner = new NaiveBayesReasoner("reasoner");
+		JSimpleProcess base = new JSimpleProcess("base");
+		JLogicalSensor ls = new JLogicalSensor("logicalSensor");
 		
+		reasoner.setILogicalSensor(ls);
 		reasoner.setSmlConfiguration(parseDescription("res-test/j_reasoner.xml"));
-		
 		
 		JTechnicalSensor sensor = new JTechnicalSensor("testSensor");
 		sensor.setSmlConfiguration(parseDescription("res-test/glove_aggregator_process.xml"));
