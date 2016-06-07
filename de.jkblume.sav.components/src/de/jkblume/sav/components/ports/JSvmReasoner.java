@@ -24,9 +24,9 @@ import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.sensorml.v20.IOPropertyList;
 import weka.core.Instances;
 import weka.classifiers.Classifier;
-
+import weka.classifiers.functions.SMO;
 import de.jkblume.sav.architecture.gen.porttypes.*;
-
+import de.jkblume.sav.components.components.JWekaLearningReasoner;
 import de.jkblume.sav.components.gen.ports.*;
 import org.smags.componentmodel.IPort;
 import java.util.*;
@@ -46,8 +46,20 @@ public class JSvmReasoner extends AbstractJSvmReasoner {
 	}
 
 	public Boolean buildClassifier() {
-		Boolean result = base.buildClassifier();
-		return result;
+		if (base instanceof JWekaLearningReasoner) {
+			JWekaLearningReasoner castedBase = (JWekaLearningReasoner) base;
+			
+			castedBase.setClassifier(new SMO());
+			try {
+				castedBase.getClassifier().buildClassifier(castedBase.getInstances());
+			} catch (Exception e) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		return true;
+		
 	}
 	public void teachCurrentState(Category category) {
 		base.teachCurrentState(category);

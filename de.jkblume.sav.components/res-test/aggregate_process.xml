@@ -52,8 +52,8 @@
 
 	<sml:components>
 		<sml:ComponentList>
-			<sml:component name="acceleration_csv_preprocessing">
-				<sml:SimpleProcess gml:id="acceleration_csv_preprocessing">
+			<sml:component name="acceleration_regex_preprocessing">
+				<sml:SimpleProcess gml:id="acceleration_regex_preprocessing">
 					<sml:inputs>
 						<sml:InputList>
 							<sml:input name="input1">
@@ -72,12 +72,12 @@
 					</sml:outputs>
 					<sml:parameters>
 						<sml:ParameterList>
-							<sml:parameter name="separator">
+							<sml:parameter name="regex">
 								<swe:Text>
-									<swe:value>/</swe:value>
+									<swe:value>A: ([^!]*)</swe:value>
 								</swe:Text>
 							</sml:parameter>
-							<sml:parameter name="column">
+							<sml:parameter name="group">
 								<swe:Count>
 									<swe:value>1</swe:value>
 								</swe:Count>
@@ -87,8 +87,8 @@
 				</sml:SimpleProcess>
 			</sml:component>
 
-			<sml:component name="gyroscope_csv_preprocessing">
-				<sml:SimpleProcess gml:id="gyroscope_csv_preprocessing">
+			<sml:component name="gyroscope_regex_preprocessing">
+				<sml:SimpleProcess gml:id="gyroscope_regex_preprocessing">
 					<sml:inputs>
 						<sml:InputList>
 							<sml:input name="input1">
@@ -107,47 +107,12 @@
 					</sml:outputs>
 					<sml:parameters>
 						<sml:ParameterList>
-							<sml:parameter name="separator">
+							<sml:parameter name="regex">
 								<swe:Text>
-									<swe:value>/</swe:value>
+									<swe:value>B: ([^!]*)</swe:value>
 								</swe:Text>
 							</sml:parameter>
-							<sml:parameter name="column">
-								<swe:Count>
-									<swe:value>2</swe:value>
-								</swe:Count>
-							</sml:parameter>
-						</sml:ParameterList>
-					</sml:parameters>
-				</sml:SimpleProcess>
-			</sml:component>
-
-			<sml:component name="acceleration_csv_process_x">
-				<sml:SimpleProcess gml:id="acceleration_csv_process_x">
-					<sml:inputs>
-						<sml:InputList>
-							<sml:input name="input1">
-								<swe:Text>
-								</swe:Text>
-							</sml:input>
-						</sml:InputList>
-					</sml:inputs>
-					<sml:outputs>
-						<sml:OutputList>
-							<sml:output name="output1">
-								<swe:Quantity>
-								</swe:Quantity>
-							</sml:output>
-						</sml:OutputList>
-					</sml:outputs>
-					<sml:parameters>
-						<sml:ParameterList>
-							<sml:parameter name="separator">
-								<swe:Text>
-									<swe:value>;</swe:value>
-								</swe:Text>
-							</sml:parameter>
-							<sml:parameter name="column">
+							<sml:parameter name="group">
 								<swe:Count>
 									<swe:value>1</swe:value>
 								</swe:Count>
@@ -157,8 +122,8 @@
 				</sml:SimpleProcess>
 			</sml:component>
 
-			<sml:component name="acceleration_csv_process_y">
-				<sml:SimpleProcess gml:id="acceleration_csv_process_y">
+			<sml:component name="acceleration_regex_process_x">
+				<sml:SimpleProcess gml:id="acceleration_regex_process_x">
 					<sml:inputs>
 						<sml:InputList>
 							<sml:input name="input1">
@@ -177,82 +142,12 @@
 					</sml:outputs>
 					<sml:parameters>
 						<sml:ParameterList>
-							<sml:parameter name="separator">
+							<sml:parameter name="regex">
 								<swe:Text>
-									<swe:value>;</swe:value>
+									<swe:value>X:([-+]?(\d*[.])?\d+)</swe:value>
 								</swe:Text>
 							</sml:parameter>
-							<sml:parameter name="column">
-								<swe:Count>
-									<swe:value>2</swe:value>
-								</swe:Count>
-							</sml:parameter>
-						</sml:ParameterList>
-					</sml:parameters>
-				</sml:SimpleProcess>
-			</sml:component>
-
-			<sml:component name="acceleration_csv_process_z">
-				<sml:SimpleProcess gml:id="acceleration_csv_process_z">
-					<sml:inputs>
-						<sml:InputList>
-							<sml:input name="input1">
-								<swe:Text>
-								</swe:Text>
-							</sml:input>
-						</sml:InputList>
-					</sml:inputs>
-					<sml:outputs>
-						<sml:OutputList>
-							<sml:output name="output1">
-								<swe:Quantity>
-								</swe:Quantity>
-							</sml:output>
-						</sml:OutputList>
-					</sml:outputs>
-					<sml:parameters>
-						<sml:ParameterList>
-							<sml:parameter name="separator">
-								<swe:Text>
-									<swe:value>;</swe:value>
-								</swe:Text>
-							</sml:parameter>
-							<sml:parameter name="column">
-								<swe:Count>
-									<swe:value>3</swe:value>
-								</swe:Count>
-							</sml:parameter>
-						</sml:ParameterList>
-					</sml:parameters>
-				</sml:SimpleProcess>
-			</sml:component>
-
-			<sml:component name="gyroscope_csv_process_x">
-				<sml:SimpleProcess gml:id="gyroscope_csv_process_x">
-					<sml:inputs>
-						<sml:InputList>
-							<sml:input name="input1">
-								<swe:Text>
-								</swe:Text>
-							</sml:input>
-						</sml:InputList>
-					</sml:inputs>
-					<sml:outputs>
-						<sml:OutputList>
-							<sml:output name="output1">
-								<swe:Quantity>
-								</swe:Quantity>
-							</sml:output>
-						</sml:OutputList>
-					</sml:outputs>
-					<sml:parameters>
-						<sml:ParameterList>
-							<sml:parameter name="separator">
-								<swe:Text>
-									<swe:value>;</swe:value>
-								</swe:Text>
-							</sml:parameter>
-							<sml:parameter name="column">
+							<sml:parameter name="group">
 								<swe:Count>
 									<swe:value>1</swe:value>
 								</swe:Count>
@@ -262,8 +157,8 @@
 				</sml:SimpleProcess>
 			</sml:component>
 
-			<sml:component name="gyroscope_csv_process_y">
-				<sml:SimpleProcess gml:id="gyroscope_csv_process_y">
+			<sml:component name="acceleration_regex_process_y">
+				<sml:SimpleProcess gml:id="acceleration_regex_process_y">
 					<sml:inputs>
 						<sml:InputList>
 							<sml:input name="input1">
@@ -282,14 +177,14 @@
 					</sml:outputs>
 					<sml:parameters>
 						<sml:ParameterList>
-							<sml:parameter name="separator">
+							<sml:parameter name="regex">
 								<swe:Text>
-									<swe:value>;</swe:value>
+									<swe:value>Y:([-+]?(\d*[.])?\d+)</swe:value>
 								</swe:Text>
 							</sml:parameter>
-							<sml:parameter name="column">
+							<sml:parameter name="group">
 								<swe:Count>
-									<swe:value>2</swe:value>
+									<swe:value>1</swe:value>
 								</swe:Count>
 							</sml:parameter>
 						</sml:ParameterList>
@@ -297,8 +192,8 @@
 				</sml:SimpleProcess>
 			</sml:component>
 
-			<sml:component name="gyroscope_csv_process_z">
-				<sml:SimpleProcess gml:id="gyroscope_csv_process_z">
+			<sml:component name="acceleration_regex_process_z">
+				<sml:SimpleProcess gml:id="acceleration_regex_process_z">
 					<sml:inputs>
 						<sml:InputList>
 							<sml:input name="input1">
@@ -317,14 +212,119 @@
 					</sml:outputs>
 					<sml:parameters>
 						<sml:ParameterList>
-							<sml:parameter name="separator">
+							<sml:parameter name="regex">
 								<swe:Text>
-									<swe:value>;</swe:value>
+									<swe:value>Z:([-+]?(\d*[.])?\d+)</swe:value>
 								</swe:Text>
 							</sml:parameter>
-							<sml:parameter name="column">
+							<sml:parameter name="group">
 								<swe:Count>
-									<swe:value>3</swe:value>
+									<swe:value>1</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="gyroscope_regex_process_x">
+				<sml:SimpleProcess gml:id="gyroscope_regex_process_x">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="regex">
+								<swe:Text>
+									<swe:value>X:([-+]?(\d*[.])?\d+)</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="group">
+								<swe:Count>
+									<swe:value>1</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="gyroscope_regex_process_y">
+				<sml:SimpleProcess gml:id="gyroscope_regex_process_y">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="regex">
+								<swe:Text>
+									<swe:value>Y:([-+]?(\d*[.])?\d+)</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="group">
+								<swe:Count>
+									<swe:value>1</swe:value>
+								</swe:Count>
+							</sml:parameter>
+						</sml:ParameterList>
+					</sml:parameters>
+				</sml:SimpleProcess>
+			</sml:component>
+
+			<sml:component name="gyroscope_regex_process_z">
+				<sml:SimpleProcess gml:id="gyroscope_regex_process_z">
+					<sml:inputs>
+						<sml:InputList>
+							<sml:input name="input1">
+								<swe:Text>
+								</swe:Text>
+							</sml:input>
+						</sml:InputList>
+					</sml:inputs>
+					<sml:outputs>
+						<sml:OutputList>
+							<sml:output name="output1">
+								<swe:Quantity>
+								</swe:Quantity>
+							</sml:output>
+						</sml:OutputList>
+					</sml:outputs>
+					<sml:parameters>
+						<sml:ParameterList>
+							<sml:parameter name="regex">
+								<swe:Text>
+									<swe:value>Z:([-+]?(\d*[.])?\d+)</swe:value>
+								</swe:Text>
+							</sml:parameter>
+							<sml:parameter name="group">
+								<swe:Count>
+									<swe:value>1</swe:value>
 								</swe:Count>
 							</sml:parameter>
 						</sml:ParameterList>
@@ -340,7 +340,7 @@
 				<sml:Link>
 					<sml:source ref="inputs/input1" />
 					<sml:destination
-						ref="components/acceleration_csv_preprocessing/inputs/input1" />
+						ref="components/acceleration_regex_preprocessing/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
@@ -348,99 +348,105 @@
 				<sml:Link>
 					<sml:source ref="inputs/input1" />
 					<sml:destination
-						ref="components/gyroscope_csv_preprocessing/inputs/input1" />
+						ref="components/gyroscope_regex_preprocessing/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
 					<sml:source
-						ref="components/acceleration_csv_preprocessing/outputs/output1" />
+						ref="components/acceleration_regex_preprocessing/outputs/output1" />
 					<sml:destination
-						ref="components/acceleration_csv_process_x/inputs/input1" />
+						ref="components/acceleration_regex_process_x/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
 					<sml:source
-						ref="components/acceleration_csv_preprocessing/outputs/output1" />
+						ref="components/acceleration_regex_preprocessing/outputs/output1" />
 					<sml:destination
-						ref="components/acceleration_csv_process_y/inputs/input1" />
+						ref="components/acceleration_regex_process_y/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
 					<sml:source
-						ref="components/acceleration_csv_preprocessing/outputs/output1" />
+						ref="components/acceleration_regex_preprocessing/outputs/output1" />
 					<sml:destination
-						ref="components/acceleration_csv_process_z/inputs/input1" />
+						ref="components/acceleration_regex_process_z/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
 					<sml:source
-						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
-					<sml:destination ref="components/gyroscope_csv_process_x/inputs/input1" />
+						ref="components/gyroscope_regex_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/gyroscope_regex_process_x/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
 					<sml:source
-						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
-					<sml:destination ref="components/gyroscope_csv_process_y/inputs/input1" />
+						ref="components/gyroscope_regex_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/gyroscope_regex_process_y/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
 					<sml:source
-						ref="components/gyroscope_csv_preprocessing/outputs/output1" />
-					<sml:destination ref="components/gyroscope_csv_process_z/inputs/input1" />
+						ref="components/gyroscope_regex_preprocessing/outputs/output1" />
+					<sml:destination
+						ref="components/gyroscope_regex_process_z/inputs/input1" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
-					<sml:source ref="components/acceleration_csv_process_x/outputs/output1" />
+					<sml:source
+						ref="components/acceleration_regex_process_x/outputs/output1" />
 					<sml:destination ref="outputs/acceleration/x" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
-					<sml:source ref="components/acceleration_csv_process_y/outputs/output1" />
+					<sml:source
+						ref="components/acceleration_regex_process_y/outputs/output1" />
 					<sml:destination ref="outputs/acceleration/y" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
-					<sml:source ref="components/acceleration_csv_process_z/outputs/output1" />
+					<sml:source
+						ref="components/acceleration_regex_process_z/outputs/output1" />
 					<sml:destination ref="outputs/acceleration/z" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
-					<sml:source ref="components/gyroscope_csv_process_x/outputs/output1" />
+					<sml:source ref="components/gyroscope_regex_process_x/outputs/output1" />
 					<sml:destination ref="outputs/gyroscope/x" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
-					<sml:source ref="components/gyroscope_csv_process_y/outputs/output1" />
+					<sml:source ref="components/gyroscope_regex_process_y/outputs/output1" />
 					<sml:destination ref="outputs/gyroscope/y" />
 				</sml:Link>
 			</sml:connection>
 
 			<sml:connection>
 				<sml:Link>
-					<sml:source ref="components/gyroscope_csv_process_z/outputs/output1" />
+					<sml:source ref="components/gyroscope_regex_process_z/outputs/output1" />
 					<sml:destination ref="outputs/gyroscope/z" />
 				</sml:Link>
 			</sml:connection>

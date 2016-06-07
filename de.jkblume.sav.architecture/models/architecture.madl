@@ -85,6 +85,11 @@ meta architecture SavMetaArchitecture{
 	component type Sensor {
 		provides ISensor;
 	}
+	
+	component type Visualizer {
+		provides IVisualisationStrategy;
+		requires ISensor[0 to *];
+	}	
 			
 	sensor types:
 

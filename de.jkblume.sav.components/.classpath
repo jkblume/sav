@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res-test"/>
 	<classpathentry kind="src" path="src-gen"/>
+	<classpathentry kind="src" path="src-test"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/de.jkblume.sav.architecture"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="lib" path="/home/jkb/wekafiles/packages/HMM/HMM.jar"/>

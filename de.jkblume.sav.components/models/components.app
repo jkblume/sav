@@ -25,12 +25,9 @@ app SavComponents {
 	}
 
 	ports:
-//	implementation port RegexProcessor implements IProcess{}
-//	implementation port DiagramVisualisationStrategy implements IVisualisationStrategy{}
-//	implementation port ClassificationVisualisationStrategy implements IVisualisationStrategy{}
-//	implementation port Cube3DVisualisationStrategy implements IVisualisationStrategy{}
-//	implementation port SerialTechnicalSensor implements ISensor{}
-//	implementation port SimpleRuleReasoner implements IProcess{}
+	implementation port DiagramVisualisationStrategy implements IVisualisationStrategy{}
+	implementation port ClassificationVisualisationStrategy implements IVisualisationStrategy{}
+	implementation port Cube3DVisualisationStrategy implements IVisualisationStrategy{}
 	implementation port JSvmReasoner implements ILearningProcess{}
 	
 	components:
@@ -39,7 +36,11 @@ app SavComponents {
 	component JRegexProcess implements SimpleProcess{}
 	component JSerialPortRetrieveStrategy implements TechnicalRetrieveStrategy{}
 	component JSimpleRuleReasoner implements SimpleProcess{}
-	component JWekaLearningReasoner implements LearningProcess{}	
+	component JWekaLearningReasoner implements LearningProcess{
+		parameter instances : Instances;
+		parameter classifier : Classifier;
+	}	
+	component JVisualizer implements Visualizer{}
 	
 	sensors:
 

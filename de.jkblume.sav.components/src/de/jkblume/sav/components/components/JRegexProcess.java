@@ -70,7 +70,7 @@ public class JRegexProcess extends AbstractSimpleProcess {
 			specificResult.setValue(value);
 			result = specificResult;
 		} else if (dataType.isNumberType()) {
-			Float value = Float.parseFloat(outputString);
+			Double value = Double.parseDouble(outputString);
 			Quantity specificResult = new QuantityImpl();
 			specificResult.setValue(value);
 			result = specificResult;
