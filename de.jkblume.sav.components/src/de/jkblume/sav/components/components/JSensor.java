@@ -14,31 +14,33 @@ public class JSensor extends AbstractSensor {
 
 	private static final String SAMPLING_RATE_PARAMETER_NAME = "samplingRate";
 	private Thread pullThread;
-	
+
 	public JSensor(String name) {
 		super(name);
 	}
 
 	public void setup() {
 		pullThread = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				while(getRunning()) {
-					
+				while (getRunning()) {
+
 					Object value = getIRetrieveStrategy().retrieveValue();
 					if (value == null) {
 						continue;
 					}
-					
-					value = (IOPropertyList) getIProcess().execute(value);
+
+					value = getIProcess().execute(value);
 					if (value == null) {
 						continue;
 					}
-					
-					Event currentEvent = MySMLUtils.createEvent(value);
+
+					// can cast, because IProcess is ever returning a
+					// IOPropertyList at this stage
+					Event currentEvent = MySMLUtils.createEvent((IOPropertyList) value);
 					setLastEvent(currentEvent);
-					
+
 					try {
 						Thread.sleep(getSamplingRate());
 					} catch (InterruptedException e) {
@@ -47,8 +49,6 @@ public class JSensor extends AbstractSensor {
 				}
 			}
 		});
-		
-		
 
 	}
 
@@ -70,10 +70,11 @@ public class JSensor extends AbstractSensor {
 	public String getIdImpl() {
 		return getIProcess().getSmlConfiguration().getId();
 	}
-	
+
 	@Override
 	public Integer getSamplingRateImpl() {
-		AbstractSWEIdentifiable parameter = getIProcess().getSmlConfiguration().getParameter(SAMPLING_RATE_PARAMETER_NAME);
+		AbstractSWEIdentifiable parameter = getIProcess().getSmlConfiguration()
+				.getParameter(SAMPLING_RATE_PARAMETER_NAME);
 		return ((Count) parameter).getValue();
 	}
 
@@ -84,33 +85,33 @@ public class JSensor extends AbstractSensor {
 
 	@Override
 	public void handleIProcessConnected(IProcess connectedItem) {
-		//TODO Handle
+		// TODO Handle
 	}
 
 	@Override
 	public void handleIProcessDisconnected(IProcess disconnectedItem) {
-		//TODO Handle
+		// TODO Handle
 	}
 
 	@Override
 	public void handleIRetrieveStrategyConnected(IRetrieveStrategy connectedItem) {
-		//TODO Handle
+		// TODO Handle
 	}
 
 	@Override
 	public void handleIRetrieveStrategyDisconnected(IRetrieveStrategy disconnectedItem) {
-		//TODO Handle
+		// TODO Handle
 	}
 
 	@Override
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
 
 		if (propertyName.equals("running")) {
-			//TODO:Implement
+			// TODO:Implement
 		}
 
 		if (propertyName.equals("lastEvent")) {
-			//TODO:Implement
+			// TODO:Implement
 		}
 
 	}
