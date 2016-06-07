@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sml:PhysicalComponent gml:id="serial_sensor_glove"
+<sml:PhysicalComponent gml:id="glove_serial_port"
 	xmlns:sml="http://www.opengis.net/sensorml/2.0" xmlns:swe="http://www.opengis.net/swe/2.0"
 	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -27,11 +27,6 @@
 				<swe:Text>
 				    <swe:value>/dev/ttyACM0</swe:value>
 				</swe:Text>
-			</sml:parameter>
-			<sml:parameter name="samplingRate">
-				<swe:Count>
-					<swe:value>100</swe:value>
-				</swe:Count>
 			</sml:parameter>
 		</sml:ParameterList>
 	</sml:parameters>

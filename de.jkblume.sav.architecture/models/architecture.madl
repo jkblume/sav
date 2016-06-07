@@ -12,6 +12,7 @@ meta architecture SavMetaArchitecture{
 	port types:
 	
 	port type ISensor {
+		parameter smlConfiguration : AbstractProcess;
 		parameter running : Boolean;
 		parameter lastEvent : Event;
 		

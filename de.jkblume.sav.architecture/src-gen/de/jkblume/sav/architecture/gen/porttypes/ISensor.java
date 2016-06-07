@@ -40,6 +40,9 @@ public interface ISensor {
 	public Integer getSamplingRate();
 	public IOPropertyList retrieveOutputStructure();
 
+	public AbstractProcess getSmlConfiguration();
+	public void setSmlConfiguration(AbstractProcess smlConfiguration);
+
 	public Boolean getRunning();
 	public void setRunning(Boolean running);
 
@@ -54,6 +57,14 @@ public interface ISensor {
 
 		public ISensorRemote(String name) {
 			super(name, ISensor.class);
+		}
+
+		public AbstractProcess getSmlConfiguration() {
+			return base.getSmlConfiguration();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			base.setSmlConfiguration(smlConfiguration);
 		}
 
 		public Boolean getRunning() {
@@ -119,6 +130,17 @@ public interface ISensor {
 			return null;
 		}
 
+		public AbstractProcess getSmlConfiguration() {
+			GetSmlConfigurationRemoteMessage in = new GetSmlConfigurationRemoteMessage();
+			return client.send(in, GetSmlConfigurationRemoteMessage.class).getResponseResult();
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			SetSmlConfigurationRemoteMessage in = new SetSmlConfigurationRemoteMessage();
+			in.setSmlConfiguration(smlConfiguration);
+			client.send(in, SetSmlConfigurationRemoteMessage.class);
+		}
+
 		public Boolean getRunning() {
 			GetRunningRemoteMessage in = new GetRunningRemoteMessage();
 			return client.send(in, GetRunningRemoteMessage.class).getResponseResult();
@@ -173,6 +195,38 @@ public interface ISensor {
 					.getResponseResult();
 		}
 
+	}
+
+	public class GetSmlConfigurationRemoteMessage extends RemoteMessageBase<AbstractProcess> {
+
+		public GetSmlConfigurationRemoteMessage() {
+			super("getSmlConfiguration");
+		}
+
+	}
+
+	public class SetSmlConfigurationRemoteMessage extends RemoteMessageBase<Object> {
+
+		private AbstractProcess smlConfiguration;
+
+		public SetSmlConfigurationRemoteMessage() {
+			super("setSmlConfiguration", AbstractProcess.class.getName());
+		}
+
+		public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+			this.smlConfiguration = smlConfiguration;
+		}
+
+		public AbstractProcess getSmlConfiguration() {
+			return smlConfiguration;
+		}
+
+		@Override
+		public List<Object> getArguments() {
+			List<Object> result = new ArrayList<Object>();
+			result.add(getSmlConfiguration());
+			return result;
+		}
 	}
 
 	public class GetRunningRemoteMessage extends RemoteMessageBase<Boolean> {

@@ -78,6 +78,16 @@ public abstract class AbstractSensor extends AbstractComponent implements INotif
 		super(name);
 	}
 
+	public AbstractProcess getSmlConfiguration() {
+		return (AbstractProcess) getSharedMemory().getValue(AbstractSensor.class, "smlConfiguration");
+	}
+
+	public void setSmlConfiguration(AbstractProcess smlConfiguration) {
+		AbstractProcess oldValue = getSmlConfiguration();
+		getSharedMemory().setValue(AbstractSensor.class, "smlConfiguration", smlConfiguration);
+		notifyPropertyChanged(this, "smlConfiguration", oldValue, smlConfiguration);
+	}
+
 	public Boolean getRunning() {
 		return (Boolean) getSharedMemory().getValue(AbstractSensor.class, "running");
 	}

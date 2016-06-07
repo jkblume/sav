@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:PhysicalComponent gml:id="glove_reasoner"
+	xmlns:sml="http://www.opengis.net/sensorml/2.0" xmlns:swe="http://www.opengis.net/swe/2.0"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xlink="http://www.w3.org/1999/xlink">	
+	<sml:parameters>
+		<sml:ParameterList>
+			<sml:parameter name="samplingRate">
+				<swe:Count>
+					<swe:value>100</swe:value>
+				</swe:Count>
+			</sml:parameter>
+		</sml:ParameterList>
+	</sml:parameters>
+</sml:PhysicalComponent>

@@ -2,3 +2,9 @@
 /glove_aggregator_process.xml
 /glove_reasoner.xml
 /serial_sensor_glove.xml
+/glove_serial_port.xml
+/glove_sensor.xml
+/glove_reasoner_process.xml
+/glove_reasoner_sensor.xml
+/glove_reasoner_logical_retriever.xml
+/glove_serial_port_retriever.xml

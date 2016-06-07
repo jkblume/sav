@@ -68,7 +68,7 @@ public class ClassifyUiHelper {
 				
 				box.getChildren().add(startReasoner);
 							
-				if (getReasoner() instanceof ILearningProcess) {
+				if (reasonerProcess instanceof ILearningProcess) {
 					ILearningProcess learningProcess = (ILearningProcess) reasonerProcess;
 
 					Button yes = new Button();
@@ -90,7 +90,6 @@ public class ClassifyUiHelper {
 						@Override
 						public void handle(ActionEvent arg0) {
 							learningProcess.buildClassifier();
-							getReasoner().start();
 						}
 					});
 					
@@ -129,11 +128,7 @@ public class ClassifyUiHelper {
 		});
 	}
 
-	public ISensor getReasoner() {
-		return sensor;
-	}
-
-	public void setReasoner(ISensor sensor) {
+	public void setSensor(ISensor sensor) {
 		this.sensor = sensor;
 		if (sensor instanceof AbstractSensor) {
 			this.reasonerProcess = ((AbstractSensor) sensor).getIProcess();

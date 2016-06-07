@@ -68,12 +68,12 @@ public class JSensor extends AbstractSensor {
 
 	@Override
 	public String getIdImpl() {
-		return getIProcess().getSmlConfiguration().getId();
+		return getSmlConfiguration().getId();
 	}
 
 	@Override
 	public Integer getSamplingRateImpl() {
-		AbstractSWEIdentifiable parameter = getIProcess().getSmlConfiguration()
+		AbstractSWEIdentifiable parameter = getSmlConfiguration()
 				.getParameter(SAMPLING_RATE_PARAMETER_NAME);
 		return ((Count) parameter).getValue();
 	}
