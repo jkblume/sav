@@ -75,7 +75,7 @@ public class JTechnicalSensor extends AbstractTechnicalSensor {
 	}
 
 	public IOPropertyList retrieveValuesImpl() {
-		throw new IllegalStateException("This method need to be implemented by an implementation port!");
+		throw new UnsupportedOperationException("This method need to be implemented by an implementation port!");
 	}
 
 	public void startImpl() {

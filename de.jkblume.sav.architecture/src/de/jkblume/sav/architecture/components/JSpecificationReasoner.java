@@ -58,7 +58,6 @@ public class JSpecificationReasoner extends AbstractSpecificationReasoner {
 	
 	@Override
 	public void notifyPropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue) {
-
 		if (propertyName.equals("smlConfiguration")) {
 			//TODO:Implement
 		}
@@ -66,7 +65,6 @@ public class JSpecificationReasoner extends AbstractSpecificationReasoner {
 		if (propertyName.equals("lastEvent")) {
 			//TODO:Implement
 		}
-
 	}
 
 	@Override
