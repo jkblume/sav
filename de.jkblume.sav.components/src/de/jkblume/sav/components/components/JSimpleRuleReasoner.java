@@ -31,7 +31,7 @@ public class JSimpleRuleReasoner extends AbstractSimpleProcess {
 			return null;
 		}
 		
-		if (component.getValue() < 780) {
+		if (component.getValue() < 110) {
 			category.setValue("not buckled");
 		} else {
 			category.setValue("buckled");

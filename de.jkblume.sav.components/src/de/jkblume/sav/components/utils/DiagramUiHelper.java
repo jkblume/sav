@@ -53,8 +53,8 @@ public class DiagramUiHelper {
 				
 				NumberAxis yAxis = new NumberAxis();
 				yAxis.setAutoRanging(false);
-				yAxis.setLowerBound(560);
-				yAxis.setUpperBound(1000);
+				yAxis.setLowerBound(-20);
+				yAxis.setUpperBound(150);
 				
 				// creating the chart
 				LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
@@ -77,6 +77,7 @@ public class DiagramUiHelper {
 				LineChart chart = charts.get(sensorId);
 
 				double value = getValue(event);
+								
 				double timestamp = getTimestamp(event);
 				
 				if (xAxis != null) {

@@ -30,7 +30,7 @@ public class JSensor extends AbstractSensor {
 					if (value == null) {
 						continue;
 					}
-
+					
 					value = getIProcess().execute(value);
 					if (value == null) {
 						continue;

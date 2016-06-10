@@ -25,6 +25,7 @@ import de.jkblume.sav.components.components.JSimpleRuleReasoner;
 import de.jkblume.sav.components.components.JVisualizer;
 import de.jkblume.sav.components.components.JWekaLearningReasoner;
 import de.jkblume.sav.components.ports.ClassificationVisualisationStrategy;
+import de.jkblume.sav.components.ports.JSvmReasoner;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -42,6 +43,15 @@ public class UI extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		InputStream is = new FileInputStream("res/reasoner_sensor.xml");
+		AbstractProcess process = utils.readProcess(is);
+
+		InputStream is2 = new FileInputStream("res/reasoner_retriever.xml");
+		AbstractProcess process2 = utils.readProcess(is2);
+
+		InputStream is3 = new FileInputStream("res/reasoner_process.xml");
+		AbstractProcess process3 = utils.readProcess(is3);
+
 		VBox box = new VBox();
 		Button btn1 = new Button();
 		btn1.setText("Enable Specification Reasoning");
@@ -58,19 +68,11 @@ public class UI extends Application {
 					ops.add(new CreateComponentInstanceOperation("simpleReasoner", JSimpleRuleReasoner.class));
 					ops.add(new CreateComponentInstanceOperation("logicalRetriever1", JLogicalRetrieveStrategy.class));
 					
-					InputStream is = new FileInputStream("res/glove_reasoner_sensor.xml");
-					AbstractProcess process = utils.readProcess(is);
 					ops.add(new SetComponentParameterOperation("reasoningSensor1", "smlConfiguration", process));
-	
-					InputStream is2 = new FileInputStream("res/glove_reasoner_logical_retriever.xml");
-					AbstractProcess process2 = utils.readProcess(is2);
 					ops.add(new SetComponentParameterOperation("logicalRetriever1", "smlConfiguration", process2));
-	
-					InputStream is3 = new FileInputStream("res/glove_reasoner_process.xml");
-					AbstractProcess process3 = utils.readProcess(is3);
 					ops.add(new SetComponentParameterOperation("simpleReasoner", "smlConfiguration", process3));
 	
-					ops.add(new ConnectOperation("gloveSensor", "logicalRetriever1", "ISensor"));
+					ops.add(new ConnectOperation("scaleSensor", "logicalRetriever1", "ISensor"));
 					ops.add(new ConnectOperation("simpleReasoner", "reasoningSensor1", "IProcess"));
 					ops.add(new ConnectOperation("logicalRetriever1", "reasoningSensor1", "IRetrieveStrategy"));
 					ops.add(new SetupComponentOperation("reasoningSensor1"));
@@ -109,24 +111,19 @@ public class UI extends Application {
 				
 
 					List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+
 					ops.add(new CreateComponentInstanceOperation("reasoningSensor2", JSensor.class));
 					ops.add(new CreateComponentInstanceOperation("wekaReasoner", JWekaLearningReasoner.class));
+					ops.add(new CreateComponentInstanceOperation("logicalRetriever2", JLogicalRetrieveStrategy.class));
 					
-					InputStream is = new FileInputStream("res/glove_reasoner_sensor.xml");
-					AbstractProcess process = utils.readProcess(is);
 					ops.add(new SetComponentParameterOperation("reasoningSensor2", "smlConfiguration", process));
-	
-					InputStream is2 = new FileInputStream("res/glove_reasoner_logical_retriever.xml");
-					AbstractProcess process2 = utils.readProcess(is2);
-					ops.add(new SetComponentParameterOperation("logicalRetriever1", "smlConfiguration", process2));
-	
-					InputStream is3 = new FileInputStream("res/glove_reasoner_process.xml");
-					AbstractProcess process3 = utils.readProcess(is3);
+					ops.add(new SetComponentParameterOperation("logicalRetriever2", "smlConfiguration", process2));
 					ops.add(new SetComponentParameterOperation("wekaReasoner", "smlConfiguration", process3));
 	
+					ops.add(new ConnectOperation("gloveSensor", "logicalRetriever2", "ISensor"));
 					ops.add(new ConnectOperation("gloveSensor", "wekaReasoner", "ISensor"));
 					ops.add(new ConnectOperation("wekaReasoner", "reasoningSensor2", "IProcess"));
-					ops.add(new ConnectOperation("logicalRetriever1", "reasoningSensor2", "IRetrieveStrategy"));
+					ops.add(new ConnectOperation("logicalRetriever2", "reasoningSensor2", "IRetrieveStrategy"));
 					ops.add(new SetupComponentOperation("reasoningSensor2"));
 					ops.add(new SetupComponentOperation("wekaReasoner"));
 					
@@ -151,9 +148,36 @@ public class UI extends Application {
 			}
 		});
 
+
+		Button btn3 = new Button();
+		btn3.setText("Switch to SVM Reasoning");
+		btn3.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				try {
+					RuntimeEnvironment re = RuntimeEnvironment.instance();
+				
+
+					List<ReconfigurtionOperation> ops = new ArrayList<ReconfigurtionOperation>();
+					
+					ops.add(new CreatePortInstanceOperation("svmReasoner", JSvmReasoner.class));
+					ops.add(new BindPortOperation("wekaReasoner", "svmReasoner", "ILearningProcess"));
+					
+					ReconfigurationScript rs = new ReconfigurationScript(ops);
+	
+					re.getReconfigurationEngine().executeScript(rs);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		
 		box.getChildren().add(btn1);
 		box.getChildren().add(btn2);
-
+		box.getChildren().add(btn3);
+		
 		Scene scene = new Scene(box, 200, 200);
 		this.stage = stage;
 		this.stage.setTitle("SVA - ManagementConsole");
