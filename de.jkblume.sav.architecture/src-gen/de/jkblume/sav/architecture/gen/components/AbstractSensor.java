@@ -35,25 +35,6 @@ import org.smags.componentmodel.annotations.Component;
 public abstract class AbstractSensor extends AbstractComponent implements INotifyPropertyChanged, ISensor {
 
 	@RequirementA
-	private IProcess iProcess;
-
-	public IProcess getIProcess() {
-		return this.iProcess;
-
-	}
-
-	public void setIProcess(IProcess iProcess) {
-		this.iProcess = iProcess;
-		if (iProcess != null)
-			handleIProcessConnected(iProcess);
-		else
-			handleIProcessDisconnected(iProcess);
-	}
-
-	public abstract void handleIProcessConnected(IProcess item);
-	public abstract void handleIProcessDisconnected(IProcess item);
-
-	@RequirementA
 	private IRetrieveStrategy iRetrieveStrategy;
 
 	public IRetrieveStrategy getIRetrieveStrategy() {
@@ -71,6 +52,25 @@ public abstract class AbstractSensor extends AbstractComponent implements INotif
 
 	public abstract void handleIRetrieveStrategyConnected(IRetrieveStrategy item);
 	public abstract void handleIRetrieveStrategyDisconnected(IRetrieveStrategy item);
+
+	@RequirementA
+	private IProcess iProcess;
+
+	public IProcess getIProcess() {
+		return this.iProcess;
+
+	}
+
+	public void setIProcess(IProcess iProcess) {
+		this.iProcess = iProcess;
+		if (iProcess != null)
+			handleIProcessConnected(iProcess);
+		else
+			handleIProcessDisconnected(iProcess);
+	}
+
+	public abstract void handleIProcessConnected(IProcess item);
+	public abstract void handleIProcessDisconnected(IProcess item);
 
 	private final List<ISensor> iSensorRoles = new ArrayList<ISensor>();
 
