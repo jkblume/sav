@@ -3,12 +3,12 @@ package de.jkblume.sav.components.components;
 
 import org.vast.data.CategoryImpl;
 
-import de.jkblume.sav.architecture.gen.components.AbstractSimpleProcess;
+import de.jkblume.sav.architecture.gen.components.AbstractReasoningProcess;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Quantity;
 
-public class JSimpleRuleReasoner extends AbstractSimpleProcess {
+public class JSimpleRuleReasoner extends AbstractReasoningProcess {
 
 	public JSimpleRuleReasoner(String name) {
 		super(name);
@@ -51,6 +51,18 @@ public class JSimpleRuleReasoner extends AbstractSimpleProcess {
 			//TODO:Implement
 		}
 
+	}
+
+	@Override
+	public Object injectImpl(IOPropertyList input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IOPropertyList extractImpl(Object input) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

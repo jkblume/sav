@@ -21,7 +21,7 @@ import org.vast.xml.XMLReaderException;
 
 import de.jkblume.sav.components.components.JAggregateProcess;
 import de.jkblume.sav.components.components.JLogicalRetrieveStrategy;
-import de.jkblume.sav.components.components.JNumericScaleProcess;
+import de.jkblume.sav.components.components.JNumericMapIntervalProcess;
 import de.jkblume.sav.components.components.JRegexProcess;
 import de.jkblume.sav.components.components.JSensor;
 import de.jkblume.sav.components.components.JSerialPortRetrieveStrategy;
@@ -98,7 +98,7 @@ public class Starter {
 		
 		ops.add(new CreateComponentInstanceOperation("scaleSensor", JSensor.class));
 		ops.add(new CreateComponentInstanceOperation("scaleRetriever", JLogicalRetrieveStrategy.class));
-		ops.add(new CreateComponentInstanceOperation("scaleProcess", JNumericScaleProcess.class));
+		ops.add(new CreateComponentInstanceOperation("scaleProcess", JNumericMapIntervalProcess.class));
 		ops.add(new SetComponentParameterOperation("scaleRetriever", "smlConfiguration", scaleRetrieverConfig));
 		ops.add(new SetComponentParameterOperation("scaleSensor", "smlConfiguration", scaleSensorConfig));
 		ops.add(new SetComponentParameterOperation("scaleProcess", "smlConfiguration", scaleProcessConfig));

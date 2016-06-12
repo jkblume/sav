@@ -93,4 +93,14 @@ public class JSvmReasoner extends AbstractJSvmReasoner {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Object inject(IOPropertyList input) {
+		return base.inject(input);
+	}
+
+	@Override
+	public IOPropertyList extract(Object input) {
+		return base.extract(input);
+	}
 }

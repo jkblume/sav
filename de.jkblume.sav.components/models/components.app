@@ -34,10 +34,10 @@ app SavComponents {
 	component JSensor implements Sensor{}
 	component JAggregateProcess implements AggregateProcess{}
 	component JRegexProcess implements SimpleProcess{}
-	component JNumericScaleProcess implements SimpleProcess{}
+	component JNumericMapIntervalProcess implements SimpleProcess{}
 	component JSerialPortRetrieveStrategy implements TechnicalRetrieveStrategy{}
 	component JLogicalRetrieveStrategy implements LogicalRetrieveStrategy{}
-	component JSimpleRuleReasoner implements SimpleProcess{}
+	component JSimpleRuleReasoner implements ReasoningProcess{}
 	component JWekaLearningReasoner implements LearningProcess{
 		parameter instances : Instances;
 		parameter classifier : Classifier;

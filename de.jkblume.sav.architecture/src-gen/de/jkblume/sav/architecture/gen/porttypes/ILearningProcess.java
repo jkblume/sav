@@ -29,7 +29,7 @@ import org.smags.remoting.RemoteMessageBase;
 import org.smags.componentmodel.annotations.Component;
 
 @PortTypeA(name = "ILearningProcess", architectureName = "SavMetaArchitecture", architectureNamespace = "de.jkblume.sav.architecture")
-public interface ILearningProcess extends IProcess {
+public interface ILearningProcess extends IReasoningProcess {
 
 	public static Class remotePortClass = ILearningProcessRemote.class;
 	public static Class proxyComponentClass = ILearningProcessRemoteProxy.class;
@@ -69,6 +69,15 @@ public interface ILearningProcess extends IProcess {
 		}
 		public void stopGesture(Category category) {
 			base.stopGesture(category);
+		}
+
+		public Object inject(IOPropertyList input) {
+			Object result = base.inject(input);
+			return result;
+		}
+		public IOPropertyList extract(Object input) {
+			IOPropertyList result = base.extract(input);
+			return result;
 		}
 
 		public Object execute(Object input) {
@@ -141,6 +150,20 @@ public interface ILearningProcess extends IProcess {
 			in.setCategory(category);
 
 			client.send(in, StopGestureRemoteMessage.class);
+		}
+
+		public Object inject(IOPropertyList input) {
+			InjectRemoteMessage in = new InjectRemoteMessage();
+			in.setInput(input);
+
+			return ((InjectRemoteMessage) client.send(in, InjectRemoteMessage.class)).getResponseResult();
+		}
+
+		public IOPropertyList extract(Object input) {
+			ExtractRemoteMessage in = new ExtractRemoteMessage();
+			in.setInput(input);
+
+			return ((ExtractRemoteMessage) client.send(in, ExtractRemoteMessage.class)).getResponseResult();
 		}
 
 		public Object execute(Object input) {

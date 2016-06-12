@@ -92,7 +92,7 @@ public class JWekaLearningReasoner extends AbstractLearningProcess {
 		
 		
 		
-		Instance labledInstance = inject(list);
+		Instance labledInstance = (Instance) injectImpl(list);
 		
 		getInstances().add(labledInstance);
 	}
@@ -136,7 +136,7 @@ public class JWekaLearningReasoner extends AbstractLearningProcess {
 	private Instance result;
 	private List<ScalarComponent> values;
 	
-	private Instance inject(IOPropertyList input) {
+	public Object injectImpl(IOPropertyList input) {
 		values = new ArrayList<>();
 		for (AbstractSWEIdentifiable identifiable : input) {
 			DataComponent component = (DataComponent) identifiable;
@@ -170,7 +170,7 @@ public class JWekaLearningReasoner extends AbstractLearningProcess {
 
 	@Override
 	public Object executeImpl(Object input) {
-		Instance unlabeled = inject((IOPropertyList) input);
+		Instance unlabeled = (Instance) inject((IOPropertyList) input);
 		
 		double cls = 0;
 		try {
@@ -212,6 +212,12 @@ public class JWekaLearningReasoner extends AbstractLearningProcess {
 			//TODO:Implement
 		}
 
+	}
+
+	@Override
+	public IOPropertyList extractImpl(Object input) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

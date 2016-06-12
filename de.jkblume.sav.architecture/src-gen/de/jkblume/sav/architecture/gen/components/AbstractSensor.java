@@ -35,25 +35,6 @@ import org.smags.componentmodel.annotations.Component;
 public abstract class AbstractSensor extends AbstractComponent implements INotifyPropertyChanged, ISensor {
 
 	@RequirementA
-	private IRetrieveStrategy iRetrieveStrategy;
-
-	public IRetrieveStrategy getIRetrieveStrategy() {
-		return this.iRetrieveStrategy;
-
-	}
-
-	public void setIRetrieveStrategy(IRetrieveStrategy iRetrieveStrategy) {
-		this.iRetrieveStrategy = iRetrieveStrategy;
-		if (iRetrieveStrategy != null)
-			handleIRetrieveStrategyConnected(iRetrieveStrategy);
-		else
-			handleIRetrieveStrategyDisconnected(iRetrieveStrategy);
-	}
-
-	public abstract void handleIRetrieveStrategyConnected(IRetrieveStrategy item);
-	public abstract void handleIRetrieveStrategyDisconnected(IRetrieveStrategy item);
-
-	@RequirementA
 	private IProcess iProcess;
 
 	public IProcess getIProcess() {
@@ -71,6 +52,25 @@ public abstract class AbstractSensor extends AbstractComponent implements INotif
 
 	public abstract void handleIProcessConnected(IProcess item);
 	public abstract void handleIProcessDisconnected(IProcess item);
+
+	@RequirementA
+	private IRetrieveStrategy iRetrieveStrategy;
+
+	public IRetrieveStrategy getIRetrieveStrategy() {
+		return this.iRetrieveStrategy;
+
+	}
+
+	public void setIRetrieveStrategy(IRetrieveStrategy iRetrieveStrategy) {
+		this.iRetrieveStrategy = iRetrieveStrategy;
+		if (iRetrieveStrategy != null)
+			handleIRetrieveStrategyConnected(iRetrieveStrategy);
+		else
+			handleIRetrieveStrategyDisconnected(iRetrieveStrategy);
+	}
+
+	public abstract void handleIRetrieveStrategyConnected(IRetrieveStrategy item);
+	public abstract void handleIRetrieveStrategyDisconnected(IRetrieveStrategy item);
 
 	private final List<ISensor> iSensorRoles = new ArrayList<ISensor>();
 

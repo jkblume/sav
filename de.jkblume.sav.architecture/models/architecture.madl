@@ -37,7 +37,12 @@ meta architecture SavMetaArchitecture{
 		requires IProcess[0 to *];
 	}
 	
-	port type ILearningProcess extends IProcess {
+	port type IReasoningProcess extends IProcess {
+		Object inject(IOPropertyList input);
+		IOPropertyList extract(Object input);
+	}
+	
+	port type ILearningProcess extends IReasoningProcess {
 		Boolean buildClassifier();
 		void teachCurrentState(Category category);
 		void startGesture(Category category);
@@ -69,6 +74,10 @@ meta architecture SavMetaArchitecture{
 	
 	component type AggregateProcess {
 		provides IAggregateProcess;
+	}
+	
+	component type ReasoningProcess {
+		provides IReasoningProcess;
 	}
 	
 	component type LearningProcess {

@@ -148,6 +148,28 @@ public abstract class AbstractLearningProcess extends AbstractComponent
 
 	}
 
+	public Object inject(IOPropertyList input) {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("inject", this);
+
+		if (countInCallStack > 1 || iLearningProcessRoles.size() == 0)
+			return injectImpl(input);
+		else
+			return iLearningProcessRoles.get(0).inject(input);
+
+	}
+
+	public IOPropertyList extract(Object input) {
+
+		int countInCallStack = ReflectionHelper.countContainedInCallStack("extract", this);
+
+		if (countInCallStack > 1 || iLearningProcessRoles.size() == 0)
+			return extractImpl(input);
+		else
+			return iLearningProcessRoles.get(0).extract(input);
+
+	}
+
 	public Object execute(Object input) {
 
 		int countInCallStack = ReflectionHelper.countContainedInCallStack("execute", this);
@@ -163,6 +185,8 @@ public abstract class AbstractLearningProcess extends AbstractComponent
 	public abstract void teachCurrentStateImpl(Category category);
 	public abstract void startGestureImpl(Category category);
 	public abstract void stopGestureImpl(Category category);
+	public abstract Object injectImpl(IOPropertyList input);
+	public abstract IOPropertyList extractImpl(Object input);
 	public abstract Object executeImpl(Object input);
 
 }

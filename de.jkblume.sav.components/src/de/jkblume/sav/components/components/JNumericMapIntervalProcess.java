@@ -1,13 +1,36 @@
 
 package de.jkblume.sav.components.components;
 
-import de.jkblume.sav.architecture.gen.components.AbstractSimpleProcess;
-import net.opengis.sensorml.v20.IOPropertyList;
-import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import de.jkblume.sav.components.types.*;
+
+import de.jkblume.sav.architecture.gen.components.*;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.sensorml.types.*;
+
+import de.jkblume.sav.architecture.gen.porttypes.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.lang.Class;
+import net.opengis.sensorml.v20.Event;
+import net.opengis.swe.v20.Category;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.Text;
+import net.opengis.sensorml.v20.AbstractProcess;
+import net.opengis.sensorml.v20.AbstractPhysicalProcess;
+import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import net.opengis.sensorml.v20.IOPropertyList;
+import weka.core.Instances;
+import weka.classifiers.Classifier;
 
-public class JNumericScaleProcess extends AbstractSimpleProcess {
+import java.util.*;
+import org.smags.componentmodel.annotations.ParameterA;
+
+public class JNumericMapIntervalProcess extends AbstractSimpleProcess {
 
 	private static final String SOURCE_MIN_VALUE_PARAMETER_NAME = "sourceMinValue";
 	private static final String SOURCE_MAX_VALUE_PARAMETER_NAME = "sourceMaxValue";
@@ -21,7 +44,7 @@ public class JNumericScaleProcess extends AbstractSimpleProcess {
 	private double targetMaxValue;
 	private String componentName;
 
-	public JNumericScaleProcess(String name) {
+	public JNumericMapIntervalProcess(String name) {
 		super(name);
 	}
 
