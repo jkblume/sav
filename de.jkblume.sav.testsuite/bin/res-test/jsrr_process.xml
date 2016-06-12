@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:PhysicalComponent gml:id="jsrr_process"
+	xmlns:sml="http://www.opengis.net/sensorml/2.0" xmlns:swe="http://www.opengis.net/swe/2.0"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<sml:outputs>
+		<sml:OutputList>
+			<sml:output name="output">
+				<swe:Category>
+				</swe:Category>
+			</sml:output>
+		</sml:OutputList>
+	</sml:outputs>	
+	<sml:parameters>
+		<sml:ParameterList>
+			<sml:parameter name="threshold">
+				<swe:Quantity>
+					<swe:value>110</swe:value>
+				</swe:Quantity>
+			</sml:parameter>
+			<sml:parameter name="componentName">
+				<swe:Text>
+					<swe:value>flex</swe:value>
+				</swe:Text>
+			</sml:parameter>
+			<sml:parameter name="operation">
+				<swe:Text>
+					<swe:value>gt</swe:value>
+				</swe:Text>
+			</sml:parameter>
+		</sml:ParameterList>
+	</sml:parameters>
+</sml:PhysicalComponent>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:SimpleProcess xmlns:sml="http://www.opengis.net/sensorml/2.0"
+    xmlns:swe="http://www.opengis.net/swe/2.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    gml:id="scale_process" >
+
+    <sml:parameters>
+		<sml:ParameterList>
+			<sml:parameter name="sourceMinValue">
+				<swe:Quantity>
+					<swe:value>620</swe:value>
+				</swe:Quantity>
+			</sml:parameter>
+			<sml:parameter name="sourceMaxValue">
+				<swe:Quantity>
+					<swe:value>820</swe:value>
+				</swe:Quantity>
+			</sml:parameter>
+			<sml:parameter name="targetMinValue">
+				<swe:Quantity>
+					<swe:value>0</swe:value>
+				</swe:Quantity>
+			</sml:parameter>
+			<sml:parameter name="targetMaxValue">
+				<swe:Quantity>
+					<swe:value>125</swe:value>
+				</swe:Quantity>
+			</sml:parameter>
+			<sml:parameter name="componentName">
+				<swe:Text>
+					<swe:value>flex</swe:value>
+				</swe:Text>
+			</sml:parameter>
+		</sml:ParameterList>
+	</sml:parameters>
+</sml:SimpleProcess>
